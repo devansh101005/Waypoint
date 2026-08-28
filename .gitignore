@@ -52,3 +52,7 @@ waypoint-submission.zip
 # browser-automation artifacts
 /.playwright-mcp/
 *-landing.png
+
+# internal planning notes and source screenshots (contain third-party emails)
+Context/
+docs/01-DIFFERENTIATION.md
