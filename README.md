@@ -76,7 +76,25 @@ and reports each problem with the spreadsheet row number. A failed import writes
 | `npm run db:studio`           | Browse the database                                                         |
 | `npm run import`              | Import a corpus (see above)                                                 |
 | `npm run eval`                | Score the planner against hand-labelled scenarios vs. a similarity baseline |
+| `npm run eval -- --json`      | The same, also writing `eval-results/eval.json` for the `/eval` page |
+| `npm run plan -- "skill:level"` | Generate a path from the CLI against the bootstrap corpus (no database) |
 | `npm run package`             | Build the submission ZIP from tracked files only                            |
+
+## Evaluation
+
+The planner is scored against learning paths a human expert wrote by hand, alongside a similarity
+baseline (rank resources by similarity to the goal text, present them in similarity order — the
+standard approach). Both see the same corpus and the same similarity signal.
+
+```bash
+npm run eval -- --json          # writes eval-results/eval.md and eval.json
+```
+
+Metrics: prerequisite violation rate (steps the learner was not ready for), gap coverage,
+redundancy, nDCG and Kendall tau against the expert ordering. Results render at `/eval`.
+
+Set `COHERE_API_KEY` before quoting the numbers: without it the baseline falls back to word-overlap
+similarity, which understates it, and the generated report says so.
 
 ## Architecture
 

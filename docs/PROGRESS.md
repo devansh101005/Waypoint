@@ -2,12 +2,12 @@
 
 Updated at every phase gate. Times IST.
 
-## Status: Phase 0 complete, Phase 2 (planner) built ahead of schedule
+## Status: Phases 0, 2 and 5 complete — well ahead of plan
 
-**Last update:** Fri 28 Aug, ~20:40
-**Hours used (Track A):** ~2.5 of ~30-33 budgeted
-**Pace vs. plan:** ahead - Phase 2 (the AI/ML core) landed Friday night instead of Saturday
-afternoon, because it needs no database and Supabase is not up yet.
+**Last update:** Fri 28 Aug, ~20:55
+**Hours used (Track A):** ~3.5 of ~30-33 budgeted
+**Pace vs. plan:** well ahead - Phase 2 (AI/ML core) and Phase 5 (evaluation harness) both
+landed Friday night instead of Saturday/Sunday, because neither needs a database.
 **Cut ladder:** nothing fired
 
 ## Done and verified
@@ -30,10 +30,16 @@ afternoon, because it needs no database and Supabase is not up yet.
 | **Hybrid scorer** | `src/lib/scoring.ts` - tag/dense/lexical with weight renormalisation |
 | **DAG-constrained planner** | `src/lib/planner.ts` - beam search, milestones, reasons objects |
 | Planner verified on real corpus | `npm run plan -- "dashboarding:4"` - 7 steps, 86h, **0 violations** |
+| **Evaluation metrics** | `src/lib/eval.ts` - violations, coverage, redundancy, nDCG, Kendall tau |
+| **Similarity baseline** | `src/lib/baseline.ts` - the "LLM wrapper" approach, implemented fairly |
+| **Eval harness** | `npm run eval` - 5 seed scenarios, markdown + JSON output |
+| **/eval page** | Lighthouse a11y **100**, best-practices 100, 0 console errors |
+| Seed eval scenarios (fallback) | `data/bootstrap/scenarios.csv` - 5 personas, pulled forward from the Sun 13:00 fallback |
 | Landing stub | Lighthouse a11y **100**, best-practices 100, 0 console errors |
 | Track B briefs B1, B2 | `docs/briefs/` - dates corrected to Sat 29 Aug |
 
-**Test suite: 73 passing** (corpus 21, graph/gap/mastery 22, planner/scoring 29, alias guard 1).
+**Test suite: 98 passing** (corpus 21, graph/gap/mastery 22, planner/scoring 31, eval/baseline 23,
+alias guard 1).
 
 Defects the tooling and fixture runs caught (none reached the browser):
 1. Cohere v1 API lacks `outputDimension` -> moved to v2 namespace.
@@ -67,7 +73,20 @@ Defects the tooling and fixture runs caught (none reached the browser):
 | Solution doc draft    | Prateek         | Sun 20:00 | brief not yet written   |
 | Demo video            | Ayush + both    | Mon 17:00 | brief not yet written   |
 
-## Next up (Phase 1, Sat 09:00–14:00)
+## Next up (still DB-free)
 
-Wire the planner to Postgres: pgvector + tsvector queries feeding the scorer, corpus import against
-the teammates’ real sheet, and the debug search endpoint. Needs `DATABASE_URL`.
+Explanation phrasing layer (reasons object -> LLM, with deterministic template fallback), then the
+intake extraction prompt. Both testable without a database; the LLM path needs the Rikko key.
+
+## First eval numbers (provisional, lexical baseline)
+
+| Metric | Waypoint | Baseline |
+|---|---|---|
+| Prerequisite violations | **0.0%** | 59.4% |
+| Gap coverage | **100.0%** | 51.9% |
+| nDCG vs. expert | **0.822** | 0.314 |
+| Ordering correlation | **0.635** | 0.293 |
+
+Caveat recorded in the report itself: without an embedding key the baseline ranks by word overlap,
+which understates it. The prerequisite result is structural and will survive; the relevance figures
+will narrow once `COHERE_API_KEY` is set. **Do not quote these to judges until re-run with embeddings.**
