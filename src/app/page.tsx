@@ -2,10 +2,10 @@ import Link from "next/link";
 
 const STATUS = [
   { label: "Skill graph + corpus import", state: "ready" },
-  { label: "Gap model + path planner", state: "building" },
+  { label: "Gap model + path planner", state: "ready" },
+  { label: "Evaluation harness", state: "ready" },
   { label: "Conversational intake", state: "building" },
   { label: "Adaptation loop", state: "planned" },
-  { label: "Evaluation harness", state: "planned" },
 ] as const;
 
 export default function Home() {
@@ -53,14 +53,14 @@ export default function Home() {
       </section>
 
       <footer className="text-muted-foreground text-sm">
-        HCL Round 2 prototype ·{" "}
+        HCL Round 2 prototype · see the{" "}
         <Link
           className="text-foreground underline underline-offset-4"
           href="/eval"
         >
           evaluation results
         </Link>{" "}
-        (coming in phase 5)
+        against expert-labelled paths
       </footer>
     </main>
   );
