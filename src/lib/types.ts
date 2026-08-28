@@ -146,6 +146,13 @@ export interface EvalScenario {
     hoursPerWeek: number;
   };
   goal: string;
+  /**
+   * Goal skills, when they have been resolved ahead of time. Left empty in
+   * teammate-authored scenarios: the harness then runs the same LLM extraction
+   * the live product uses, so the evaluation exercises the real pipeline rather
+   * than a hand-fed target.
+   */
+  goalSkills?: SkillRef[];
   expertPath: ResourceId[];
   rationale: string;
 }

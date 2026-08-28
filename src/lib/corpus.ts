@@ -425,6 +425,13 @@ export function parseScenarios(
       }
     }
 
+    const goalSkills = parseSkillRefs(
+      r.goal_skills ?? "",
+      skillIds,
+      { file, row, column: "goal_skills" },
+      errors,
+    );
+
     const hoursPerWeek = Number((r.hours_per_week ?? "5").trim());
 
     rows.push({
@@ -437,6 +444,7 @@ export function parseScenarios(
           Number.isFinite(hoursPerWeek) && hoursPerWeek > 0 ? hoursPerWeek : 5,
       },
       goal,
+      goalSkills: goalSkills.length > 0 ? goalSkills : undefined,
       expertPath,
       rationale: (r.rationale ?? "").trim(),
     });
