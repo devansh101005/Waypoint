@@ -4,11 +4,11 @@
 one Google Sheet. This is the single most valuable non-code contribution to the submission: the
 recommender can only recommend what is in this sheet.
 
-**Deadlines**
+**Deadlines** 
 
-- **Sat 30 Aug, 11:00** — `Skills` tab done (~40–60 rows)
-- **Sat 30 Aug, 13:00** — `Resources` tab v1 (60+ rows)
-- **Sat 30 Aug, 20:00** — `Resources` tab v2 (150+ rows total)
+- **Sat 29 Aug, 11:00** — `Skills` tab done (~40–60 rows)
+- **Sat 29 Aug, 13:00** — `Resources` tab v1 (60+ rows)
+- **Sat 29 Aug, 20:00** — `Resources` tab v2 (150+ rows total)
 
 Devansh is blocked on these times. Partial and on time beats complete and late — fill what you have
 by the deadline and keep adding.
