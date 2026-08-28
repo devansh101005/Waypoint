@@ -1,0 +1,141 @@
+{
+  "generatedAt": "2026-08-28T15:18:27.213Z",
+  "mode": "lexical",
+  "corpus": {
+    "skills": 40,
+    "resources": 41
+  },
+  "summary": {
+    "ours": {
+      "system": "Waypoint",
+      "prereqViolationRate": 0,
+      "gapCoverage": 1,
+      "redundancy": 0.175,
+      "ndcg": 0.822,
+      "kendallTau": 0.635,
+      "totalHours": 93
+    },
+    "baseline": {
+      "system": "Similarity baseline",
+      "prereqViolationRate": 0.594,
+      "gapCoverage": 0.519,
+      "redundancy": 0.227,
+      "ndcg": 0.314,
+      "kendallTau": 0.293,
+      "totalHours": 101.6
+    }
+  },
+  "scenarios": [
+    {
+      "id": "SCN-01",
+      "persona": "Riya, commerce graduate",
+      "ours": {
+        "system": "Waypoint",
+        "prereqViolationRate": 0,
+        "gapCoverage": 1,
+        "redundancy": 0.135,
+        "ndcg": 0.678,
+        "kendallTau": 0.733,
+        "totalHours": 107
+      },
+      "baseline": {
+        "system": "Similarity baseline",
+        "prereqViolationRate": 0.5,
+        "gapCoverage": 0.696,
+        "redundancy": 0.182,
+        "ndcg": 0.584,
+        "kendallTau": -0.2,
+        "totalHours": 109
+      }
+    },
+    {
+      "id": "SCN-02",
+      "persona": "Arjun, economics postgrad",
+      "ours": {
+        "system": "Waypoint",
+        "prereqViolationRate": 0,
+        "gapCoverage": 1,
+        "redundancy": 0.143,
+        "ndcg": 0.985,
+        "kendallTau": 1,
+        "totalHours": 94
+      },
+      "baseline": {
+        "system": "Similarity baseline",
+        "prereqViolationRate": 0.25,
+        "gapCoverage": 0.347,
+        "redundancy": 0.308,
+        "ndcg": 0.452,
+        "kendallTau": 1,
+        "totalHours": 113
+      }
+    },
+    {
+      "id": "SCN-03",
+      "persona": "Meera, CS third year",
+      "ours": {
+        "system": "Waypoint",
+        "prereqViolationRate": 0,
+        "gapCoverage": 1,
+        "redundancy": 0.288,
+        "ndcg": 0.652,
+        "kendallTau": 0.067,
+        "totalHours": 90
+      },
+      "baseline": {
+        "system": "Similarity baseline",
+        "prereqViolationRate": 0.833,
+        "gapCoverage": 0.651,
+        "redundancy": 0.324,
+        "ndcg": 0.213,
+        "kendallTau": 1,
+        "totalHours": 80
+      }
+    },
+    {
+      "id": "SCN-04",
+      "persona": "Sunil, operations executive",
+      "ours": {
+        "system": "Waypoint",
+        "prereqViolationRate": 0,
+        "gapCoverage": 1,
+        "redundancy": 0.256,
+        "ndcg": 0.907,
+        "kendallTau": 0.733,
+        "totalHours": 86
+      },
+      "baseline": {
+        "system": "Similarity baseline",
+        "prereqViolationRate": 0.5,
+        "gapCoverage": 0.7,
+        "redundancy": 0.174,
+        "ndcg": 0.321,
+        "kendallTau": -0.333,
+        "totalHours": 95
+      }
+    },
+    {
+      "id": "SCN-05",
+      "persona": "Kabir, mechanical engineering student",
+      "ours": {
+        "system": "Waypoint",
+        "prereqViolationRate": 0,
+        "gapCoverage": 1,
+        "redundancy": 0.054,
+        "ndcg": 0.887,
+        "kendallTau": 0.643,
+        "totalHours": 88
+      },
+      "baseline": {
+        "system": "Similarity baseline",
+        "prereqViolationRate": 0.889,
+        "gapCoverage": 0.203,
+        "redundancy": 0.147,
+        "ndcg": 0,
+        "kendallTau": 0,
+        "totalHours": 111
+      }
+    }
+  ],
+  "skipped": []
+}
