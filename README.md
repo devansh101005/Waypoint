@@ -20,27 +20,38 @@ Every step is explained from the plan that produced it, so recommendations canno
 
 ## Requirements
 
-- Node.js 20+ (developed on 24) and npm
-- A Postgres database with the `pgvector` extension (Supabase works out of the box)
-- An API key for an OpenAI-compatible LLM gateway
-- Optional: a Cohere key for embeddings and reranking (the app runs without it)
+- Node.js 20+ (developed on 24) and npm — this alone is enough to run the planner
+- Optional: an API key for an OpenAI-compatible LLM gateway (conversational intake, explanation phrasing)
+- Optional: a Cohere key (embeddings and reranking)
+- Optional: Postgres with `pgvector` (persistence; Supabase works out of the box)
 
 ## Setup
 
+**No database or API key is required to see it work.** With nothing configured, Waypoint loads its
+corpus from the CSVs in `data/` and keeps learner state in memory:
+
 ```bash
 npm install
-cp .env.example .env.local     # then fill in the values (see below)
-npm run db:push                # create the schema
-npm run import                 # load the bootstrap corpus (40 skills, 41 resources)
-npm run dev                    # http://localhost:3000
+npm run dev                    # http://localhost:3000/plan
+```
+
+Open `/plan`, choose a destination, and the planner will build a route. `/eval` shows how it scores
+against expert-labelled paths.
+
+For the full experience (conversational intake, embeddings, persistence):
+
+```bash
+cp .env.example .env.local     # fill in the values (see below)
+npm run db:push                # optional: create the Postgres schema
+npm run import                 # optional: load a corpus into Postgres
 ```
 
 ### Environment variables
 
 | Variable             | Required | Purpose                                                                   |
 | -------------------- | -------- | ------------------------------------------------------------------------- |
-| `DATABASE_URL`       | yes      | Postgres connection string (Supabase: use the **transaction pooler** URL) |
-| `RIKKO_API_KEY`      | yes      | API key for the OpenAI-compatible LLM gateway                             |
+| `DATABASE_URL`       | no       | Postgres connection string (Supabase: use the **transaction pooler** URL) |
+| `RIKKO_API_KEY`      | no       | API key for the OpenAI-compatible LLM gateway                             |
 | `LLM_BASE_URL`       | no       | Gateway base URL (default `https://myrikko.ai/v1`)                        |
 | `LLM_MODEL_PRIMARY`  | no       | Chat, extraction and explanations (default `deepseek-v4-pro-0813`)        |
 | `LLM_MODEL_FAST`     | no       | Cheap bulk calls (default `glm-5.3-flash`)                                |

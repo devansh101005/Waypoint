@@ -2,10 +2,10 @@
 
 Updated at every phase gate. Times IST.
 
-## Status: Phases 0, 2 and 5 complete — well ahead of plan
+## Status: Phases 0, 2, 3 (core), 4 and 5 complete — well ahead of plan
 
-**Last update:** Fri 28 Aug, ~20:55
-**Hours used (Track A):** ~3.5 of ~30-33 budgeted
+**Last update:** Sat 29 Aug, ~13:05
+**Hours used (Track A):** ~6 of ~30-33 budgeted
 **Pace vs. plan:** well ahead - Phase 2 (AI/ML core) and Phase 5 (evaluation harness) both
 landed Friday night instead of Saturday/Sunday, because neither needs a database.
 **Cut ladder:** nothing fired
@@ -38,8 +38,16 @@ landed Friday night instead of Saturday/Sunday, because neither needs a database
 | Landing stub | Lighthouse a11y **100**, best-practices 100, 0 console errors |
 | Track B briefs B1, B2 | `docs/briefs/` - dates corrected to Sat 29 Aug |
 
-**Test suite: 98 passing** (corpus 21, graph/gap/mastery 22, planner/scoring 31, eval/baseline 23,
-alias guard 1).
+| **Explanation layer** | `src/lib/explain.ts` - LLM phrasing + hallucination guard + template fallback |
+| **Intake extraction** | `src/lib/intake.ts` - enum-constrained to the skill graph, invented slugs dropped |
+| **Store abstraction** | `src/lib/store.ts` - in-memory from CSV; the app runs with no database at all |
+| **Service layer** | `src/lib/service.ts` - generate, feedback, replan, diff |
+| **API routes** | `/api/intake`, `/api/paths`, `/api/paths/feedback`, `/api/demo` |
+| **Route view (signature UI)** | `src/components/path-route.tsx` - amber route line, waypoints, milestone diamonds |
+| **/plan page** | Full journey verified in-browser; Lighthouse a11y **100**, 0 console errors |
+
+**Test suite: 149 passing** (corpus 21, graph/gap/mastery 22, planner/scoring 31, eval/baseline 23,
+explain/intake 28, service 23, alias guard 1).
 
 Defects the tooling and fixture runs caught (none reached the browser):
 1. Cohere v1 API lacks `outputDimension` -> moved to v2 namespace.
@@ -53,6 +61,13 @@ Defects the tooling and fixture runs caught (none reached the browser):
 6. **Beam search discarded terminal states** - a branch that finished in one step lost to a longer
    branch still growing, so the planner recommended 18h where 12h reached the goal. Settled-state
    pool added; regression test locks it.
+7. **Feedback changed nothing** - the first replan returned an identical path ("Your path is
+   unchanged"), killing the demo's key beat. Two causes: the learner was never credited with the
+   steps they had walked past, and a course they struggled with could be prescribed again. Both
+   fixed; struggling now visibly reroutes.
+8. **The diff lied to the learner** - a step they had just completed was reported as "dropped",
+   which reads as the plan discarding their work. Diff now separates completed / swapped out /
+   dropped, each with its own wording.
 
 ## Blocked on Devansh (tonight, ~25 min)
 
@@ -73,10 +88,11 @@ Defects the tooling and fixture runs caught (none reached the browser):
 | Solution doc draft    | Prateek         | Sun 20:00 | brief not yet written   |
 | Demo video            | Ayush + both    | Mon 17:00 | brief not yet written   |
 
-## Next up (still DB-free)
+## Next up
 
-Explanation phrasing layer (reasons object -> LLM, with deterministic template fallback), then the
-intake extraction prompt. Both testable without a database; the LLM path needs the Rikko key.
+Conversational intake UI on top of `/api/intake` (needs the Rikko key to test live), then the
+dashboard view. Postgres store implementation when `DATABASE_URL` lands - the interface is already
+in place, so it is an additive change rather than a rewrite.
 
 ## First eval numbers (provisional, lexical baseline)
 
