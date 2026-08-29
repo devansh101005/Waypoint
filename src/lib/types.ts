@@ -127,6 +127,11 @@ export interface PathDiff {
     position: number;
     why: string;
   }>;
+  /** Left the path because the learner finished it — progress, not removal. */
+  completed: Array<{ resourceId: ResourceId; title: string }>;
+  /** Left the path because it did not work for the learner. */
+  replaced: Array<{ resourceId: ResourceId; title: string }>;
+  /** Genuinely no longer needed: something else now covers it. */
   removed: Array<{ resourceId: ResourceId; title: string }>;
   moved: Array<{
     resourceId: ResourceId;

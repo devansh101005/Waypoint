@@ -39,6 +39,11 @@ export interface PlanOptions {
   beamWidth?: number;
   /** Set false for the ablation that shows what the DAG constraint is worth. */
   enforcePrerequisites?: boolean;
+  /**
+   * Resources to keep out of the plan — a learner who struggled with one should
+   * be offered a different route to the same skill, not the same course again.
+   */
+  excludeResourceIds?: string[];
 }
 
 export interface PlannedItem {
@@ -78,7 +83,9 @@ export function planPath(options: PlanOptions): PlanResult {
     maxItems = 12,
     beamWidth = 3,
     enforcePrerequisites = true,
+    excludeResourceIds = [],
   } = options;
+  const excluded = new Set(excludeResourceIds);
 
   let beam: BeamState[] = [
     {
@@ -112,6 +119,7 @@ export function planPath(options: PlanOptions): PlanResult {
         resources,
         state,
         enforcePrerequisites,
+        excluded,
       );
       const ranked = candidates
         .map((resource) => ({
@@ -165,9 +173,10 @@ function feasibleCandidates(
   resources: Resource[],
   state: BeamState,
   enforce: boolean,
+  excluded: Set<string>,
 ): Resource[] {
   return resources.filter((r) => {
-    if (state.used.has(r.id)) return false;
+    if (state.used.has(r.id) || excluded.has(r.id)) return false;
     if (!enforce) return true;
     return r.requires.every((req) => meets(state.mastery, req));
   });
