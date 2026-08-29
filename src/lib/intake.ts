@@ -1,0 +1,187 @@
+import { z } from "zod";
+import type { SkillGraph } from "./graph";
+import { extractJSON, type ChatMessage, type ModelRole } from "./llm";
+import type { LearnerConstraints, SkillRef } from "./types";
+
+/**
+ * Turning "I want to be a data analyst" into a target skill state.
+ *
+ * The model is constrained to the canonical skill list: it picks slugs, it does
+ * not invent them. Anything it returns that is not in the graph is dropped
+ * before it can reach the planner, so a confused extraction produces a smaller
+ * goal rather than a broken one.
+ */
+
+const skillRefSchema = z.object({
+  skill: z.string(),
+  level: z.number().int().min(1).max(5),
+});
+
+const intakeSchema = z.object({
+  goalSkills: z.array(skillRefSchema).default([]),
+  statedSkills: z.array(skillRefSchema).default([]),
+  constraints: z
+    .object({
+      hoursPerWeek: z.number().positive().max(80).optional(),
+      deadlineWeeks: z.number().positive().max(260).optional(),
+      formats: z.array(z.string()).optional(),
+    })
+    .default({}),
+  /** The model's read of what the learner wants, for the profile panel. */
+  goalSummary: z.string().default(""),
+  /** What is still missing before a path can be generated. */
+  followUpQuestion: z.string().nullable().default(null),
+});
+
+export type RawIntake = z.infer<typeof intakeSchema>;
+
+export interface IntakeResult {
+  goalSkills: SkillRef[];
+  statedSkills: SkillRef[];
+  constraints: LearnerConstraints;
+  goalSummary: string;
+  followUpQuestion: string | null;
+  /** Slugs the model produced that are not in the graph. Surfaced, not hidden. */
+  droppedSkills: string[];
+  ready: boolean;
+}
+
+export interface IntakeOptions {
+  role?: ModelRole;
+  /** Injectable for tests; defaults to the real structured-extraction call. */
+  extractor?: (messages: ChatMessage[]) => Promise<RawIntake>;
+  /** Cap the slug list sent to the model. */
+  maxSkillsInPrompt?: number;
+}
+
+function systemPrompt(graph: SkillGraph, limit: number): string {
+  const catalogue = graph
+    .all()
+    .slice(0, limit)
+    .map((s) => `${s.id} (${s.name}, ${s.domain})`)
+    .join("\n");
+
+  return `You read a learner's message and extract a structured profile.
+
+Available skills — you may ONLY use these exact slugs:
+${catalogue}
+
+Return JSON with this shape:
+{
+  "goalSkills":   [{"skill": "<slug>", "level": 1-5}],
+  "statedSkills": [{"skill": "<slug>", "level": 1-5}],
+  "constraints":  {"hoursPerWeek": number?, "deadlineWeeks": number?, "formats": [string]?},
+  "goalSummary":  "one sentence, second person, describing what they want",
+  "followUpQuestion": "one question, or null if you have enough"
+}
+
+Rules:
+- goalSkills are the destination: the handful of skills that, once held, mean the learner has
+  arrived. Do not list prerequisites — those are derived from the skill graph automatically.
+- Prefer 1-3 goalSkills. A vague goal like "work with AI" should still resolve to concrete slugs.
+- statedSkills are only what the learner claims. Never infer from their goal.
+- level: 1 = heard of it, 3 = can use it independently, 5 = could teach it.
+- If the learner has not said what they want clearly enough to pick any goal skill, return an
+  empty goalSkills array and ask one specific followUpQuestion.
+- Never invent a slug. If nothing fits, leave the array empty.`;
+}
+
+export async function extractIntake(
+  messages: ChatMessage[],
+  graph: SkillGraph,
+  options: IntakeOptions = {},
+): Promise<IntakeResult> {
+  const limit = options.maxSkillsInPrompt ?? 400;
+  const convo: ChatMessage[] = [
+    { role: "system", content: systemPrompt(graph, limit) },
+    ...messages,
+  ];
+
+  const raw = options.extractor
+    ? await options.extractor(convo)
+    : await extractJSON(intakeSchema, convo, {
+        role: options.role ?? "primary",
+      });
+
+  return normalise(raw, graph);
+}
+
+/** Drop anything not in the graph, deduplicate, keep the highest level per skill. */
+export function normalise(raw: RawIntake, graph: SkillGraph): IntakeResult {
+  const dropped: string[] = [];
+
+  const clean = (refs: Array<{ skill: string; level: number }>): SkillRef[] => {
+    const best = new Map<string, number>();
+    for (const ref of refs) {
+      const slug = ref.skill.trim();
+      if (!graph.has(slug)) {
+        if (slug) dropped.push(slug);
+        continue;
+      }
+      const level = Math.min(5, Math.max(1, Math.round(ref.level)));
+      best.set(slug, Math.max(best.get(slug) ?? 0, level));
+    }
+    return [...best].map(([skillId, level]) => ({ skillId, level }));
+  };
+
+  const goalSkills = clean(raw.goalSkills ?? []);
+  const statedSkills = clean(raw.statedSkills ?? []);
+
+  const constraints: LearnerConstraints = {};
+  if (raw.constraints?.hoursPerWeek)
+    constraints.hoursPerWeek = raw.constraints.hoursPerWeek;
+  if (raw.constraints?.deadlineWeeks)
+    constraints.deadlineWeeks = raw.constraints.deadlineWeeks;
+  if (raw.constraints?.formats?.length)
+    constraints.formats = raw.constraints.formats;
+
+  return {
+    goalSkills,
+    statedSkills,
+    constraints,
+    goalSummary: (raw.goalSummary ?? "").trim(),
+    followUpQuestion: raw.followUpQuestion?.trim() || null,
+    droppedSkills: [...new Set(dropped)],
+    // A path needs somewhere to go. Everything else can be discovered later.
+    ready: goalSkills.length > 0,
+  };
+}
+
+/**
+ * Merge a new extraction into the profile built so far. Later turns refine
+ * earlier ones rather than replacing them, so a learner who adds "actually I
+ * already know SQL" three messages in does not lose their goal.
+ */
+export function mergeIntake(
+  previous: IntakeResult | null,
+  next: IntakeResult,
+): IntakeResult {
+  if (!previous) return next;
+
+  const merge = (a: SkillRef[], b: SkillRef[]): SkillRef[] => {
+    const best = new Map<string, number>();
+    for (const ref of [...a, ...b]) {
+      best.set(ref.skillId, Math.max(best.get(ref.skillId) ?? 0, ref.level));
+    }
+    return [...best].map(([skillId, level]) => ({ skillId, level }));
+  };
+
+  const goalSkills =
+    next.goalSkills.length > 0
+      ? merge(previous.goalSkills, next.goalSkills)
+      : previous.goalSkills;
+
+  return {
+    goalSkills,
+    statedSkills: merge(previous.statedSkills, next.statedSkills),
+    constraints: { ...previous.constraints, ...next.constraints },
+    goalSummary: next.goalSummary || previous.goalSummary,
+    followUpQuestion: next.followUpQuestion,
+    droppedSkills: [
+      ...new Set([...previous.droppedSkills, ...next.droppedSkills]),
+    ],
+    ready: goalSkills.length > 0,
+  };
+}
+
+export { intakeSchema };
