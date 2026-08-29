@@ -172,6 +172,21 @@ describe("validate — hallucination guard", () => {
     expect(validate(text, step, SKILL_NAMES)).toBeNull();
   });
 
+  it("allows the skill that links this step to the one before it", () => {
+    // Regression: the guard used to reject a correct explanation of ordering
+    // because the linking skill was not in its permitted set.
+    const text =
+      "This takes your SQL Joins to level 3. It follows SQLBolt because it assumes the SQL Basics that teaches.";
+    expect(validate(text, step, SKILL_NAMES, { "sql-basics": "SQL Basics" })).toBeNull();
+  });
+
+  it("still rejects a skill unrelated to the step even with the map supplied", () => {
+    const text = "This takes your SQL Joins to level 3 and also builds React Hooks.";
+    expect(validate(text, step, SKILL_NAMES, { "sql-basics": "SQL Basics" })).toContain(
+      "React Hooks",
+    );
+  });
+
   it("rejects an empty or truncated reply", () => {
     expect(validate("Sure!", step, SKILL_NAMES)).toBe("reply too short");
   });

@@ -29,6 +29,8 @@ export interface RouteItem {
 
 interface PathRouteProps {
   items: RouteItem[];
+  /** Enables the "why this step" prose, which needs a saved path to explain. */
+  pathId?: string | null;
   /** Steps before this position are treated as walked. */
   progressPosition?: number;
   onFeedback?: (resourceId: string, event: "done" | "struggled") => void;
@@ -38,12 +40,43 @@ interface PathRouteProps {
 
 export function PathRoute({
   items,
+  pathId,
   progressPosition = 1,
   onFeedback,
   busyResourceId,
   changedResourceIds,
 }: PathRouteProps) {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [prose, setProse] = useState<Record<string, string>>({});
+  const [phrasing, setPhrasing] = useState<string | null>(null);
+
+  /**
+   * Fetch the phrased explanation the first time a step is opened. The
+   * structured reasons are already on screen by then, so a slow gateway delays
+   * the prose rather than the answer.
+   */
+  async function open(resourceId: string) {
+    const isOpen = openId === resourceId;
+    setOpenId(isOpen ? null : resourceId);
+    if (isOpen || !pathId || prose[resourceId]) return;
+
+    setPhrasing(resourceId);
+    try {
+      const response = await fetch("/api/explain", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pathId, resourceId }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setProse((current) => ({ ...current, [resourceId]: data.text }));
+      }
+    } catch {
+      /* the structured reasons below are the answer; prose is a bonus */
+    } finally {
+      setPhrasing(null);
+    }
+  }
 
   if (items.length === 0) {
     return (
@@ -58,7 +91,7 @@ export function PathRoute({
       {items.map((item, index) => {
         const walked = item.position < progressPosition;
         const isLast = index === items.length - 1;
-        const open = openId === item.resource.id;
+        const isOpen = openId === item.resource.id;
         const changed = changedResourceIds?.has(item.resource.id) ?? false;
 
         return (
@@ -130,11 +163,11 @@ export function PathRoute({
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setOpenId(open ? null : item.resource.id)}
-                  aria-expanded={open}
+                  onClick={() => void open(item.resource.id)}
+                  aria-expanded={isOpen}
                   className="border-hairline hover:border-route focus-visible:ring-ring rounded-full border px-3 py-1 text-xs focus-visible:ring-2 focus-visible:outline-none"
                 >
-                  {open ? "Hide reasoning" : "Why this step?"}
+                  {isOpen ? "Hide reasoning" : "Why this step?"}
                 </button>
 
                 {onFeedback && (
@@ -168,7 +201,20 @@ export function PathRoute({
                 </a>
               </div>
 
-              {open && <Reasoning reasons={item.reasons} />}
+              {isOpen && (
+                <>
+                  {prose[item.resource.id] ? (
+                    <p className="border-route mt-3 border-l-2 py-1 pl-4 text-sm">
+                      {prose[item.resource.id]}
+                    </p>
+                  ) : phrasing === item.resource.id ? (
+                    <p className="text-ink-muted mt-3 pl-4 text-sm italic">
+                      Writing this up…
+                    </p>
+                  ) : null}
+                  <Reasoning reasons={item.reasons} />
+                </>
+              )}
             </div>
           </li>
         );

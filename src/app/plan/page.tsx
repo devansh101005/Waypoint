@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { AskPanel } from "@/components/ask-panel";
 import { PathRoute, type RouteItem } from "@/components/path-route";
 import type { PathDiff } from "@/lib/types";
 
@@ -283,10 +284,13 @@ export default function PlanPage() {
               </h2>
               <PathRoute
                 items={result.items}
+                pathId={result.pathId}
                 onFeedback={sendFeedback}
                 busyResourceId={busy}
                 changedResourceIds={changed}
               />
+
+              <AskPanel pathId={result.pathId} />
             </section>
 
             {result.gap.length > 0 && (

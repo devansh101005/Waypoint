@@ -27,6 +27,12 @@ export interface ExplainOptions {
   role?: ModelRole;
   /** Every skill name in the corpus, used to detect invented ones. */
   knownSkillNames?: string[];
+  /**
+   * Skill id to display name. Lets the guard recognise the skill that links
+   * this step to the one before it, which the model legitimately names when
+   * explaining the ordering.
+   */
+  skillNameById?: Record<string, string>;
   /** Injectable for tests; defaults to the real LLM call. */
   completion?: (
     messages: ChatMessage[],
@@ -157,7 +163,12 @@ export async function explainStep(
     };
   }
 
-  const rejection = validate(text, input, options.knownSkillNames ?? []);
+  const rejection = validate(
+    text,
+    input,
+    options.knownSkillNames ?? [],
+    options.skillNameById ?? {},
+  );
   if (rejection) {
     return { text: fallback(), source: "template", rejectedBecause: rejection };
   }
@@ -174,26 +185,44 @@ export function validate(
   text: string,
   input: ExplainInput,
   knownSkillNames: string[],
+  skillNameById: Record<string, string> = {},
 ): string | null {
   if (text.length < 20) return "reply too short";
   if (text.length > 1200) return "reply too long";
 
   const lower = text.toLowerCase();
+
+  /**
+   * Everything this step is entitled to mention: the skills it teaches, the
+   * skills it opens up, the skill that connects it to the step before it, and
+   * the titles involved. Leaving out the linking skill made the guard reject
+   * correct explanations of why one step follows another.
+   */
   const permitted = new Set(
     [
       ...input.reasons.coversGapSkills.map((c) => c.name),
       ...input.reasons.unlocks.map((u) => u.name),
+      ...input.reasons.unlockedBy.map((u) => skillNameById[u.skillId] ?? ""),
+      ...input.reasons.unlockedBy.map((u) => u.title),
       input.title,
-    ].map((n) => n.toLowerCase()),
+    ]
+      .filter(Boolean)
+      .map((n) => n.toLowerCase()),
   );
 
   for (const name of knownSkillNames) {
     const needle = name.toLowerCase();
     if (permitted.has(needle)) continue;
     // Word-boundary match so "Joins" does not fire inside "adjoins".
-    const pattern = new RegExp(`\\b${escapeRegex(needle)}\\b`, "i");
-    if (pattern.test(lower))
+    // String.raw, not a plain template literal: `\b` in one is a backspace
+    // character, which silently turns this check into a no-op.
+    const pattern = new RegExp(
+      String.raw`\b` + escapeRegex(needle) + String.raw`\b`,
+      "i",
+    );
+    if (pattern.test(lower)) {
       return `mentioned "${name}", which is not part of this step`;
+    }
   }
   return null;
 }
