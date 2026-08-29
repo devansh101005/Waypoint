@@ -56,3 +56,6 @@ waypoint-submission.zip
 # internal planning notes and source screenshots (contain third-party emails)
 Context/
 docs/01-DIFFERENTIATION.md
+
+# hook diagnostics (local troubleshooting only)
+.claude/hook-diagnostics.json

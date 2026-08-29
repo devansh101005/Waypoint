@@ -2,7 +2,7 @@
 // Stop hook: block the turn from ending until the test suite passes.
 // Silent no-op before the project has a test script.
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
@@ -77,11 +77,41 @@ if (!result.ok && looksLikeRunnerFailure(result.out)) {
 if (result.ok) process.exit(0);
 
 if (looksLikeRunnerFailure(result.out)) {
+  /**
+   * This has only ever happened when the hook is launched by the agent harness,
+   * never when the same command is run by hand, so capture the environment that
+   * produced it rather than guessing again next time.
+   */
+  try {
+    writeFileSync(
+      path.join(root, ".claude", "hook-diagnostics.json"),
+      JSON.stringify(
+        {
+          at: new Date().toISOString(),
+          cwd: process.cwd(),
+          nodeVersion: process.version,
+          nodeOptions: process.env.NODE_OPTIONS ?? null,
+          nodeEnv: process.env.NODE_ENV ?? null,
+          envKeys: Object.keys(process.env)
+            .filter((k) => /^(NODE|npm|VITE|VITEST|TS)/i.test(k))
+            .sort(),
+          tail: result.out.slice(-1500),
+        },
+        null,
+        2,
+      ),
+      "utf8",
+    );
+  } catch {
+    /* diagnostics are best-effort */
+  }
+
   console.error(
     "Vitest failed to start (every suite errored at import, zero tests collected).\n" +
       "This is the test runner's environment, not the code. Verify with:\n" +
       "  node node_modules/vitest/vitest.mjs run\n" +
-      `${result.out.slice(-2000)}`,
+      "Environment captured in .claude/hook-diagnostics.json\n" +
+      `${result.out.slice(-1500)}`,
   );
   process.exit(2);
 }
