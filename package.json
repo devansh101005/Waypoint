@@ -15,7 +15,8 @@
     "eval": "tsx scripts/eval.ts",
     "package": "git archive --format=zip -o waypoint-submission.zip HEAD",
     "plan": "tsx scripts/plan-demo.ts",
-    "bench:intake": "tsx scripts/bench-intake.ts"
+    "bench:intake": "tsx scripts/bench-intake.ts",
+    "db:migrate": "tsx scripts/migrate.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

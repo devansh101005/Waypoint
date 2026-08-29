@@ -1,4 +1,5 @@
 import {
+  boolean,
   integer,
   jsonb,
   pgEnum,
@@ -97,6 +98,13 @@ export const learners = pgTable("learners", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   goalText: text("goal_text").notNull().default(""),
+  /** The assistant's one-line reading of the goal, shown back to the learner. */
+  goalSummary: text("goal_summary").notNull().default(""),
+  /** [{ skillId, level }] — the destination the planner aims at. */
+  goalSkills: jsonb("goal_skills").notNull().default([]),
+  /** [{ skillId, level }] — what the learner claimed at intake, kept separate
+   *  from derived mastery so a re-import can rebuild the vector from source. */
+  statedSkills: jsonb("stated_skills").notNull().default([]),
   // { hoursPerWeek?: number; deadlineWeeks?: number; formats?: string[] }
   constraints: jsonb("constraints").notNull().default({}),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -125,8 +133,12 @@ export const paths = pgTable("paths", {
   learnerId: uuid("learner_id")
     .notNull()
     .references(() => learners.id, { onDelete: "cascade" }),
-  // [{ skillId, targetLevel }]
+  // [{ skillId, level }]
   goalSkills: jsonb("goal_skills").notNull().default([]),
+  /** Summed from the items at write time so listing paths needs no join. */
+  totalHours: real("total_hours").notNull().default(0),
+  /** Whether this path closes the whole gap, or is a first phase toward it. */
+  complete: boolean("complete").notNull().default(false),
   supersedes: uuid("supersedes"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
