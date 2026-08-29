@@ -51,9 +51,15 @@ For the full experience (conversational intake, embeddings, persistence):
 
 ```bash
 cp .env.example .env.local     # fill in the values (see below)
-npm run db:push                # optional: create the Postgres schema
-npm run import                 # optional: load a corpus into Postgres
+npm run db:push                # create the Postgres schema (interactive; confirm when asked)
+npm run db:migrate             # apply column additions made since that first push
+npm run import                 # load the corpus into Postgres, with embeddings
 ```
+
+With `DATABASE_URL` set the app switches to Postgres automatically and learner progress survives
+restarts. Without it, everything still works and state lives in memory for the life of the process.
+`npm run db:migrate` is idempotent — run it any time; it is how schema changes reach a database that
+already exists, because `drizzle-kit push` needs a terminal to confirm and does nothing without one.
 
 ### Environment variables
 
@@ -92,7 +98,8 @@ and reports each problem with the spreadsheet row number. A failed import writes
 | `npm run dev`                 | Development server                                                          |
 | `npm run build` / `npm start` | Production build and serve                                                  |
 | `npm test`                    | Unit tests (Vitest)                                                         |
-| `npm run db:push`             | Apply the Drizzle schema to the database                                    |
+| `npm run db:push`             | Create the Drizzle schema on a fresh database (asks for confirmation)       |
+| `npm run db:migrate`          | Apply schema top-ups to an existing database (idempotent)                   |
 | `npm run db:studio`           | Browse the database                                                         |
 | `npm run import`              | Import a corpus (see above)                                                 |
 | `npm run eval`                | Score the planner against hand-labelled scenarios vs. a similarity baseline |
@@ -119,7 +126,8 @@ similarity, which understates it, and the generated report says so.
 ## Architecture
 
 - **App**: Next.js 15 (App Router) + TypeScript, React, Tailwind, shadcn/ui
-- **Data**: Postgres + pgvector via Drizzle ORM
+- **Data**: Postgres + pgvector via Drizzle ORM, behind a store interface with an in-memory
+  implementation so the app runs with no database at all
 - **AI/ML**: hybrid retrieval over a skill-tagged corpus, DAG-constrained beam-search planning,
   rule-based mastery updates, LLM used only for extraction and phrasing
 - **Deploy**: Vercel (app) + Supabase (database)

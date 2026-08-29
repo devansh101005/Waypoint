@@ -2,10 +2,10 @@
 
 Updated at every phase gate. Times IST.
 
-## Status: all six required features complete and verified in the browser
+## Status: all six required features complete; state now persists in Postgres
 
-**Last update:** Sat 29 Aug, ~18:55
-**Hours used (Track A):** ~9 of ~30-33 budgeted
+**Last update:** Sat 29 Aug, ~19:15
+**Hours used (Track A):** ~10 of ~30-33 budgeted
 **Pace vs. plan:** well ahead - Phase 2 (AI/ML core) and Phase 5 (evaluation harness) both
 landed Friday night instead of Saturday/Sunday, because neither needs a database.
 **Cut ladder:** nothing fired
@@ -54,8 +54,14 @@ landed Friday night instead of Saturday/Sunday, because neither needs a database
 | **Landing page** | Real entry point; a11y **100** |
 | Deployed and verified | https://waypoint-six-teal.vercel.app — corpus loads, plan and feedback work |
 
-**Test suite: 172 passing** (corpus 21, graph/gap/mastery 22, planner/scoring 31, eval/baseline 23,
-explain/intake 30, ask 10, quickmatch 11, service 23, alias guard 1).
+| **Postgres store** | `src/lib/store-postgres.ts` — selected automatically when `DATABASE_URL` is set |
+| Persistence proven | Learner, path and events survived a full server restart |
+| Stored embeddings | Path generation dropped to ~1.9s; the corpus is no longer re-embedded per request |
+| Both modes verified | `npm run tsx scripts/check-memory-mode.ts` confirms the no-database path still works |
+
+**Test suite: 181 passing** (corpus 21, graph/gap/mastery 22, planner/scoring 31, eval/baseline 23,
+explain/intake 30, ask 10, quickmatch 11, service 23, postgres integration 9, alias guard 1).
+The Postgres tests skip themselves when `DATABASE_URL` is absent, so a clean checkout still passes.
 
 ### Required features: 6/6
 
@@ -92,6 +98,10 @@ Defects the tooling and fixture runs caught (none reached the browser):
    silently falling back to the template. Widened, with regression tests.
 10. **A `` became a backspace character** - a scripted edit turned the guard's word-boundary
     regex into a no-op. Now built with `String.raw` so it cannot recur.
+11. **`drizzle-kit push` silently did nothing** - it waits for an interactive confirmation and exits
+    without applying anything when run without a terminal, so the new columns never reached the
+    database while reporting success. Replaced with an explicit idempotent `npm run db:migrate`
+    that verifies the columns exist afterwards and fails loudly if they do not.
 
 ## Blocked on Devansh (tonight, ~25 min)
 
@@ -114,8 +124,8 @@ Defects the tooling and fixture runs caught (none reached the browser):
 
 ## Next up
 
-Postgres store implementation (persistence; the interface is already in place). Then the real
-corpus from Track B when it lands, and a re-run of the eval against it.
+Blocked on Track B: the real corpus from Prateek and Ayush. When it lands, import it, re-run the
+eval against it, and update the numbers quoted in the solution document.
 
 ## First eval numbers (provisional, lexical baseline)
 
