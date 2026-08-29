@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { parseResources, parseSkills } from "./corpus";
 import { buildGraph, type SkillGraph } from "./graph";
+import { createPostgresStore } from "./store-postgres";
 import type {
   LearnerConstraints,
   MasteryVector,
@@ -61,6 +62,13 @@ export interface Store {
   graph(): Promise<SkillGraph>;
   resources(): Promise<Resource[]>;
   resource(id: string): Promise<Resource | null>;
+  /**
+   * Stored resource vectors, when the backing store holds them. Null means the
+   * caller should embed on demand — the memory store has no vectors, the
+   * database does, and re-embedding the corpus on every request is the thing
+   * this exists to avoid.
+   */
+  resourceEmbeddings(): Promise<Map<string, number[]> | null>;
 
   createLearner(
     input: Partial<StoredLearner> & { name?: string },
@@ -157,6 +165,9 @@ export function createMemoryStore(corpusDir?: string): Store {
     async resource(id) {
       return byId.get(id) ?? null;
     },
+    async resourceEmbeddings() {
+      return null; // CSV corpus carries no vectors
+    },
 
     async createLearner(input) {
       const learner: StoredLearner = {
@@ -244,11 +255,12 @@ declare global {
 
 export function getStore(): Store {
   if (!globalThis.__waypointStore) {
-    globalThis.__waypointStore = createMemoryStore();
-    if (!process.env.DATABASE_URL) {
-      console.info(
-        "[store] No DATABASE_URL set — running in memory from the CSV corpus.",
-      );
+    if (process.env.DATABASE_URL) {
+      globalThis.__waypointStore = createPostgresStore();
+      console.info("[store] Using Postgres.");
+    } else {
+      globalThis.__waypointStore = createMemoryStore();
+      console.info("[store] No DATABASE_URL set — running in memory from the CSV corpus.");
     }
   }
   return globalThis.__waypointStore;
