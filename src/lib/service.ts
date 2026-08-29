@@ -51,16 +51,28 @@ export async function generatePath(
     formats: learner.constraints.formats,
   });
 
+  /**
+   * Dense similarity, when we can get it. Stored vectors are used in
+   * preference to embedding the corpus again: with a database that turns an
+   * N-document embedding call per request into a single query-embedding call.
+   */
   let dense: Map<string, number> | null = null;
   if (env.hasCohere && resources.length > 0) {
     const query = await embedQuery(card);
     if (query) {
-      // Resource vectors are not persisted in memory mode; embed on demand only
-      // when a database is not carrying them.
-      const vectors = await embedCorpus(resources.map(resourceCard));
+      let vectors = await store.resourceEmbeddings();
+      if (!vectors) {
+        const computed = await embedCorpus(resources.map(resourceCard));
+        if (computed) {
+          vectors = new Map(resources.map((r, i) => [r.id, computed[i]]));
+        }
+      }
       if (vectors) {
         dense = new Map(
-          resources.map((r, i) => [r.id, cosine(query, vectors[i])]),
+          resources.map((r) => {
+            const vector = vectors.get(r.id);
+            return [r.id, vector ? cosine(query, vector) : 0];
+          }),
         );
       }
     }
