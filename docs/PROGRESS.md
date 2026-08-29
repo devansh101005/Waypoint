@@ -2,10 +2,10 @@
 
 Updated at every phase gate. Times IST.
 
-## Status: Phases 0, 2, 3 (core), 4 and 5 complete — well ahead of plan
+## Status: all six required features complete and verified in the browser
 
-**Last update:** Sat 29 Aug, ~13:05
-**Hours used (Track A):** ~6 of ~30-33 budgeted
+**Last update:** Sat 29 Aug, ~18:55
+**Hours used (Track A):** ~9 of ~30-33 budgeted
 **Pace vs. plan:** well ahead - Phase 2 (AI/ML core) and Phase 5 (evaluation harness) both
 landed Friday night instead of Saturday/Sunday, because neither needs a database.
 **Cut ladder:** nothing fired
@@ -46,8 +46,27 @@ landed Friday night instead of Saturday/Sunday, because neither needs a database
 | **Route view (signature UI)** | `src/components/path-route.tsx` - amber route line, waypoints, milestone diamonds |
 | **/plan page** | Full journey verified in-browser; Lighthouse a11y **100**, 0 console errors |
 
-**Test suite: 149 passing** (corpus 21, graph/gap/mastery 22, planner/scoring 31, eval/baseline 23,
-explain/intake 28, service 23, alias guard 1).
+| **Conversational intake** (feature 1+2) | `/start` — profile fills live; Lighthouse a11y **100** |
+| **Instant first read** | `src/lib/quickmatch.ts` — local match fills the panel while the gateway thinks |
+| **Dashboard** (feature 6) | `/dashboard/[id]` — skill meters, next action, milestones, activity; a11y **100** |
+| **Explanations** (feature 5) | `/api/explain` — model phrasing with a hallucination guard, template fallback |
+| **Learner Q&A** (feature 5) | `/api/ask` + ask panel — answers only from the learner's own plan |
+| **Landing page** | Real entry point; a11y **100** |
+| Deployed and verified | https://waypoint-six-teal.vercel.app — corpus loads, plan and feedback work |
+
+**Test suite: 172 passing** (corpus 21, graph/gap/mastery 22, planner/scoring 31, eval/baseline 23,
+explain/intake 30, ask 10, quickmatch 11, service 23, alias guard 1).
+
+### Required features: 6/6
+
+| # | Feature | Where |
+|---|---|---|
+| 1 | Conversational interface | `/start` |
+| 2 | Learner profiling engine | `/start` profile panel, `src/lib/mastery.ts` |
+| 3 | Recommendation engine | `src/lib/scoring.ts` |
+| 4 | Path generator with prerequisites and milestones | `src/lib/planner.ts`, route view |
+| 5 | Explains recommendations, answers queries | `/api/explain`, `/api/ask` |
+| 6 | Progress dashboard | `/dashboard/[id]` |
 
 Defects the tooling and fixture runs caught (none reached the browser):
 1. Cohere v1 API lacks `outputDimension` -> moved to v2 namespace.
@@ -68,6 +87,11 @@ Defects the tooling and fixture runs caught (none reached the browser):
 8. **The diff lied to the learner** - a step they had just completed was reported as "dropped",
    which reads as the plan discarding their work. Diff now separates completed / swapped out /
    dropped, each with its own wording.
+9. **The hallucination guard over-fired** - it rejected a correct explanation of *why* one step
+   follows another, because the linking skill was not in its permitted set. Every explanation was
+   silently falling back to the template. Widened, with regression tests.
+10. **A `` became a backspace character** - a scripted edit turned the guard's word-boundary
+    regex into a no-op. Now built with `String.raw` so it cannot recur.
 
 ## Blocked on Devansh (tonight, ~25 min)
 
@@ -90,9 +114,8 @@ Defects the tooling and fixture runs caught (none reached the browser):
 
 ## Next up
 
-Conversational intake UI on top of `/api/intake` (needs the Rikko key to test live), then the
-dashboard view. Postgres store implementation when `DATABASE_URL` lands - the interface is already
-in place, so it is an additive change rather than a rewrite.
+Postgres store implementation (persistence; the interface is already in place). Then the real
+corpus from Track B when it lands, and a re-run of the eval against it.
 
 ## First eval numbers (provisional, lexical baseline)
 

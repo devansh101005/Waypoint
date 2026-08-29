@@ -5,6 +5,15 @@ graph**, not text similarity: a learner is a mastery vector, a goal compiles to 
 and the recommended path is a prerequisite-feasible sequence that closes the gap in the fewest hours.
 Every step is explained from the plan that produced it, so recommendations cannot be hallucinated.
 
+## Try it
+
+| Page | What it is |
+|---|---|
+| `/start` | Describe your goal in your own words; the profile fills in as you talk, then plot a route |
+| `/plan` | Pick a destination directly — no language model needed, useful as a fallback |
+| `/dashboard/[learnerId]` | Progress, skill levels, milestones and the next thing to do |
+| `/eval` | How this planner scores against a similarity baseline on expert-written paths |
+
 ## What it does
 
 1. **Conversational intake** — describe a goal in natural language; the profile fills in as you talk.
