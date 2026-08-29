@@ -128,3 +128,100 @@
     @apply font-sans;
   }
 }
+/* ---------------------------------------------------------------------------
+   Waypoint — "survey paper"
+   The product is a route through terrain, so the surface is a surveyor's sheet:
+   a pale sage-warm ground, deep slate-green ink, contour hairlines, and a
+   single amber route line that is the only saturated colour on the page.
+   Documented deviation from docs/02-ARCHITECTURE.md §6, which specified an ink
+   canvas: near-black with one bright accent is the most common look in this
+   category, and paper reads as a map rather than as a dashboard.
+--------------------------------------------------------------------------- */
+
+:root {
+  --paper: oklch(0.973 0.006 120);
+  --paper-raised: oklch(0.995 0.003 120);
+  --ink: oklch(0.26 0.021 165);
+  --ink-muted: oklch(0.52 0.016 165);
+  --hairline: oklch(0.9 0.012 140);
+  --route: oklch(0.63 0.148 62);
+  --route-ink: oklch(0.47 0.12 55);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper-raised);
+  --card-foreground: var(--ink);
+  --popover: var(--paper-raised);
+  --popover-foreground: var(--ink);
+  --primary: var(--route-ink);
+  --primary-foreground: oklch(0.99 0.004 100);
+  --secondary: oklch(0.94 0.009 130);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.945 0.008 130);
+  --muted-foreground: var(--ink-muted);
+  --accent: oklch(0.93 0.02 90);
+  --accent-foreground: var(--ink);
+  --border: var(--hairline);
+  --input: var(--hairline);
+  --ring: var(--route);
+  --radius: 0.375rem;
+}
+
+.dark {
+  --paper: oklch(0.19 0.014 170);
+  --paper-raised: oklch(0.23 0.014 170);
+  --ink: oklch(0.95 0.006 110);
+  --ink-muted: oklch(0.73 0.012 140);
+  --hairline: oklch(0.32 0.014 165);
+  --route: oklch(0.76 0.14 68);
+  --route-ink: oklch(0.82 0.13 72);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper-raised);
+  --card-foreground: var(--ink);
+  --popover: var(--paper-raised);
+  --popover-foreground: var(--ink);
+  --primary: var(--route-ink);
+  --primary-foreground: oklch(0.2 0.014 170);
+  --secondary: oklch(0.27 0.014 170);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.26 0.012 170);
+  --muted-foreground: var(--ink-muted);
+  --accent: oklch(0.3 0.03 90);
+  --accent-foreground: var(--ink);
+  --border: var(--hairline);
+  --input: var(--hairline);
+  --ring: var(--route);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-hairline: var(--hairline);
+  --color-route: var(--route);
+  --color-route-ink: var(--route-ink);
+  --font-display: var(--font-display);
+}
+
+/* Contour hairlines: the faint survey grid the route is drawn on. */
+.survey-ground {
+  background-image:
+    linear-gradient(to right, var(--hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hairline) 1px, transparent 1px);
+  background-size: 96px 96px;
+  background-position: center;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
