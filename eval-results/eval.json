@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-28T15:18:27.213Z",
-  "mode": "lexical",
+  "generatedAt": "2026-08-29T07:51:05.893Z",
+  "mode": "embeddings",
   "corpus": {
     "skills": 40,
     "resources": 41
@@ -9,20 +9,20 @@
     "ours": {
       "system": "Waypoint",
       "prereqViolationRate": 0,
-      "gapCoverage": 1,
-      "redundancy": 0.175,
-      "ndcg": 0.822,
-      "kendallTau": 0.635,
-      "totalHours": 93
+      "gapCoverage": 0.981,
+      "redundancy": 0.196,
+      "ndcg": 0.831,
+      "kendallTau": 0.689,
+      "totalHours": 90.4
     },
     "baseline": {
       "system": "Similarity baseline",
-      "prereqViolationRate": 0.594,
-      "gapCoverage": 0.519,
-      "redundancy": 0.227,
-      "ndcg": 0.314,
-      "kendallTau": 0.293,
-      "totalHours": 101.6
+      "prereqViolationRate": 0.617,
+      "gapCoverage": 0.61,
+      "redundancy": 0.324,
+      "ndcg": 0.353,
+      "kendallTau": -0.053,
+      "totalHours": 104
     }
   },
   "scenarios": [
@@ -32,20 +32,20 @@
       "ours": {
         "system": "Waypoint",
         "prereqViolationRate": 0,
-        "gapCoverage": 1,
-        "redundancy": 0.135,
-        "ndcg": 0.678,
-        "kendallTau": 0.733,
-        "totalHours": 107
+        "gapCoverage": 0.906,
+        "redundancy": 0.24,
+        "ndcg": 0.725,
+        "kendallTau": 1,
+        "totalHours": 94
       },
       "baseline": {
         "system": "Similarity baseline",
         "prereqViolationRate": 0.5,
-        "gapCoverage": 0.696,
-        "redundancy": 0.182,
-        "ndcg": 0.584,
-        "kendallTau": -0.2,
-        "totalHours": 109
+        "gapCoverage": 0.848,
+        "redundancy": 0.339,
+        "ndcg": 0.613,
+        "kendallTau": 0.4,
+        "totalHours": 101
       }
     },
     {
@@ -63,11 +63,11 @@
       "baseline": {
         "system": "Similarity baseline",
         "prereqViolationRate": 0.25,
-        "gapCoverage": 0.347,
-        "redundancy": 0.308,
-        "ndcg": 0.452,
+        "gapCoverage": 0.275,
+        "redundancy": 0.431,
+        "ndcg": 0.375,
         "kendallTau": 1,
-        "totalHours": 113
+        "totalHours": 107
       }
     },
     {
@@ -84,12 +84,12 @@
       },
       "baseline": {
         "system": "Similarity baseline",
-        "prereqViolationRate": 0.833,
-        "gapCoverage": 0.651,
-        "redundancy": 0.324,
-        "ndcg": 0.213,
-        "kendallTau": 1,
-        "totalHours": 80
+        "prereqViolationRate": 0.667,
+        "gapCoverage": 0.694,
+        "redundancy": 0.439,
+        "ndcg": 0.206,
+        "kendallTau": -1,
+        "totalHours": 70
       }
     },
     {
@@ -106,12 +106,12 @@
       },
       "baseline": {
         "system": "Similarity baseline",
-        "prereqViolationRate": 0.5,
-        "gapCoverage": 0.7,
-        "redundancy": 0.174,
-        "ndcg": 0.321,
-        "kendallTau": -0.333,
-        "totalHours": 95
+        "prereqViolationRate": 1,
+        "gapCoverage": 0.538,
+        "redundancy": 0.275,
+        "ndcg": 0.167,
+        "kendallTau": -1,
+        "totalHours": 90
       }
     },
     {
@@ -128,12 +128,12 @@
       },
       "baseline": {
         "system": "Similarity baseline",
-        "prereqViolationRate": 0.889,
-        "gapCoverage": 0.203,
-        "redundancy": 0.147,
-        "ndcg": 0,
-        "kendallTau": 0,
-        "totalHours": 111
+        "prereqViolationRate": 0.667,
+        "gapCoverage": 0.694,
+        "redundancy": 0.136,
+        "ndcg": 0.406,
+        "kendallTau": 0.333,
+        "totalHours": 152
       }
     }
   ],

@@ -30,18 +30,63 @@ if (!pkg?.scripts?.test) process.exit(0);
 // Run vitest's JS entry via node directly — avoids Windows .cmd spawn EINVAL.
 const vitest = path.join(root, "node_modules", "vitest", "vitest.mjs");
 if (!existsSync(vitest)) process.exit(0);
-try {
-  execFileSync(process.execPath, [vitest, "run", "--silent"], {
-    cwd: root,
-    stdio: ["ignore", "pipe", "pipe"],
-    timeout: 300000,
-    windowsHide: true,
-  });
-  process.exit(0);
-} catch (e) {
-  const out = `${e.stdout ?? ""}${e.stderr ?? ""}`;
+
+/**
+ * Vitest must not inherit an instrumentation loader from whatever spawned this
+ * hook. NODE_OPTIONS carrying `--require`/`--import` hooks loads a second copy
+ * of modules into the worker, and the suite then dies at the first `describe()`
+ * with "Cannot read properties of undefined (reading 'config')" — every file
+ * failing at import, zero tests collected, and nothing wrong with the code.
+ */
+const env = { ...process.env };
+delete env.NODE_OPTIONS;
+delete env.NODE_REPL_EXTERNAL_MODULE;
+
+function run() {
+  try {
+    const stdout = execFileSync(process.execPath, [vitest, "run", "--silent"], {
+      cwd: root,
+      env,
+      stdio: ["ignore", "pipe", "pipe"],
+      timeout: 300000,
+      windowsHide: true,
+    }).toString();
+    return { ok: true, out: stdout };
+  } catch (e) {
+    return { ok: false, out: `${e.stdout ?? ""}${e.stderr ?? ""}` };
+  }
+}
+
+/**
+ * Every suite failing to import with no tests collected is the runner falling
+ * over, not a regression. Reporting that as "your tests are failing" sends the
+ * next hour into debugging code that is fine.
+ */
+function looksLikeRunnerFailure(out) {
+  return (
+    /Tests {2}no tests/.test(out) &&
+    /Cannot read properties of undefined \(reading 'config'\)/.test(out)
+  );
+}
+
+let result = run();
+if (!result.ok && looksLikeRunnerFailure(result.out)) {
+  result = run(); // one retry; transient runner failures do not survive it
+}
+
+if (result.ok) process.exit(0);
+
+if (looksLikeRunnerFailure(result.out)) {
   console.error(
-    `Test suite failing — fix before ending the turn:\n${out.slice(-6000)}`,
+    "Vitest failed to start (every suite errored at import, zero tests collected).\n" +
+      "This is the test runner's environment, not the code. Verify with:\n" +
+      "  node node_modules/vitest/vitest.mjs run\n" +
+      `${result.out.slice(-2000)}`,
   );
   process.exit(2);
 }
+
+console.error(
+  `Test suite failing — fix before ending the turn:\n${result.out.slice(-6000)}`,
+);
+process.exit(2);
