@@ -60,10 +60,29 @@ async function embedBatch(
   }
 }
 
+/**
+ * Cohere rejects a request carrying more than 96 texts, so a corpus larger than
+ * that has to be split. This is chunked here rather than in each caller: the
+ * limit is the API's, and a caller that forgets it does not get an error it can
+ * act on — it gets a 400, no dense signal, and results that quietly get worse.
+ */
+const MAX_TEXTS_PER_REQUEST = 90;
+
 export async function embedDocuments(
   texts: string[],
 ): Promise<number[][] | null> {
-  return embedBatch(texts, "search_document");
+  const out: number[][] = [];
+  for (let i = 0; i < texts.length; i += MAX_TEXTS_PER_REQUEST) {
+    const chunk = await embedBatch(
+      texts.slice(i, i + MAX_TEXTS_PER_REQUEST),
+      "search_document",
+    );
+    // Callers match vectors to resources by position, so a partial result would
+    // silently misalign them. All or nothing.
+    if (!chunk) return null;
+    out.push(...chunk);
+  }
+  return out.length > 0 ? out : null;
 }
 
 export async function embedQuery(text: string): Promise<number[] | null> {
