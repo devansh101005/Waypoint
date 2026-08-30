@@ -1,0 +1,168 @@
+{
+  "SCN-01": [
+    {
+      "skillId": "pandas-dataframes",
+      "level": 3
+    },
+    {
+      "skillId": "sql-basics",
+      "level": 3
+    },
+    {
+      "skillId": "descriptive-statistics",
+      "level": 3
+    },
+    {
+      "skillId": "data-visualization-principles",
+      "level": 2
+    }
+  ],
+  "SCN-02": [
+    {
+      "skillId": "sql-aggregation",
+      "level": 4
+    },
+    {
+      "skillId": "sql-joins",
+      "level": 4
+    },
+    {
+      "skillId": "sql-subqueries",
+      "level": 4
+    },
+    {
+      "skillId": "bi-dashboards",
+      "level": 4
+    },
+    {
+      "skillId": "exploratory-data-analysis",
+      "level": 4
+    },
+    {
+      "skillId": "data-storytelling",
+      "level": 4
+    }
+  ],
+  "SCN-03": [
+    {
+      "skillId": "scikit-learn-basics",
+      "level": 4
+    },
+    {
+      "skillId": "supervised-learning",
+      "level": 4
+    },
+    {
+      "skillId": "model-evaluation",
+      "level": 4
+    },
+    {
+      "skillId": "feature-engineering",
+      "level": 4
+    },
+    {
+      "skillId": "ml-deployment",
+      "level": 4
+    }
+  ],
+  "SCN-04": [
+    {
+      "skillId": "sql-basics",
+      "level": 4
+    },
+    {
+      "skillId": "sql-aggregation",
+      "level": 4
+    },
+    {
+      "skillId": "sql-joins",
+      "level": 4
+    },
+    {
+      "skillId": "bi-dashboards",
+      "level": 4
+    }
+  ],
+  "SCN-06": [
+    {
+      "skillId": "bi-dashboards",
+      "level": 3
+    }
+  ],
+  "SCN-07": [
+    {
+      "skillId": "html-fundamentals",
+      "level": 4
+    },
+    {
+      "skillId": "css-fundamentals",
+      "level": 4
+    },
+    {
+      "skillId": "javascript-basics",
+      "level": 4
+    },
+    {
+      "skillId": "react-fundamentals",
+      "level": 4
+    },
+    {
+      "skillId": "responsive-design",
+      "level": 4
+    },
+    {
+      "skillId": "git-version-control",
+      "level": 4
+    }
+  ],
+  "SCN-08": [
+    {
+      "skillId": "javascript-basics",
+      "level": 4
+    },
+    {
+      "skillId": "react-fundamentals",
+      "level": 4
+    },
+    {
+      "skillId": "react-hooks",
+      "level": 4
+    },
+    {
+      "skillId": "frontend-testing",
+      "level": 3
+    },
+    {
+      "skillId": "typescript-basics",
+      "level": 3
+    }
+  ],
+  "SCN-09": [
+    {
+      "skillId": "nodejs-basics",
+      "level": 3
+    },
+    {
+      "skillId": "express-apis",
+      "level": 4
+    },
+    {
+      "skillId": "database-integration",
+      "level": 4
+    },
+    {
+      "skillId": "authentication-basics",
+      "level": 4
+    }
+  ],
+  "SCN-10": [
+    {
+      "skillId": "web-accessibility",
+      "level": 3
+    },
+    {
+      "skillId": "ui-design-basics",
+      "level": 3
+    }
+  ]
+}

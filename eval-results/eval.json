@@ -1,141 +1,231 @@
 {
-  "generatedAt": "2026-08-29T07:51:05.893Z",
+  "generatedAt": "2026-08-30T14:18:06.365Z",
   "mode": "embeddings",
   "corpus": {
-    "skills": 40,
-    "resources": 41
+    "skills": 65,
+    "resources": 95
   },
   "summary": {
     "ours": {
       "system": "Waypoint",
       "prereqViolationRate": 0,
-      "gapCoverage": 0.981,
-      "redundancy": 0.196,
-      "ndcg": 0.831,
-      "kendallTau": 0.689,
-      "totalHours": 90.4
+      "gapCoverage": 0.915,
+      "redundancy": 0.145,
+      "ndcg": 0.382,
+      "kendallTau": 0.452,
+      "totalHours": 69.667
     },
     "baseline": {
       "system": "Similarity baseline",
-      "prereqViolationRate": 0.617,
-      "gapCoverage": 0.61,
-      "redundancy": 0.324,
-      "ndcg": 0.353,
-      "kendallTau": -0.053,
-      "totalHours": 104
+      "prereqViolationRate": 0.452,
+      "gapCoverage": 0.635,
+      "redundancy": 0.369,
+      "ndcg": 0.191,
+      "kendallTau": 0.111,
+      "totalHours": 222.333
     }
   },
   "scenarios": [
     {
       "id": "SCN-01",
-      "persona": "Riya, commerce graduate",
+      "persona": "Meera, first-year college student",
       "ours": {
         "system": "Waypoint",
         "prereqViolationRate": 0,
-        "gapCoverage": 0.906,
-        "redundancy": 0.24,
-        "ndcg": 0.725,
+        "gapCoverage": 1,
+        "redundancy": 0.146,
+        "ndcg": 0.312,
         "kendallTau": 1,
-        "totalHours": 94
+        "totalHours": 60
       },
       "baseline": {
         "system": "Similarity baseline",
         "prereqViolationRate": 0.5,
-        "gapCoverage": 0.848,
-        "redundancy": 0.339,
-        "ndcg": 0.613,
-        "kendallTau": 0.4,
-        "totalHours": 101
+        "gapCoverage": 0.975,
+        "redundancy": 0.239,
+        "ndcg": 0.273,
+        "kendallTau": -0.333,
+        "totalHours": 281
       }
     },
     {
       "id": "SCN-02",
-      "persona": "Arjun, economics postgrad",
+      "persona": "Riya, commerce graduate in an accounts role",
       "ours": {
         "system": "Waypoint",
         "prereqViolationRate": 0,
-        "gapCoverage": 1,
-        "redundancy": 0.143,
-        "ndcg": 0.985,
-        "kendallTau": 1,
-        "totalHours": 94
+        "gapCoverage": 0.72,
+        "redundancy": 0.042,
+        "ndcg": 0.245,
+        "kendallTau": 0.333,
+        "totalHours": 54
       },
       "baseline": {
         "system": "Similarity baseline",
-        "prereqViolationRate": 0.25,
-        "gapCoverage": 0.275,
-        "redundancy": 0.431,
-        "ndcg": 0.375,
-        "kendallTau": 1,
-        "totalHours": 107
+        "prereqViolationRate": 0.333,
+        "gapCoverage": 0.713,
+        "redundancy": 0.394,
+        "ndcg": 0.179,
+        "kendallTau": -0.333,
+        "totalHours": 275
       }
     },
     {
       "id": "SCN-03",
-      "persona": "Meera, CS third year",
+      "persona": "Arjun, backend engineer moving into ML",
       "ours": {
         "system": "Waypoint",
         "prereqViolationRate": 0,
-        "gapCoverage": 1,
-        "redundancy": 0.288,
-        "ndcg": 0.652,
-        "kendallTau": 0.067,
-        "totalHours": 90
+        "gapCoverage": 0.65,
+        "redundancy": 0.3,
+        "ndcg": 0.317,
+        "kendallTau": 0.667,
+        "totalHours": 49
       },
       "baseline": {
         "system": "Similarity baseline",
-        "prereqViolationRate": 0.667,
-        "gapCoverage": 0.694,
-        "redundancy": 0.439,
-        "ndcg": 0.206,
-        "kendallTau": -1,
-        "totalHours": 70
+        "prereqViolationRate": 0.222,
+        "gapCoverage": 0.547,
+        "redundancy": 0.525,
+        "ndcg": 0.184,
+        "kendallTau": 1,
+        "totalHours": 201
       }
     },
     {
       "id": "SCN-04",
-      "persona": "Sunil, operations executive",
+      "persona": "Sana, retail supervisor with a hard deadline",
       "ours": {
         "system": "Waypoint",
         "prereqViolationRate": 0,
         "gapCoverage": 1,
-        "redundancy": 0.256,
-        "ndcg": 0.907,
-        "kendallTau": 0.733,
-        "totalHours": 86
+        "redundancy": 0.268,
+        "ndcg": 0.202,
+        "kendallTau": 1,
+        "totalHours": 73
       },
       "baseline": {
         "system": "Similarity baseline",
         "prereqViolationRate": 1,
-        "gapCoverage": 0.538,
-        "redundancy": 0.275,
-        "ndcg": 0.167,
-        "kendallTau": -1,
-        "totalHours": 90
+        "gapCoverage": 0.212,
+        "redundancy": 0.125,
+        "ndcg": 0.147,
+        "kendallTau": 0,
+        "totalHours": 127
       }
     },
     {
-      "id": "SCN-05",
-      "persona": "Kabir, mechanical engineering student",
+      "id": "SCN-06",
+      "persona": "Farid, operations manager with one specific need",
       "ours": {
         "system": "Waypoint",
         "prereqViolationRate": 0,
         "gapCoverage": 1,
-        "redundancy": 0.054,
-        "ndcg": 0.887,
-        "kendallTau": 0.643,
-        "totalHours": 88
+        "redundancy": 0,
+        "ndcg": 0.139,
+        "kendallTau": 0,
+        "totalHours": 39
       },
       "baseline": {
         "system": "Similarity baseline",
         "prereqViolationRate": 0.667,
-        "gapCoverage": 0.694,
-        "redundancy": 0.136,
-        "ndcg": 0.406,
+        "gapCoverage": 0.625,
+        "redundancy": 0.268,
+        "ndcg": 0.235,
+        "kendallTau": -1,
+        "totalHours": 248
+      }
+    },
+    {
+      "id": "SCN-07",
+      "persona": "Nikhil, mechanical engineering graduate switching to web",
+      "ours": {
+        "system": "Waypoint",
+        "prereqViolationRate": 0,
+        "gapCoverage": 1,
+        "redundancy": 0.246,
+        "ndcg": 0.603,
+        "kendallTau": 0.6,
+        "totalHours": 188
+      },
+      "baseline": {
+        "system": "Similarity baseline",
+        "prereqViolationRate": 0.444,
+        "gapCoverage": 0.635,
+        "redundancy": 0.329,
+        "ndcg": 0.153,
         "kendallTau": 0.333,
-        "totalHours": 152
+        "totalHours": 249
+      }
+    },
+    {
+      "id": "SCN-08",
+      "persona": "Tanvi, self-taught developer stuck at intermediate",
+      "ours": {
+        "system": "Waypoint",
+        "prereqViolationRate": 0,
+        "gapCoverage": 1,
+        "redundancy": 0.1,
+        "ndcg": 0.73,
+        "kendallTau": 0.667,
+        "totalHours": 86
+      },
+      "baseline": {
+        "system": "Similarity baseline",
+        "prereqViolationRate": 0.111,
+        "gapCoverage": 0.473,
+        "redundancy": 0.494,
+        "ndcg": 0.079,
+        "kendallTau": 0,
+        "totalHours": 245
+      }
+    },
+    {
+      "id": "SCN-09",
+      "persona": "Rohan, front-end developer moving to full-stack",
+      "ours": {
+        "system": "Waypoint",
+        "prereqViolationRate": 0,
+        "gapCoverage": 0.865,
+        "redundancy": 0,
+        "ndcg": 0.597,
+        "kendallTau": 0.8,
+        "totalHours": 52
+      },
+      "baseline": {
+        "system": "Similarity baseline",
+        "prereqViolationRate": 0.455,
+        "gapCoverage": 0.532,
+        "redundancy": 0.616,
+        "ndcg": 0.214,
+        "kendallTau": 0.333,
+        "totalHours": 310
+      }
+    },
+    {
+      "id": "SCN-10",
+      "persona": "Priya, marketing associate maintaining the company site",
+      "ours": {
+        "system": "Waypoint",
+        "prereqViolationRate": 0,
+        "gapCoverage": 1,
+        "redundancy": 0.2,
+        "ndcg": 0.295,
+        "kendallTau": -1,
+        "totalHours": 26
+      },
+      "baseline": {
+        "system": "Similarity baseline",
+        "prereqViolationRate": 0.333,
+        "gapCoverage": 1,
+        "redundancy": 0.333,
+        "ndcg": 0.258,
+        "kendallTau": 1,
+        "totalHours": 65
       }
     }
   ],
-  "skipped": []
+  "skipped": [
+    "SCN-05"
+  ]
 }

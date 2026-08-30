@@ -32,6 +32,7 @@ import {
 import { env } from "../src/lib/env";
 import { evaluatePath, macroAverage } from "../src/lib/eval";
 import { computeGap } from "../src/lib/gap";
+import { extractIntake } from "../src/lib/intake";
 import { buildGraph } from "../src/lib/graph";
 import { buildMastery } from "../src/lib/mastery";
 import { planPath } from "../src/lib/planner";
@@ -120,16 +121,81 @@ async function main() {
   }
 
   /**
-   * Goal skills come from the scenario when pre-resolved. Scenarios written by
-   * a non-coder leave that column empty; in the deployed product an LLM
-   * extraction fills it, and until that runs the scenario is skipped rather
-   * than silently scored against a guess.
+   * Goal skills come from the scenario when the sheet supplies them. It usually
+   * does not — asking a non-coder to name skill slugs was never part of the
+   * brief — so they are resolved by running the same intake extraction the
+   * product uses on the learner's own words.
+   *
+   * That is the honest way round: hand-feeding the planner its target would
+   * quietly evaluate a pipeline nobody actually runs. Resolutions are cached to
+   * disk so a re-run costs nothing, and written out in full so the extraction
+   * can be inspected rather than trusted.
    */
-  function goalSkillsFor(scenario: EvalScenario): SkillRef[] | null {
-    const resolved = (scenario.goalSkills ?? []).filter((g) =>
-      graph.has(g.skillId),
-    );
-    return resolved.length > 0 ? resolved : null;
+  const cachePath = path.join(outDir, "resolved-goals.json");
+  let cache: Record<string, SkillRef[]> = {};
+  try {
+    cache = JSON.parse(readFileSync(cachePath, "utf8")) as Record<string, SkillRef[]>;
+  } catch {
+    /* first run */
+  }
+
+  const resolvedBy: Record<string, "sheet" | "cache" | "model"> = {};
+  /**
+   * Scenarios where the intake asked for clarification instead of committing to
+   * a destination. That is correct behaviour on a deliberately vague goal, and
+   * reporting it as a plain "skipped" would read as a failure of the system
+   * rather than a demonstration of it.
+   */
+  const clarified: Record<string, string> = {};
+
+  async function goalSkillsFor(scenario: EvalScenario): Promise<SkillRef[] | null> {
+    const fromSheet = (scenario.goalSkills ?? []).filter((g) => graph.has(g.skillId));
+    if (fromSheet.length > 0) {
+      resolvedBy[scenario.id] = "sheet";
+      return fromSheet;
+    }
+
+    const cached = (cache[scenario.id] ?? []).filter((g) => graph.has(g.skillId));
+    if (cached.length > 0) {
+      resolvedBy[scenario.id] = "cache";
+      return cached;
+    }
+
+    process.stdout.write(`  resolving ${scenario.id} via intake extraction… `);
+    try {
+      const intake = await extractIntake(
+        [
+          {
+            role: "user",
+            content: `${scenario.persona.background}
+
+What I want: ${scenario.goal}`,
+          },
+        ],
+        graph,
+      );
+      if (intake.goalSkills.length === 0) {
+        // Say why. A silent skip here quietly removes a scenario from the
+        // published numbers, which is the last place to be vague.
+        const reasons: string[] = [];
+        if (intake.droppedSkills.length > 0) {
+          reasons.push(`invented slugs dropped: ${intake.droppedSkills.join(", ")}`);
+        }
+        if (intake.followUpQuestion) {
+          clarified[scenario.id] = intake.followUpQuestion;
+          reasons.push(`asked instead: "${intake.followUpQuestion}"`);
+        }
+        console.log(`no goal skills resolved${reasons.length ? ` — ${reasons.join("; ")}` : ""}`);
+        return null;
+      }
+      cache[scenario.id] = intake.goalSkills;
+      resolvedBy[scenario.id] = "model";
+      console.log(intake.goalSkills.map((g) => `${g.skillId}:${g.level}`).join(", "));
+      return intake.goalSkills;
+    } catch (error) {
+      console.log(`failed — ${error instanceof Error ? error.message : error}`);
+      return null;
+    }
   }
 
   const perScenario: Array<{
@@ -140,7 +206,7 @@ async function main() {
   const skipped: string[] = [];
 
   for (const scenario of scenariosResult.rows) {
-    const goalSkills = goalSkillsFor(scenario);
+    const goalSkills = await goalSkillsFor(scenario);
     if (!goalSkills) {
       skipped.push(scenario.id);
       continue;
@@ -197,6 +263,10 @@ async function main() {
     );
     process.exit(1);
   }
+
+  mkdirSync(outDir, { recursive: true });
+  writeFileSync(cachePath, `${JSON.stringify(cache, null, 2)}
+`, "utf8");
 
   const oursAvg = macroAverage(perScenario.map((r) => r.ours));
   const baseAvg = macroAverage(perScenario.map((r) => r.baseline));
@@ -300,9 +370,28 @@ async function main() {
     "- **nDCG / Kendall tau** — agreement with the human expert's chosen resources and ordering.",
   );
 
-  if (skipped.length) {
+  const clarifiedIds = Object.keys(clarified);
+  for (const id of clarifiedIds) {
+    const scenario = scenariosResult.rows.find((s) => s.id === id);
     lines.push(
-      `\n_Skipped ${skipped.length} scenario(s) with unresolved goal skills: ${skipped.join(", ")}._`,
+      `
+**${id} was not scored, and that is the intended behaviour.** Its goal — ` +
+        `"${scenario?.goal ?? ""}" — is too vague to compile into a destination, so the intake ` +
+        `asked a clarifying question rather than inventing one:
+
+> ${clarified[id]}
+
+` +
+        `A system that guessed here would score on this scenario and be wrong in a way nobody ` +
+        `could check. There is nothing to compare against an expert path until the learner answers.`,
+    );
+  }
+
+  const unexplained = skipped.filter((id) => !clarified[id]);
+  if (unexplained.length) {
+    lines.push(
+      `
+_Skipped ${unexplained.length} scenario(s) with unresolved goal skills: ${unexplained.join(", ")}._`,
     );
   }
   lines.push(
