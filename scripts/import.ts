@@ -121,7 +121,21 @@ async function main() {
 
   console.log("\nWriting to database…");
   await db.transaction(async (tx) => {
-    // Replace the corpus wholesale. Learner data is untouched.
+    /**
+     * Replacing the corpus invalidates anything that points into it.
+     *
+     * Saved paths reference resource ids by foreign key, so they physically
+     * cannot survive a swap — and a path built from resources that no longer
+     * exist is not worth keeping. Mastery is different: a skill slug present in
+     * both corpora describes the same thing, so it is carried across rather
+     * than lost to the cascade. Learners and their event history are untouched.
+     */
+    const keptMastery = await tx.select().from(schema.learnerSkills);
+    const pathRows = await tx.select({ id: schema.paths.id }).from(schema.paths);
+    const pathCount = pathRows.length;
+
+    await tx.delete(schema.pathItems);
+    await tx.delete(schema.paths);
     await tx.delete(schema.resourceSkills);
     await tx.delete(schema.evalScenarios);
     await tx.delete(schema.resources);
@@ -172,6 +186,29 @@ async function main() {
       })),
     ]);
     if (links.length) await tx.insert(schema.resourceSkills).values(links);
+
+    // Carry mastery across for every skill that still exists.
+    const survivingSkills = new Set(skillsResult.rows.map((s) => s.id));
+    const carried = keptMastery.filter((row) =>
+      survivingSkills.has(row.skillId),
+    );
+    if (carried.length > 0) {
+      await tx.insert(schema.learnerSkills).values(
+        carried.map((row) => ({
+          learnerId: row.learnerId,
+          skillId: row.skillId,
+          mastery: row.mastery,
+          source: row.source,
+        })),
+      );
+    }
+    if (keptMastery.length > 0 || pathCount > 0) {
+      console.log(
+        `  carried ${carried.length}/${keptMastery.length} mastery entries across; ` +
+          `discarded ${pathCount} saved path(s) built on the old corpus`,
+      );
+    }
+
 
     if (scenariosResult.rows.length) {
       await tx.insert(schema.evalScenarios).values(
