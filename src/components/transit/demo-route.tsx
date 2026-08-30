@@ -25,6 +25,11 @@ import { INK, LINE, LINE_INK, ON_INK, PAPER } from "./theme";
  * show the same two routes without ever showing the relationship between them.
  */
 
+interface RouteStats {
+  violations: number;
+  reachesGoal: boolean;
+}
+
 export interface DemoRouteProps {
   learner: string;
   before: RouteStop[];
@@ -32,6 +37,8 @@ export interface DemoRouteProps {
   struggledWith: string;
   diffSummary: string;
   addedIds: string[];
+  beforeStats: RouteStats;
+  afterStats: RouteStats;
 }
 
 const LEAVE_MS = 280;
@@ -53,6 +60,8 @@ export function DemoRoute({
   struggledWith,
   diffSummary,
   addedIds,
+  beforeStats,
+  afterStats,
 }: DemoRouteProps) {
   const [adapted, setAdapted] = useState(false);
   const [leavingIds, setLeavingIds] = useState<Set<string>>(new Set());
@@ -151,6 +160,7 @@ export function DemoRoute({
   // During beat one `adapted` has not flipped yet, so this is still the outgoing
   // route — dropped stops included, which is what lets them animate away.
   const stops = adapted ? after : before;
+  const stats = adapted ? afterStats : beforeStats;
   const hours = Math.round(
     stops.reduce((sum, s) => sum + s.resource.estHours, 0),
   );
@@ -205,8 +215,12 @@ export function DemoRoute({
         {[
           { k: "STOPS", v: stops.length, tick: true },
           { k: "HOURS", v: hours, accent: true, tick: true },
-          { k: "VIOLATIONS", v: 0, tick: false },
-          { k: "REACHES GOAL", v: "YES", tick: false },
+          { k: "VIOLATIONS", v: stats.violations, tick: true },
+          {
+            k: "REACHES GOAL",
+            v: stats.reachesGoal ? "YES" : "NO",
+            tick: false,
+          },
         ].map((cell) => (
           <div key={cell.k} className="px-4 py-3" style={{ background: INK }}>
             <dt
