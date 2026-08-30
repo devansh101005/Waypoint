@@ -115,6 +115,35 @@ if (shortfalls.length > 0) {
   console.log("   ✔ every required level is reachable from the corpus");
 }
 
+// ---------- 2b. how high can each skill actually be taken? ----------
+
+/**
+ * A goal is normally asked for at level 4 ("employable"). A skill whose best
+ * resource stops at level 2 can never satisfy that, so the planner returns a
+ * partial route and the learner is told the goal is out of reach — correct, but
+ * it looks like a bug and it is really a gap in the shelf.
+ */
+console.log("\n2b. LEVEL CEILINGS");
+const lowCeiling = [...taughtAt.entries()]
+  .filter(([, level]) => level < 4)
+  .map(([id, level]) => ({ id, level, name: graph.name(id) }))
+  .sort((a, b) => a.level - b.level);
+
+if (lowCeiling.length === 0) {
+  console.log("   ✔ every skill can be taken to level 4 or above");
+} else {
+  console.log(
+    `   ⚠ ${lowCeiling.length} skill(s) top out below level 4 — a goal asking for 4 there cannot complete:`,
+  );
+  for (const entry of lowCeiling.slice(0, 15)) {
+    console.log(`       ${entry.id.padEnd(30)} best level ${entry.level}  (${entry.name})`);
+  }
+  if (lowCeiling.length > 15) console.log(`       …and ${lowCeiling.length - 15} more`);
+  notes.push(
+    `${lowCeiling.length} skills cannot reach level 4 — add a deeper resource, or expect partial routes`,
+  );
+}
+
 // ---------- 3. do the experts' own paths obey prerequisites? ----------
 
 console.log("\n3. EXPERT PATHS");

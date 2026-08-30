@@ -41,7 +41,7 @@ if (!goalArg || goalArg.startsWith("--")) {
   process.exit(1);
 }
 
-const dir = path.join("data", "bootstrap");
+const dir = path.join("data", "live");
 const skillsResult = parseSkills(
   readFileSync(path.join(dir, "skills.csv"), "utf8"),
 );
