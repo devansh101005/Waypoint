@@ -248,8 +248,27 @@ body {
 h1,
 h2,
 h3,
+/*
+  Archivo carries no optical-size axis, so the compensation is made by hand.
+  Tracking in `em` already scales with the type, but linearly — and display type
+  needs to close up faster than that as it grows, or sidebearings that read
+  correctly at body size look slack at 48px. The clamp tightens the larger end
+  without over-tightening the small.
+
+  `text-wrap: balance` is the other half: these headings are set in two or three
+  words per line, where the default greedy break routinely leaves one word
+  stranded on the last line.
+*/
 .wp-display {
   font-family: var(--font-display), system-ui, sans-serif;
+  font-optical-sizing: auto;
+  letter-spacing: clamp(-0.032em, -0.014em - 0.06vw, -0.012em);
+  text-wrap: balance;
+}
+
+/* Section rules: printed matter divides with a hard rule, not with whitespace. */
+.wp-rule {
+  border-top: 4px solid #16161a;
 }
 
 /* Metrics, hours and levels must not reflow while a number counts up. */

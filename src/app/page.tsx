@@ -119,7 +119,7 @@ export default async function Home() {
                 LEARNING PATH PLANNER · PROTOTYPE ROUND
               </p>
               <h1
-                className="text-[clamp(2.5rem,6.2vw,4.6rem)] leading-[0.93] font-extrabold tracking-[-0.03em]"
+                className="wp-display text-[clamp(2.5rem,6.2vw,4.6rem)] leading-[0.93] font-extrabold"
                 style={{ textWrap: "balance" }}
               >
                 EVERY COURSE
@@ -224,7 +224,7 @@ export default async function Home() {
         </section>
 
         <section className="mx-auto max-w-6xl px-6 py-20">
-          <h2 className="mb-3 text-[clamp(1.8rem,4vw,3rem)] leading-none font-extrabold tracking-[-0.02em]">
+          <h2 className="wp-display mb-3 text-[clamp(1.8rem,4vw,3rem)] leading-none font-extrabold">
             HOW THE LINE IS BUILT
           </h2>
           <p className="mb-12 max-w-2xl text-base leading-relaxed">
@@ -291,7 +291,7 @@ export default async function Home() {
           <section className="border-t-4 py-20" style={{ borderColor: INK }}>
             <div className="mx-auto max-w-6xl px-6">
               <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
-                <h2 className="text-[clamp(1.8rem,4vw,3rem)] leading-none font-extrabold tracking-[-0.02em]">
+                <h2 className="wp-display text-[clamp(1.8rem,4vw,3rem)] leading-none font-extrabold">
                   MEASURED, NOT CLAIMED
                 </h2>
                 <p className="max-w-md text-sm leading-relaxed">
