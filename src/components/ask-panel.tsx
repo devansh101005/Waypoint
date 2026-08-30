@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { INK, LINE, LINE_INK, PAPER } from "@/components/transit/theme";
 
 /**
- * Questions about the plan on screen.
+ * Questions about the route on screen.
  *
- * Deliberately narrow: this answers from the learner's own route, not from the
+ * Deliberately narrow: this answers from the learner's own plan, not from the
  * whole catalogue and not from the model's general knowledge. When an answer
- * strays outside the plan the server says so, and we mark it, because an
- * answer the learner cannot check against what is in front of them is worth
- * less than one they can.
+ * strays outside the plan the server says so and it is marked, because an
+ * answer nobody can check against what is in front of them is worth less than
+ * one they can.
  */
 
 interface Exchange {
@@ -62,26 +63,33 @@ export function AskPanel({ pathId }: { pathId: string }) {
   }
 
   return (
-    <section aria-labelledby="ask" className="mt-10">
+    <section aria-labelledby="ask" className="mt-12">
       <h2
         id="ask"
-        className="mb-3 font-[family-name:var(--font-display)] text-xl font-semibold"
+        className="wp-display mb-5 text-[clamp(1.3rem,3vw,1.9rem)] font-extrabold tracking-[-0.01em]"
       >
-        Ask about your route
+        ASK ABOUT YOUR ROUTE
       </h2>
 
       {history.length > 0 && (
-        <ul className="mb-4 space-y-4" aria-live="polite">
+        <ul className="mb-5 space-y-5" aria-live="polite">
           {history.map((exchange, i) => (
             <li key={i}>
-              <p className="text-ink-muted text-sm">{exchange.question}</p>
-              <p className="border-route mt-1 border-l-2 py-1 pl-4 text-sm">
+              <p className="font-mono text-[0.72rem] tracking-[0.1em] opacity-70">
+                {exchange.question.toUpperCase()}
+              </p>
+              <p
+                className="mt-1.5 py-1 pl-4 text-sm leading-relaxed"
+                style={{ borderLeft: `3px solid ${LINE.data}` }}
+              >
                 {exchange.answer}
               </p>
               {!exchange.grounded && (
-                <p className="text-ink-muted mt-1 pl-4 text-xs italic">
-                  This answer mentions something outside your plan — treat it
-                  with care.
+                <p
+                  className="mt-1 pl-4 font-mono text-[0.68rem]"
+                  style={{ color: LINE_INK.accent }}
+                >
+                  ⚠ MENTIONS SOMETHING OUTSIDE YOUR PLAN — TREAT WITH CARE
                 </p>
               )}
             </li>
@@ -94,7 +102,7 @@ export function AskPanel({ pathId }: { pathId: string }) {
           e.preventDefault();
           void ask(question);
         }}
-        className="flex gap-2"
+        className="flex flex-wrap gap-2"
       >
         <label htmlFor="question" className="sr-only">
           Your question about this route
@@ -105,14 +113,27 @@ export function AskPanel({ pathId }: { pathId: string }) {
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Why is this step before that one?"
           disabled={asking}
-          className="border-hairline bg-paper focus-visible:ring-ring min-w-0 flex-1 rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+          className="min-w-0 flex-1 border-2 px-3 py-2 font-mono text-sm focus-visible:outline-2 focus-visible:outline-offset-2"
+          style={{
+            borderColor: INK,
+            background: PAPER,
+            outlineColor: LINE.data,
+          }}
         />
         <button
           type="submit"
           disabled={asking || !question.trim()}
-          className="border-hairline hover:border-route focus-visible:ring-ring rounded-md border px-4 py-2 text-sm disabled:opacity-50 focus-visible:ring-2 focus-visible:outline-none"
+          className="wp-press px-5 py-2 text-sm font-bold tracking-[0.14em] disabled:opacity-45"
+          style={{ background: INK, color: PAPER }}
         >
-          {asking ? "Thinking…" : "Ask"}
+          {asking ? (
+            <>
+              THINKING
+              <span className="wp-ellipsis" />
+            </>
+          ) : (
+            "ASK"
+          )}
         </button>
       </form>
 
@@ -123,9 +144,10 @@ export function AskPanel({ pathId }: { pathId: string }) {
               <button
                 type="button"
                 onClick={() => void ask(suggestion)}
-                className="border-hairline hover:border-route text-ink-muted focus-visible:ring-ring rounded-full border px-3 py-1 text-xs focus-visible:ring-2 focus-visible:outline-none"
+                className="border-2 px-3 py-1 font-mono text-[0.65rem] tracking-[0.1em] transition-colors hover:opacity-70"
+                style={{ borderColor: "rgba(22,22,26,0.28)", color: INK }}
               >
-                {suggestion}
+                {suggestion.toUpperCase()}
               </button>
             </li>
           ))}
@@ -133,7 +155,11 @@ export function AskPanel({ pathId }: { pathId: string }) {
       )}
 
       {error && (
-        <p role="alert" className="text-destructive mt-3 text-sm">
+        <p
+          role="alert"
+          className="mt-3 text-sm"
+          style={{ color: LINE_INK.data }}
+        >
           {error}
         </p>
       )}

@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { NetworkMap } from "@/components/preview/network-map";
-import { RouteBoard } from "@/components/preview/route-board";
+import { CountUp } from "@/components/transit/count-up";
+import { DemoRoute } from "@/components/transit/demo-route";
+import { NetworkMap } from "@/components/transit/network-map";
+import { buildDemoRoute } from "@/lib/demo-route";
 import { asPercent, asScore, getSiteStats } from "@/lib/site-stats";
 
 /**
@@ -22,7 +24,7 @@ const GREEN = "#00734A";
 const AMBER_INK = "#8A5B00";
 
 export default async function Home() {
-  const stats = await getSiteStats();
+  const [stats, demo] = await Promise.all([getSiteStats(), buildDemoRoute()]);
   const { corpus, evaluation, tests } = stats;
 
   // Only figures with a source behind them reach the page.
@@ -39,25 +41,29 @@ export default async function Home() {
   const metrics = evaluation
     ? [
         {
-          value: asPercent(evaluation.ours.prereqViolationRate),
+          raw: evaluation.ours.prereqViolationRate,
+          format: "percent" as const,
           against: asPercent(evaluation.baseline.prereqViolationRate),
           label: "PREREQUISITE VIOLATIONS",
           ink: RED_INK,
         },
         {
-          value: asPercent(evaluation.ours.gapCoverage),
+          raw: evaluation.ours.gapCoverage,
+          format: "percent" as const,
           against: asPercent(evaluation.baseline.gapCoverage),
           label: "SKILL GAP CLOSED",
           ink: BLUE,
         },
         {
-          value: asScore(evaluation.ours.ndcg),
+          raw: evaluation.ours.ndcg,
+          format: "score" as const,
           against: asScore(evaluation.baseline.ndcg),
           label: "AGREEMENT WITH EXPERT",
           ink: GREEN,
         },
         {
-          value: asScore(evaluation.ours.kendallTau),
+          raw: evaluation.ours.kendallTau,
+          format: "score" as const,
           against: asScore(evaluation.baseline.kendallTau),
           label: "ORDERING CORRELATION",
           ink: AMBER_INK,
@@ -207,7 +213,13 @@ export default async function Home() {
         >
           <Halftone />
           <div className="relative mx-auto max-w-6xl px-6">
-            <RouteBoard />
+            {demo ? (
+              <DemoRoute {...demo} />
+            ) : (
+              <p className="font-mono text-sm" style={{ color: PAPER }}>
+                No corpus loaded, so there is no example route to show.
+              </p>
+            )}
           </div>
         </section>
 
@@ -301,20 +313,18 @@ export default async function Home() {
                     className="wp-card p-7"
                     style={{ background: PAPER }}
                   >
-                    <p
+                    <CountUp
+                      value={stat.raw}
+                      format={stat.format}
                       className="font-mono text-[clamp(2.4rem,5vw,3.4rem)] leading-none font-extrabold tracking-[-0.03em] tabular-nums"
                       style={{ color: stat.ink }}
                     >
-                      {stat.value}
-                    </p>
+                      <span className="mt-1 block font-mono text-[0.75rem] tabular-nums opacity-70">
+                        similarity search: {stat.against}
+                      </span>
+                    </CountUp>
                     <p className="mt-3 text-[0.7rem] font-bold tracking-[0.16em]">
                       {stat.label}
-                    </p>
-                    <p
-                      className="mt-1 font-mono text-[0.75rem] tabular-nums"
-                      style={{ opacity: 0.62 }}
-                    >
-                      similarity search: {stat.against}
                     </p>
                   </div>
                 ))}

@@ -2,14 +2,18 @@
 
 import { use, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { SkillMeter } from "@/components/skill-meter";
+import { ReadingStrip, TransitBar } from "@/components/transit/chrome";
+import { SkillLine } from "@/components/transit/skill-line";
+import { INK, LINE, LINE_INK, PAPER } from "@/components/transit/theme";
 import type { Reasons } from "@/lib/types";
 
 /**
- * The learner's standing at a glance: how far along the route they are, what
- * their skills look like now, which milestones are ahead, and the single next
- * thing to do. Everything here is derived from the same plan the route view
- * shows, so the two can never disagree.
+ * Where the learner stands, drawn as position on a line.
+ *
+ * Everything here comes from the same plan the route view renders, so the two
+ * can never disagree. Progress is shown as stations passed rather than as a
+ * percentage: the underlying data is a sequence of discrete stops, and a ring
+ * chart would be inventing a continuous quantity that does not exist.
  */
 
 interface Progress {
@@ -38,7 +42,6 @@ interface Progress {
     reasons: Reasons;
   } | null;
   activity: Array<{ type: string; resourceId: string | null; at: string }>;
-  error?: string;
 }
 
 export default function DashboardPage({
@@ -76,43 +79,36 @@ export default function DashboardPage({
 
   const goalSkills = data?.skills.filter((s) => s.isGoal) ?? [];
   const supporting = data?.skills.filter((s) => !s.isGoal && s.level > 0) ?? [];
-  const goalsReached = goalSkills.filter(
+  const reached = goalSkills.filter(
     (s) => s.targetLevel !== null && s.level >= s.targetLevel,
   ).length;
 
   return (
-    <main className="relative min-h-screen">
-      <div
-        aria-hidden="true"
-        className="survey-ground pointer-events-none absolute inset-0 opacity-[0.18]"
-      />
+    <div className="min-h-screen" style={{ background: PAPER, color: INK }}>
+      <TransitBar line="YOUR POSITION" />
 
-      <div className="relative mx-auto max-w-3xl px-6 py-12">
-        <header className="mb-8">
-          <Link
-            href="/"
-            className="text-ink-muted hover:text-ink text-xs tracking-[0.2em] uppercase"
-          >
-            Waypoint
-          </Link>
-          <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl leading-tight font-semibold text-balance">
-            Where you stand
-          </h1>
-          {data?.goalSummary && (
-            <p className="text-ink-muted mt-2 text-pretty">
-              {data.goalSummary}
-            </p>
-          )}
-        </header>
+      <main className="mx-auto max-w-4xl px-6 py-12">
+        <h1 className="wp-display text-[clamp(2rem,5vw,3.2rem)] leading-[0.95] font-extrabold tracking-[-0.02em]">
+          WHERE YOU STAND
+        </h1>
+        {data?.goalSummary && (
+          <p className="mt-4 max-w-2xl leading-relaxed">{data.goalSummary}</p>
+        )}
 
         {status === "loading" && (
-          <p className="text-ink-muted text-sm">Loading your progress…</p>
+          <p className="mt-8 font-mono text-sm">
+            LOADING YOUR POSITION
+            <span className="wp-ellipsis" />
+          </p>
         )}
 
         {status === "missing" && (
-          <p className="border-hairline rounded-md border border-dashed p-6 text-sm">
-            No learner with that id. This happens if the server restarted —
-            learner state is held in memory unless a database is configured.{" "}
+          <p
+            className="mt-8 border-2 border-dashed p-6 text-sm"
+            style={{ borderColor: INK }}
+          >
+            No learner with that id. This happens after a restart when no
+            database is configured.{" "}
             <Link href="/start" className="underline underline-offset-4">
               Start a new plan
             </Link>
@@ -121,7 +117,11 @@ export default function DashboardPage({
         )}
 
         {status === "error" && (
-          <p role="alert" className="text-destructive text-sm">
+          <p
+            role="alert"
+            className="mt-8 text-sm"
+            style={{ color: LINE_INK.data }}
+          >
             Could not load your progress.{" "}
             <button
               type="button"
@@ -134,51 +134,64 @@ export default function DashboardPage({
         )}
 
         {status === "ready" && data && (
-          <div className="space-y-10">
+          <div className="mt-8 space-y-12">
             <section aria-labelledby="summary">
               <h2 id="summary" className="sr-only">
                 Summary
               </h2>
-              <dl className="border-hairline flex flex-wrap gap-x-10 gap-y-4 border-y py-4">
-                <Stat
-                  label="Goals reached"
-                  value={`${goalsReached}/${goalSkills.length}`}
-                />
-                <Stat label="Steps on route" value={String(data.totalSteps)} />
-                <Stat label="Hours to go" value={String(data.totalHours)} />
-                <Stat
-                  label="Milestones"
-                  value={String(data.milestones.length)}
-                />
-              </dl>
+              <ReadingStrip
+                readings={[
+                  {
+                    label: "DESTINATIONS REACHED",
+                    value: `${reached}/${goalSkills.length}`,
+                  },
+                  { label: "STOPS AHEAD", value: String(data.totalSteps) },
+                  {
+                    label: "HOURS TO GO",
+                    value: String(data.totalHours),
+                    accent: true,
+                  },
+                  {
+                    label: "INTERCHANGES",
+                    value: String(data.milestones.length),
+                  },
+                ]}
+              />
             </section>
 
             {data.nextAction && (
               <section aria-labelledby="next">
                 <h2
                   id="next"
-                  className="mb-3 font-[family-name:var(--font-display)] text-xl font-semibold"
+                  className="wp-display mb-4 text-[clamp(1.3rem,3vw,1.9rem)] font-extrabold tracking-[-0.01em]"
                 >
-                  Do this next
+                  NEXT STOP
                 </h2>
-                <div className="border-route bg-accent/30 rounded-r-md border-l-2 p-4">
-                  <p className="font-[family-name:var(--font-display)] text-lg font-semibold">
+                <div
+                  className="p-5"
+                  style={{
+                    borderLeft: `6px solid ${LINE.data}`,
+                    background: "rgba(22,22,26,0.03)",
+                  }}
+                >
+                  <p className="wp-display text-xl font-bold uppercase">
                     {data.nextAction.resource.title}
                   </p>
-                  <p className="text-ink-muted mt-0.5 font-mono text-xs">
+                  <p className="mt-1 font-mono text-[0.75rem] tabular-nums opacity-70">
                     {data.nextAction.resource.provider} ·{" "}
                     {data.nextAction.resource.estHours}h
                   </p>
-                  <p className="mt-2 text-sm">
-                    {whySentence(data.nextAction.reasons)}
+                  <p className="mt-3 text-sm leading-relaxed">
+                    {why(data.nextAction.reasons)}
                   </p>
                   <a
                     href={data.nextAction.resource.url}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="text-route-ink focus-visible:ring-ring mt-3 inline-block text-sm underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                    className="mt-4 inline-block font-mono text-[0.7rem] font-bold tracking-[0.14em] underline underline-offset-4"
+                    style={{ color: LINE_INK.data }}
                   >
-                    Open it
+                    OPEN IT ↗
                   </a>
                 </div>
               </section>
@@ -187,37 +200,45 @@ export default function DashboardPage({
             <section aria-labelledby="skills">
               <h2
                 id="skills"
-                className="mb-3 font-[family-name:var(--font-display)] text-xl font-semibold"
+                className="wp-display mb-5 text-[clamp(1.3rem,3vw,1.9rem)] font-extrabold tracking-[-0.01em]"
               >
-                Skill development
+                SKILL DEVELOPMENT
               </h2>
+
               {goalSkills.length > 0 && (
                 <>
-                  <p className="text-ink-muted mb-1 text-xs tracking-wide uppercase">
-                    Destination
+                  <p className="mb-1 font-mono text-[0.66rem] font-bold tracking-[0.18em] opacity-70">
+                    DESTINATION
                   </p>
-                  <ul className="border-hairline mb-5 divide-y">
+                  <ul
+                    className="mb-7 divide-y"
+                    style={{ borderColor: "rgba(22,22,26,0.14)" }}
+                  >
                     {goalSkills.map((s) => (
-                      <SkillMeter key={s.skillId} {...s} />
+                      <SkillLine key={s.skillId} {...s} />
                     ))}
                   </ul>
                 </>
               )}
+
               {supporting.length > 0 ? (
                 <>
-                  <p className="text-ink-muted mb-1 text-xs tracking-wide uppercase">
-                    Picked up along the way
+                  <p className="mb-1 font-mono text-[0.66rem] font-bold tracking-[0.18em] opacity-70">
+                    STATIONS PASSED ALONG THE WAY
                   </p>
-                  <ul className="border-hairline divide-y">
+                  <ul
+                    className="divide-y"
+                    style={{ borderColor: "rgba(22,22,26,0.14)" }}
+                  >
                     {supporting.map((s) => (
-                      <SkillMeter key={s.skillId} {...s} />
+                      <SkillLine key={s.skillId} {...s} />
                     ))}
                   </ul>
                 </>
               ) : (
-                <p className="text-ink-muted text-sm">
-                  Nothing recorded yet. Mark a step finished on your route and
-                  it shows up here.
+                <p className="text-sm opacity-70">
+                  Nothing recorded yet. Mark a stop finished on your route and
+                  it appears here.
                 </p>
               )}
             </section>
@@ -226,23 +247,31 @@ export default function DashboardPage({
               <section aria-labelledby="milestones">
                 <h2
                   id="milestones"
-                  className="mb-3 font-[family-name:var(--font-display)] text-xl font-semibold"
+                  className="wp-display mb-4 text-[clamp(1.3rem,3vw,1.9rem)] font-extrabold tracking-[-0.01em]"
                 >
-                  Milestones ahead
+                  INTERCHANGES AHEAD
                 </h2>
-                <ol className="space-y-2">
+                <ol className="space-y-3">
                   {data.milestones.map((m) => (
                     <li
                       key={m.position}
-                      className="flex items-center gap-3 text-sm"
+                      className="flex items-center gap-4 text-sm"
                     >
                       <span
                         aria-hidden="true"
-                        className="border-route-ink size-2.5 rotate-45 border"
+                        className="shrink-0"
+                        style={{
+                          width: 13,
+                          height: 13,
+                          transform: "rotate(45deg)",
+                          border: `3px solid ${LINE_INK.data}`,
+                        }}
                       />
-                      <span>{m.label.replace(/^Milestone:\s*/i, "")}</span>
-                      <span className="text-ink-muted ml-auto font-mono text-xs">
-                        step {m.position}
+                      <span className="wp-display font-bold uppercase">
+                        {m.label.replace(/^Milestone:\s*/i, "")}
+                      </span>
+                      <span className="ml-auto font-mono text-xs tabular-nums opacity-65">
+                        STOP {m.position}
                       </span>
                     </li>
                   ))}
@@ -254,18 +283,24 @@ export default function DashboardPage({
               <section aria-labelledby="activity">
                 <h2
                   id="activity"
-                  className="mb-3 font-[family-name:var(--font-display)] text-xl font-semibold"
+                  className="wp-display mb-4 text-[clamp(1.3rem,3vw,1.9rem)] font-extrabold tracking-[-0.01em]"
                 >
-                  Recent activity
+                  SERVICE LOG
                 </h2>
-                <ul className="text-ink-muted space-y-1.5 text-sm">
+                <ul className="space-y-2">
                   {data.activity.map((event, i) => (
-                    <li key={i} className="flex gap-3">
-                      <span className="text-ink">{verb(event.type)}</span>
-                      <span className="font-mono text-xs">
-                        {event.resourceId}
+                    <li key={i} className="flex gap-4 font-mono text-[0.75rem]">
+                      <span
+                        className="font-bold tracking-[0.1em]"
+                        style={{
+                          color:
+                            event.type === "struggled" ? LINE_INK.data : INK,
+                        }}
+                      >
+                        {verb(event.type)}
                       </span>
-                      <span className="ml-auto font-mono text-xs">
+                      <span className="opacity-70">{event.resourceId}</span>
+                      <span className="ml-auto tabular-nums opacity-70">
                         {new Date(event.at).toLocaleTimeString("en-IN", {
                           hour: "2-digit",
                           minute: "2-digit",
@@ -278,25 +313,12 @@ export default function DashboardPage({
             )}
           </div>
         )}
-      </div>
-    </main>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <dt className="text-ink-muted text-xs tracking-wide uppercase">
-        {label}
-      </dt>
-      <dd className="font-[family-name:var(--font-display)] text-2xl font-semibold">
-        {value}
-      </dd>
+      </main>
     </div>
   );
 }
 
-function whySentence(reasons: Reasons): string {
+function why(reasons: Reasons): string {
   const covers = reasons.coversGapSkills;
   if (covers.length === 0) return "Consolidates what you have already covered.";
   const names = covers.map((c) => c.name);
@@ -304,12 +326,12 @@ function whySentence(reasons: Reasons): string {
     names.length === 1
       ? names[0]
       : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
-  return `Builds ${list} — the next thing your goal depends on.`;
+  return `Builds ${list} — the next thing your destination depends on.`;
 }
 
 function verb(type: string): string {
-  if (type === "done") return "Finished";
-  if (type === "struggled") return "Struggled with";
-  if (type === "skipped") return "Skipped";
-  return type;
+  if (type === "done") return "FINISHED";
+  if (type === "struggled") return "STRUGGLED";
+  if (type === "skipped") return "SKIPPED";
+  return type.toUpperCase();
 }

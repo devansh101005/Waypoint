@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AskPanel } from "@/components/ask-panel";
-import { PathRoute, type RouteItem } from "@/components/path-route";
+import { ReadingStrip, TransitBar } from "@/components/transit/chrome";
+import { TransitRoute, type RouteStop } from "@/components/transit/route";
+import { INK, LINE, LINE_INK, PAPER } from "@/components/transit/theme";
 import { quickMatch, type MatchableSkill } from "@/lib/quickmatch";
 import type { PathDiff } from "@/lib/types";
 
@@ -44,7 +46,7 @@ interface PathResponse {
   learnerId: string;
   complete: boolean;
   totalHours: number;
-  items: RouteItem[];
+  items: RouteStop[];
   gap: Array<{
     skillId: string;
     name: string;
@@ -235,51 +237,35 @@ export default function StartPage() {
   const changed = new Set(path?.diff?.added.map((a) => a.resourceId) ?? []);
 
   return (
-    <main className="relative min-h-screen">
-      <div
-        aria-hidden="true"
-        className="survey-ground pointer-events-none absolute inset-0 opacity-[0.18]"
-      />
+    <div className="min-h-screen" style={{ background: PAPER, color: INK }}>
+      <TransitBar line="INTAKE" />
 
-      <div className="relative mx-auto max-w-5xl px-6 py-12">
-        <header className="mb-8">
-          <Link
-            href="/"
-            className="text-ink-muted hover:text-ink text-xs tracking-[0.2em] uppercase"
-          >
-            Waypoint
-          </Link>
-          <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl leading-tight font-semibold text-balance">
-            Tell me where you want to get to
-          </h1>
-        </header>
+      <main className="mx-auto max-w-5xl px-6 py-12">
+        <h1 className="wp-display text-[clamp(2rem,5vw,3.2rem)] leading-[0.95] font-extrabold tracking-[-0.02em]">
+          TELL ME WHERE
+          <br />
+          YOU WANT TO GET TO
+        </h1>
 
-        <div className="grid gap-8 lg:grid-cols-[1fr_20rem]">
-          {/* conversation */}
+        <div className="mt-9 grid gap-8 lg:grid-cols-[1fr_19rem]">
           <section aria-labelledby="conversation" className="min-w-0">
             <h2 id="conversation" className="sr-only">
               Conversation
             </h2>
 
-            <div className="border-hairline bg-paper-raised rounded-lg border">
-              <div
-                className="max-h-[26rem] space-y-4 overflow-y-auto p-5"
-                aria-live="polite"
-              >
+            <div className="border-[3px]" style={{ borderColor: INK }}>
+              <div className="max-h-[24rem] space-y-4 overflow-y-auto p-5" aria-live="polite">
                 {messages.map((message, i) => (
                   <div
                     key={i}
-                    className={
-                      message.role === "user"
-                        ? "flex justify-end"
-                        : "flex justify-start"
-                    }
+                    className={message.role === "user" ? "flex justify-end" : "flex justify-start"}
                   >
                     <p
-                      className={
+                      className="max-w-[88%] px-3.5 py-2.5 text-sm leading-relaxed"
+                      style={
                         message.role === "user"
-                          ? "bg-secondary max-w-[85%] rounded-lg rounded-br-sm px-3.5 py-2.5 text-sm"
-                          : "border-hairline max-w-[90%] rounded-lg rounded-bl-sm border px-3.5 py-2.5 text-sm"
+                          ? { background: INK, color: PAPER }
+                          : { border: `2px solid ${INK}` }
                       }
                     >
                       {message.content}
@@ -287,21 +273,25 @@ export default function StartPage() {
                   </div>
                 ))}
                 {thinking && (
-                  <p className="text-ink-muted text-sm italic">
+                  <p
+                    className="font-mono text-sm tracking-[0.08em]"
+                    style={{ color: LINE_INK.data }}
+                  >
                     {
                       [
-                        "Reading that…",
-                        "Matching it against the skill graph…",
-                        "Working out which skills that really needs…",
-                        "Almost there — resolving prerequisites…",
+                        "READING THAT",
+                        "MATCHING AGAINST THE NETWORK",
+                        "WORKING OUT WHICH SKILLS THAT NEEDS",
+                        "RESOLVING PREREQUISITES",
                       ][stage]
                     }
+                    <span className="wp-ellipsis" />
                   </p>
                 )}
                 <div ref={endRef} />
               </div>
 
-              <div className="border-hairline border-t p-3">
+              <div className="border-t-[3px] p-3" style={{ borderColor: INK }}>
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -318,24 +308,26 @@ export default function StartPage() {
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="I want to become a data analyst…"
                     disabled={thinking}
-                    className="border-hairline bg-paper focus-visible:ring-ring min-w-0 flex-1 rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+                    className="min-w-0 flex-1 border-2 px-3 py-2 font-mono text-sm focus-visible:outline-2 focus-visible:outline-offset-2"
+                    style={{ borderColor: INK, background: PAPER, outlineColor: LINE.data }}
                   />
                   <button
                     type="submit"
                     disabled={thinking || !input.trim()}
-                    className="bg-primary text-primary-foreground focus-visible:ring-ring rounded-md px-4 py-2 text-sm font-medium disabled:opacity-50 focus-visible:ring-2 focus-visible:outline-none"
+                    className="wp-press px-5 py-2 text-sm font-bold tracking-[0.14em] disabled:opacity-45"
+                    style={{ background: INK, color: PAPER }}
                   >
-                    Send
+                    SEND
                   </button>
                 </form>
               </div>
             </div>
 
             {error && (
-              <p role="alert" className="text-destructive mt-3 text-sm">
+              <p role="alert" className="mt-3 text-sm" style={{ color: LINE_INK.data }}>
                 {error}{" "}
                 <Link href="/plan" className="underline underline-offset-4">
-                  Plan a route by hand instead
+                  Plot a route by hand instead
                 </Link>
                 .
               </p>
@@ -346,71 +338,63 @@ export default function StartPage() {
                 type="button"
                 onClick={plotRoute}
                 disabled={planning}
-                className="bg-primary text-primary-foreground focus-visible:ring-ring mt-5 rounded-md px-4 py-2.5 text-sm font-medium disabled:opacity-50 focus-visible:ring-2 focus-visible:outline-none"
+                className="wp-press mt-6 px-6 py-3 text-sm font-bold tracking-[0.16em] disabled:opacity-50"
+                style={{ background: LINE_INK.data, color: PAPER }}
               >
-                {planning ? "Plotting…" : "Plot my route"}
+                {planning ? (
+                  <>
+                    PLOTTING ROUTE<span className="wp-ellipsis" />
+                  </>
+                ) : (
+                  "PLOT MY ROUTE"
+                )}
               </button>
             )}
           </section>
 
-          {/* profile, filling in as they talk */}
-          <aside
-            aria-labelledby="profile"
-            className="lg:sticky lg:top-8 lg:self-start"
-          >
+          <aside aria-labelledby="profile" className="lg:sticky lg:top-8 lg:self-start">
             <h2
               id="profile"
-              className="text-ink-muted mb-3 flex items-center gap-2 text-xs font-semibold tracking-[0.18em] uppercase"
+              className="mb-3 flex items-center gap-2 font-mono text-[0.66rem] font-bold tracking-[0.18em]"
             >
-              What I have so far
-              {provisional && (
-                <span className="text-route-ink normal-case tracking-normal italic">
-                  first read
-                </span>
-              )}
+              WHAT I HAVE SO FAR
+              {provisional && <span style={{ color: LINE_INK.accent }}>· FIRST READ</span>}
             </h2>
 
-            <div className="border-hairline bg-paper-raised space-y-4 rounded-lg border p-4 text-sm">
+            <div className="space-y-5 border-2 p-4 text-sm" style={{ borderColor: INK }}>
               {!profile ? (
-                <p className="text-ink-muted">
-                  Nothing yet. Describe your goal and this fills in.
+                <p className="opacity-70">
+                  Nothing yet. Describe where you want to get to and this fills in.
                 </p>
               ) : (
                 <>
-                  {profile.goalSummary && <p>{profile.goalSummary}</p>}
+                  {profile.goalSummary && (
+                    <p className="leading-relaxed">{profile.goalSummary}</p>
+                  )}
 
-                  <Group label="Destination" empty="not identified yet">
+                  <Group label="DESTINATION" empty="not identified yet">
                     {profile.goalSkills.map((s) => (
-                      <Chip key={s.skillId} accent>
-                        {s.name}{" "}
-                        <span className="font-mono text-[0.7rem]">
-                          L{s.level}
-                        </span>
-                      </Chip>
+                      <Station key={s.skillId} accent>
+                        {s.name} <span className="font-mono text-[0.68rem]">L{s.level}</span>
+                      </Station>
                     ))}
                   </Group>
 
-                  <Group label="Already has" empty="nothing mentioned">
+                  <Group label="STATIONS ALREADY PASSED" empty="nothing mentioned">
                     {profile.statedSkills.map((s) => (
-                      <Chip key={s.skillId}>
-                        {s.name}{" "}
-                        <span className="font-mono text-[0.7rem]">
-                          L{s.level}
-                        </span>
-                      </Chip>
+                      <Station key={s.skillId}>
+                        {s.name} <span className="font-mono text-[0.68rem]">L{s.level}</span>
+                      </Station>
                     ))}
                   </Group>
 
-                  {(profile.constraints.hoursPerWeek ||
-                    profile.constraints.deadlineWeeks) && (
-                    <Group label="Time" empty="">
+                  {(profile.constraints.hoursPerWeek || profile.constraints.deadlineWeeks) && (
+                    <Group label="SERVICE PATTERN" empty="">
                       {profile.constraints.hoursPerWeek && (
-                        <Chip>
-                          {profile.constraints.hoursPerWeek}h per week
-                        </Chip>
+                        <Station>{profile.constraints.hoursPerWeek}h per week</Station>
                       )}
                       {profile.constraints.deadlineWeeks && (
-                        <Chip>{profile.constraints.deadlineWeeks} weeks</Chip>
+                        <Station>{profile.constraints.deadlineWeeks} weeks</Station>
                       )}
                     </Group>
                   )}
@@ -421,57 +405,67 @@ export default function StartPage() {
         </div>
 
         {path && (
-          <section aria-labelledby="route" className="mt-12">
-            <div className="border-hairline mb-6 flex flex-wrap gap-x-8 gap-y-3 border-y py-4">
-              <Stat label="Steps" value={String(path.items.length)} />
-              <Stat label="Hours" value={String(path.totalHours)} />
-              <Stat
-                label="Reaches goal"
-                value={path.complete ? "yes" : "partly"}
+          <>
+            <section aria-labelledby="summary" className="mt-12">
+              <h2 id="summary" className="sr-only">
+                Route summary
+              </h2>
+              <ReadingStrip
+                readings={[
+                  { label: "STOPS", value: String(path.items.length) },
+                  { label: "HOURS", value: String(path.totalHours), accent: true },
+                  { label: "REACHES GOAL", value: path.complete ? "YES" : "PARTLY" },
+                  { label: "VIOLATIONS", value: "0" },
+                ]}
               />
-            </div>
+            </section>
 
             {path.diff && path.diff.summary !== "Your path is unchanged." && (
               <p
                 aria-live="polite"
-                className="border-route bg-accent/40 mb-6 rounded-r-md border-l-2 py-3 pr-4 pl-4 text-sm"
+                className="mt-6 py-2 pl-4 text-sm"
+                style={{ borderLeft: `4px solid ${LINE.accent}` }}
               >
-                <span className="text-route-ink block text-xs font-semibold tracking-[0.18em] uppercase">
-                  Route updated
+                <span
+                  className="block font-mono text-[0.66rem] font-bold tracking-[0.18em]"
+                  style={{ color: LINE_INK.accent }}
+                >
+                  ROUTE UPDATED
                 </span>
                 <span className="mt-1 block">{path.diff.summary}</span>
               </p>
             )}
 
-            <h2
-              id="route"
-              className="mb-5 font-[family-name:var(--font-display)] text-xl font-semibold"
-            >
-              Your route
-            </h2>
-            <PathRoute
-              items={path.items}
-              pathId={path.pathId}
-              onFeedback={sendFeedback}
-              busyResourceId={busy}
-              changedResourceIds={changed}
-            />
+            <section aria-labelledby="route" className="mt-10">
+              <h2
+                id="route"
+                className="wp-display mb-6 text-[clamp(1.5rem,3.5vw,2.2rem)] leading-none font-extrabold tracking-[-0.02em]"
+              >
+                YOUR ROUTE
+              </h2>
+              <TransitRoute
+                stops={path.items}
+                pathId={path.pathId}
+                onFeedback={sendFeedback}
+                busyResourceId={busy}
+                changedResourceIds={changed}
+              />
+            </section>
 
             <AskPanel pathId={path.pathId} />
 
-            <p className="text-ink-muted mt-8 text-sm">
+            <p className="mt-10 font-mono text-[0.75rem] tracking-[0.08em]">
               <Link
                 href={`/dashboard/${path.learnerId}`}
-                className="text-foreground underline underline-offset-4"
+                className="underline underline-offset-4"
               >
-                See your dashboard
-              </Link>{" "}
-              for progress, skills and milestones.
+                SEE YOUR POSITION ON THE NETWORK →
+              </Link>
             </p>
-          </section>
+          </>
         )}
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
 
@@ -490,11 +484,11 @@ function Group({
 
   return (
     <div>
-      <p className="text-ink-muted mb-1.5 text-xs tracking-wide uppercase">
+      <p className="mb-2 font-mono text-[0.62rem] font-bold tracking-[0.16em] opacity-70">
         {label}
       </p>
       {isEmpty ? (
-        <p className="text-ink-muted text-xs italic">{empty}</p>
+        <p className="font-mono text-[0.7rem] opacity-70">{empty}</p>
       ) : (
         <ul className="flex flex-wrap gap-1.5">{children}</ul>
       )}
@@ -502,37 +496,29 @@ function Group({
   );
 }
 
-function Chip({
-  children,
-  accent,
-}: {
-  children: React.ReactNode;
-  accent?: boolean;
-}) {
+/** A skill as a station: a ring for one already passed, a diamond for a destination. */
+function Station({ children, accent }: { children: React.ReactNode; accent?: boolean }) {
   return (
     <li
-      className={
-        accent
-          ? "border-route text-route-ink rounded-full border px-2.5 py-1 text-xs"
-          : "border-hairline rounded-full border px-2.5 py-1 text-xs"
-      }
+      className="flex items-center gap-1.5 border-2 px-2.5 py-1 text-xs"
+      style={{ borderColor: accent ? LINE.data : "rgba(22,22,26,0.3)" }}
     >
+      <span
+        aria-hidden="true"
+        style={{
+          width: 8,
+          height: 8,
+          borderRadius: accent ? 0 : "999px",
+          transform: accent ? "rotate(45deg)" : undefined,
+          background: accent ? LINE.data : "transparent",
+          border: accent ? undefined : `2px solid ${INK}`,
+        }}
+      />
       {children}
     </li>
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="text-ink-muted text-xs tracking-wide uppercase">{label}</p>
-      <p className="font-[family-name:var(--font-display)] text-2xl font-semibold">
-        {value}
-      </p>
-    </div>
-  );
-}
-
 function lower(text: string): string {
-  return text.charAt(0).toLowerCase() + text.slice(1).replace(/\.$/, ".");
+  return text.charAt(0).toLowerCase() + text.slice(1);
 }
