@@ -225,3 +225,136 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Waypoint — the transit system
+   Motion is grounded in one idea: a transit line is a thing that draws itself.
+   Nothing here is decorative, and every animation is disabled outright under
+   prefers-reduced-motion, with content left in its final state.
+--------------------------------------------------------------------------- */
+
+@theme inline {
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+/* Prose reads in Inter; the display face is reserved for headings and the
+   station names that carry the identity. */
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+.wp-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+}
+
+/* Metrics, hours and levels must not reflow while a number counts up. */
+.tabular-nums,
+[class*="tabular"] {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes wp-draw-in {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.wp-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: wp-draw-in 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes wp-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.wp-rise {
+  animation: wp-rise-in 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes wp-stop-in {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.wp-stop {
+  animation: wp-stop-in 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes wp-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.wp-ticker {
+  animation: wp-scroll 32s linear infinite;
+}
+
+.wp-station circle,
+.wp-station rect {
+  transition:
+    r 0.18s ease,
+    stroke-width 0.18s ease;
+}
+
+.wp-card {
+  transition: transform 0.18s ease;
+}
+.wp-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Printed matter does not glow: hover is a hard offset, like a stamped block. */
+.wp-press {
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+.wp-press:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 #16161a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wp-draw,
+  .wp-rise,
+  .wp-stop,
+  .wp-ticker {
+    animation: none !important;
+  }
+  .wp-draw {
+    stroke-dashoffset: 0;
+  }
+  .wp-rise,
+  .wp-stop {
+    opacity: 1;
+    transform: none;
+  }
+  .wp-card:hover,
+  .wp-press:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

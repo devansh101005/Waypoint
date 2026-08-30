@@ -1,25 +1,32 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
+import { Archivo, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-// Display: Bricolage Grotesque — a surveyor's lettering, slightly irregular,
-// used only for headings and waypoint numbers.
-const display = Bricolage_Grotesque({
+/**
+ * Three faces, three jobs.
+ *
+ * Archivo carries the identity: heavy, uppercase, tight tracking, used for
+ * headings and station names. Inter carries anything read in sentences — mono
+ * at paragraph length is measurably slower to read and costs accessibility.
+ * JetBrains Mono carries data: hours, levels, skill slugs, metrics, and every
+ * label whose job is to look like a reading off an instrument.
+ */
+
+const display = Archivo({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
 });
 
-const body = Inter({
+const sans = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
 });
 
-// Mono carries measurements: hours, levels, scores.
 const mono = JetBrains_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -32,11 +39,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`}
+      className={`${display.variable} ${sans.variable} ${mono.variable} h-full antialiased`}
     >
-      <body className="bg-paper text-ink flex min-h-full flex-col">
-        {children}
-      </body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }
