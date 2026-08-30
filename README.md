@@ -7,12 +7,12 @@ Every step is explained from the plan that produced it, so recommendations canno
 
 ## Try it
 
-| Page | What it is |
-|---|---|
-| `/start` | Describe your goal in your own words; the profile fills in as you talk, then plot a route |
-| `/plan` | Pick a destination directly — no language model needed, useful as a fallback |
-| `/dashboard/[learnerId]` | Progress, skill levels, milestones and the next thing to do |
-| `/eval` | How this planner scores against a similarity baseline on expert-written paths |
+| Page                     | What it is                                                                                |
+| ------------------------ | ----------------------------------------------------------------------------------------- |
+| `/start`                 | Describe your goal in your own words; the profile fills in as you talk, then plot a route |
+| `/plan`                  | Pick a destination directly — no language model needed, useful as a fallback              |
+| `/dashboard/[learnerId]` | Progress, skill levels, milestones and the next thing to do                               |
+| `/eval`                  | How this planner scores against a similarity baseline on expert-written paths             |
 
 ## What it does
 
@@ -93,19 +93,19 @@ and reports each problem with the spreadsheet row number. A failed import writes
 
 ## Scripts
 
-| Command                       | What it does                                                                |
-| ----------------------------- | --------------------------------------------------------------------------- |
-| `npm run dev`                 | Development server                                                          |
-| `npm run build` / `npm start` | Production build and serve                                                  |
-| `npm test`                    | Unit tests (Vitest)                                                         |
-| `npm run db:push`             | Create the Drizzle schema on a fresh database (asks for confirmation)       |
-| `npm run db:migrate`          | Apply schema top-ups to an existing database (idempotent)                   |
-| `npm run db:studio`           | Browse the database                                                         |
-| `npm run import`              | Import a corpus (see above)                                                 |
-| `npm run eval`                | Score the planner against hand-labelled scenarios vs. a similarity baseline |
-| `npm run eval -- --json`      | The same, also writing `eval-results/eval.json` for the `/eval` page |
-| `npm run plan -- "skill:level"` | Generate a path from the CLI against the bootstrap corpus (no database) |
-| `npm run package`             | Build the submission ZIP from tracked files only                            |
+| Command                         | What it does                                                                |
+| ------------------------------- | --------------------------------------------------------------------------- |
+| `npm run dev`                   | Development server                                                          |
+| `npm run build` / `npm start`   | Production build and serve                                                  |
+| `npm test`                      | Unit tests (Vitest)                                                         |
+| `npm run db:push`               | Create the Drizzle schema on a fresh database (asks for confirmation)       |
+| `npm run db:migrate`            | Apply schema top-ups to an existing database (idempotent)                   |
+| `npm run db:studio`             | Browse the database                                                         |
+| `npm run import`                | Import a corpus (see above)                                                 |
+| `npm run eval`                  | Score the planner against hand-labelled scenarios vs. a similarity baseline |
+| `npm run eval -- --json`        | The same, also writing `eval-results/eval.json` for the `/eval` page        |
+| `npm run plan -- "skill:level"` | Generate a path from the CLI against the bootstrap corpus (no database)     |
+| `npm run package`               | Build the submission ZIP from tracked files only                            |
 
 ## Evaluation
 
@@ -114,8 +114,11 @@ baseline (rank resources by similarity to the goal text, present them in similar
 standard approach). Both see the same corpus and the same similarity signal.
 
 ```bash
-npm run eval -- --json          # writes eval-results/eval.md and eval.json
+npm run eval -- --corpus data/live --json   # writes eval-results/eval.md and eval.json
 ```
+
+**Pass `--corpus data/live`.** Without it the harness scores the small `data/bootstrap` seed corpus,
+which is a different and much easier comparison than the published numbers.
 
 Metrics: prerequisite violation rate (steps the learner was not ready for), gap coverage,
 redundancy, nDCG and Kendall tau against the expert ordering. Results render at `/eval`.
@@ -125,7 +128,7 @@ similarity, which understates it, and the generated report says so.
 
 ## Architecture
 
-- **App**: Next.js 15 (App Router) + TypeScript, React, Tailwind, shadcn/ui
+- **App**: Next.js 16 (App Router) + TypeScript, React 19, Tailwind, shadcn/ui
 - **Data**: Postgres + pgvector via Drizzle ORM, behind a store interface with an in-memory
   implementation so the app runs with no database at all
 - **AI/ML**: hybrid retrieval over a skill-tagged corpus, DAG-constrained beam-search planning,
@@ -139,9 +142,15 @@ Full design: [docs/02-ARCHITECTURE.md](docs/02-ARCHITECTURE.md). Problem brief a
 
 ```
 src/app/          routes and UI
+src/components/   UI, including the shared transit-route view
 src/lib/          gap model, retrieval, planner, LLM and corpus parsing
 src/db/           Drizzle schema and client
-scripts/          import.ts, eval.ts
-data/bootstrap/   seed corpus (CSV)
-docs/             brief, differentiation, architecture, plan, verification
+scripts/          import.ts, eval.ts, audit-corpus.ts and other CLI tools
+data/live/        the curated corpus (CSV) — used when present
+data/bootstrap/   seed corpus (CSV) — the fallback when data/live is empty
+eval-results/     committed eval output, rendered by /eval
+docs/             brief, architecture, plan, verification, teammate briefs
 ```
+
+The corpus loader prefers `data/live` and falls back to `data/bootstrap`, so a
+clean checkout runs against the curated corpus with no database and no keys.

@@ -1,28 +1,28 @@
 {
-  "generatedAt": "2026-08-30T14:18:06.365Z",
+  "generatedAt": "2026-08-30T19:27:57.805Z",
   "mode": "embeddings",
   "corpus": {
     "skills": 65,
-    "resources": 95
+    "resources": 126
   },
   "summary": {
     "ours": {
       "system": "Waypoint",
       "prereqViolationRate": 0,
-      "gapCoverage": 0.915,
-      "redundancy": 0.145,
-      "ndcg": 0.382,
-      "kendallTau": 0.452,
-      "totalHours": 69.667
+      "gapCoverage": 0.93,
+      "redundancy": 0.168,
+      "ndcg": 0.392,
+      "kendallTau": 0.459,
+      "totalHours": 71.333
     },
     "baseline": {
       "system": "Similarity baseline",
-      "prereqViolationRate": 0.452,
-      "gapCoverage": 0.635,
-      "redundancy": 0.369,
-      "ndcg": 0.191,
+      "prereqViolationRate": 0.502,
+      "gapCoverage": 0.647,
+      "redundancy": 0.363,
+      "ndcg": 0.17,
       "kendallTau": 0.111,
-      "totalHours": 222.333
+      "totalHours": 231.556
     }
   },
   "scenarios": [
@@ -40,12 +40,12 @@
       },
       "baseline": {
         "system": "Similarity baseline",
-        "prereqViolationRate": 0.5,
-        "gapCoverage": 0.975,
-        "redundancy": 0.239,
-        "ndcg": 0.273,
+        "prereqViolationRate": 0.6,
+        "gapCoverage": 0.769,
+        "redundancy": 0.324,
+        "ndcg": 0.188,
         "kendallTau": -0.333,
-        "totalHours": 281
+        "totalHours": 286
       }
     },
     {
@@ -62,12 +62,12 @@
       },
       "baseline": {
         "system": "Similarity baseline",
-        "prereqViolationRate": 0.333,
-        "gapCoverage": 0.713,
-        "redundancy": 0.394,
-        "ndcg": 0.179,
-        "kendallTau": -0.333,
-        "totalHours": 275
+        "prereqViolationRate": 0.556,
+        "gapCoverage": 0.832,
+        "redundancy": 0.342,
+        "ndcg": 0.125,
+        "kendallTau": -1,
+        "totalHours": 329
       }
     },
     {
@@ -84,12 +84,12 @@
       },
       "baseline": {
         "system": "Similarity baseline",
-        "prereqViolationRate": 0.222,
-        "gapCoverage": 0.547,
-        "redundancy": 0.525,
-        "ndcg": 0.184,
+        "prereqViolationRate": 0.333,
+        "gapCoverage": 0.586,
+        "redundancy": 0.481,
+        "ndcg": 0.164,
         "kendallTau": 1,
-        "totalHours": 201
+        "totalHours": 216
       }
     },
     {
@@ -108,10 +108,10 @@
         "system": "Similarity baseline",
         "prereqViolationRate": 1,
         "gapCoverage": 0.212,
-        "redundancy": 0.125,
+        "redundancy": 0.122,
         "ndcg": 0.147,
         "kendallTau": 0,
-        "totalHours": 127
+        "totalHours": 112
       }
     },
     {
@@ -172,12 +172,12 @@
       },
       "baseline": {
         "system": "Similarity baseline",
-        "prereqViolationRate": 0.111,
-        "gapCoverage": 0.473,
-        "redundancy": 0.494,
+        "prereqViolationRate": 0.222,
+        "gapCoverage": 0.634,
+        "redundancy": 0.449,
         "ndcg": 0.079,
         "kendallTau": 0,
-        "totalHours": 245
+        "totalHours": 254
       }
     },
     {
@@ -186,20 +186,20 @@
       "ours": {
         "system": "Waypoint",
         "prereqViolationRate": 0,
-        "gapCoverage": 0.865,
-        "redundancy": 0,
-        "ndcg": 0.597,
-        "kendallTau": 0.8,
-        "totalHours": 52
+        "gapCoverage": 1,
+        "redundancy": 0.211,
+        "ndcg": 0.682,
+        "kendallTau": 0.867,
+        "totalHours": 67
       },
       "baseline": {
         "system": "Similarity baseline",
-        "prereqViolationRate": 0.455,
+        "prereqViolationRate": 0.364,
         "gapCoverage": 0.532,
-        "redundancy": 0.616,
-        "ndcg": 0.214,
-        "kendallTau": 0.333,
-        "totalHours": 310
+        "redundancy": 0.62,
+        "ndcg": 0.182,
+        "kendallTau": 1,
+        "totalHours": 325
       }
     },
     {
@@ -219,7 +219,7 @@
         "prereqViolationRate": 0.333,
         "gapCoverage": 1,
         "redundancy": 0.333,
-        "ndcg": 0.258,
+        "ndcg": 0.253,
         "kendallTau": 1,
         "totalHours": 65
       }
