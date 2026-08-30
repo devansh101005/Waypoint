@@ -20,16 +20,37 @@ const hasDatabase = Boolean(process.env.DATABASE_URL);
 describe.skipIf(!hasDatabase)("postgres store", () => {
   let store: Store;
   let learner: StoredLearner;
+  let goalSkillId: string;
 
   beforeAll(async () => {
     store = createPostgresStore();
+
+    /**
+     * The goal is chosen from whatever corpus the database currently holds
+     * rather than named here. These tests run against a live database whose
+     * contents change whenever someone imports a new sheet, and hardcoded
+     * slugs turn a routine corpus update into a red suite.
+     */
+    const [graph, resources] = await Promise.all([store.graph(), store.resources()]);
+    const teachable = new Set(resources.flatMap((r) => r.teaches.map((t) => t.skillId)));
+    const deepest = graph
+      .all()
+      .filter((skill) => teachable.has(skill.id))
+      .sort((a, b) => graph.ancestors(b.id).size - graph.ancestors(a.id).size)[0];
+
+    const foundation = [...graph.ancestors(deepest.id)]
+      .filter((id) => graph.directPrereqs(id).length === 0 && teachable.has(id))
+      .sort()[0];
+
+    goalSkillId = deepest.id;
+
     learner = await store.createLearner({
       name: "Integration test",
-      goalText: "I want to build dashboards",
-      goalSummary: "You want to build dashboards.",
-      goalSkills: [{ skillId: "dashboarding", level: 4 }],
-      statedSkills: [{ skillId: "sql-basics", level: 3 }],
-      mastery: { "sql-basics": 0.6 },
+      goalText: `I want to reach ${deepest.name}`,
+      goalSummary: `You want to reach ${deepest.name}.`,
+      goalSkills: [{ skillId: deepest.id, level: 4 }],
+      statedSkills: foundation ? [{ skillId: foundation, level: 3 }] : [],
+      mastery: foundation ? { [foundation]: 0.6 } : {},
     });
   }, 60000);
 
@@ -55,9 +76,11 @@ describe.skipIf(!hasDatabase)("postgres store", () => {
   it("round-trips a learner including goal and mastery", async () => {
     const loaded = await store.getLearner(learner.id);
     expect(loaded).not.toBeNull();
-    expect(loaded!.goalSummary).toBe("You want to build dashboards.");
-    expect(loaded!.goalSkills).toEqual([{ skillId: "dashboarding", level: 4 }]);
-    expect(loaded!.mastery["sql-basics"]).toBeCloseTo(0.6, 2);
+    expect(loaded!.goalSummary).toBe(learner.goalSummary);
+    expect(loaded!.goalSkills).toEqual([{ skillId: goalSkillId, level: 4 }]);
+    for (const stated of learner.statedSkills) {
+      expect(loaded!.mastery[stated.skillId]).toBeCloseTo(0.6, 2);
+    }
   });
 
   it("returns null for a learner that does not exist", async () => {
@@ -107,9 +130,9 @@ describe.skipIf(!hasDatabase)("postgres store", () => {
   });
 
   it("updates mastery without leaving stale skills behind", async () => {
-    await store.updateLearner(learner.id, { mastery: { "sql-basics": 0.9 } });
+    await store.updateLearner(learner.id, { mastery: { [goalSkillId]: 0.9 } });
     const reloaded = await store.getLearner(learner.id);
-    expect(reloaded!.mastery["sql-basics"]).toBeCloseTo(0.9, 2);
-    expect(Object.keys(reloaded!.mastery)).toEqual(["sql-basics"]);
+    expect(reloaded!.mastery[goalSkillId]).toBeCloseTo(0.9, 2);
+    expect(Object.keys(reloaded!.mastery)).toEqual([goalSkillId]);
   }, 30000);
 });

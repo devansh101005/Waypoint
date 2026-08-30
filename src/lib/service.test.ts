@@ -5,13 +5,19 @@ import { createMemoryStore, type Store, type StoredLearner } from "./store";
 import { serialiseProgress } from "./serialise";
 
 /**
- * These run against the real bootstrap corpus rather than fixtures: the
- * behaviours here (does feedback change anything? does the path stay feasible?)
- * only mean something over a corpus with real coverage gaps in it.
+ * These run against a real corpus rather than fixtures: the behaviours here
+ * (does feedback change anything? does the path stay feasible?) only mean
+ * something over a corpus with real coverage gaps in it.
+ *
+ * Pinned to the seed corpus on purpose. Reading whatever happens to be in
+ * data/live would make the suite fail every time someone delivers a new sheet
+ * with different skill slugs — the tests are about planner behaviour, not about
+ * the contents of the current corpus.
  */
+const CORPUS = "data/bootstrap";
 
 async function setup(): Promise<{ store: Store; learner: StoredLearner }> {
-  const store = createMemoryStore();
+  const store = createMemoryStore(CORPUS);
   const learner = await store.createLearner({
     name: "Test learner",
     goalText: "I want to build dashboards",
@@ -46,7 +52,7 @@ describe("generatePath", () => {
   });
 
   it("respects an hour budget derived from the learner's constraints", async () => {
-    const store = createMemoryStore();
+    const store = createMemoryStore(CORPUS);
     const learner = await store.createLearner({
       goalSkills: [{ skillId: "dashboarding", level: 4 }],
       constraints: { hoursPerWeek: 2, deadlineWeeks: 10 }, // 20 hours

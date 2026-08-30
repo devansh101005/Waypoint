@@ -116,6 +116,12 @@ export function createPostgresStore(): Store {
       const { embeddings } = await loadCorpus();
       return embeddings.size > 0 ? embeddings : null;
     },
+    async scenarioCount() {
+      const [row] = await db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(schema.evalScenarios);
+      return row?.count ?? 0;
+    },
 
     async createLearner(input) {
       const [row] = await db

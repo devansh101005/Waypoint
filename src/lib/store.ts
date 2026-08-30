@@ -69,6 +69,8 @@ export interface Store {
    * this exists to avoid.
    */
   resourceEmbeddings(): Promise<Map<string, number[]> | null>;
+  /** How many expert-labelled scenarios the corpus carries. */
+  scenarioCount(): Promise<number>;
 
   createLearner(
     input: Partial<StoredLearner> & { name?: string },
@@ -94,15 +96,22 @@ export interface Store {
 export interface CorpusData {
   graph: SkillGraph;
   resources: Resource[];
+  scenarios: number;
 }
 
-let corpusCache: CorpusData | null = null;
+/**
+ * Cached per directory. Keying on the path matters: a single shared cache meant
+ * asking for a different corpus silently returned the first one ever loaded,
+ * which made tests depend on whichever corpus happened to be on disk.
+ */
+const corpusCache = new Map<string, CorpusData>();
 
 /** Load the CSV corpus. Cached: the files do not change while the server runs. */
 export function loadCorpusFromDisk(dir?: string): CorpusData {
-  if (corpusCache) return corpusCache;
-
   const base = dir ?? resolveCorpusDir();
+  const cached = corpusCache.get(base);
+  if (cached) return cached;
+
   const skillsResult = parseSkills(
     readFileSync(path.join(base, "skills.csv"), "utf8"),
   );
@@ -111,6 +120,16 @@ export function loadCorpusFromDisk(dir?: string): CorpusData {
     readFileSync(path.join(base, "resources.csv"), "utf8"),
     skillIds,
   );
+
+  // Scenarios are ground truth for the evaluation rather than app data, so only
+  // the count is kept here — enough to report the corpus honestly.
+  let scenarios = 0;
+  try {
+    const text = readFileSync(path.join(base, "scenarios.csv"), "utf8");
+    scenarios = text.trim().split("\n").filter((line) => line.trim()).length - 1;
+  } catch {
+    /* a corpus without scenarios is valid; it just cannot be evaluated */
+  }
 
   const errors = [...skillsResult.errors, ...resourcesResult.errors];
   if (errors.length > 0) {
@@ -121,11 +140,13 @@ export function loadCorpusFromDisk(dir?: string): CorpusData {
     );
   }
 
-  corpusCache = {
+  const loaded: CorpusData = {
     graph: buildGraph(skillsResult.rows),
     resources: resourcesResult.rows,
+    scenarios,
   };
-  return corpusCache;
+  corpusCache.set(base, loaded);
+  return loaded;
 }
 
 function resolveCorpusDir(): string {
@@ -167,6 +188,9 @@ export function createMemoryStore(corpusDir?: string): Store {
     },
     async resourceEmbeddings() {
       return null; // CSV corpus carries no vectors
+    },
+    async scenarioCount() {
+      return corpus.scenarios;
     },
 
     async createLearner(input) {

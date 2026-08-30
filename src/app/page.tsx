@@ -283,10 +283,11 @@ export default async function Home() {
                   MEASURED, NOT CLAIMED
                 </h2>
                 <p className="max-w-md text-sm leading-relaxed">
-                  Scored against {evaluation.scenarios} learning paths a human
-                  expert wrote by hand, alongside the semantic search this is
-                  meant to beat. Both saw the same corpus of {corpus.resources}{" "}
-                  resources and the same embeddings.
+                  Scored against {evaluation.scenarios} of {corpus.scenarios}{" "}
+                  learning paths a human expert wrote by hand, alongside the
+                  semantic search this is meant to beat. Both saw the same
+                  corpus of {corpus.resources} resources and the same
+                  embeddings.
                 </p>
               </div>
 

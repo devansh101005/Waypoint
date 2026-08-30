@@ -37,9 +37,10 @@ export interface SiteStats {
 
 export async function getSiteStats(): Promise<SiteStats> {
   const store = getStore();
-  const [graph, resources] = await Promise.all([
+  const [graph, resources, scenarios] = await Promise.all([
     store.graph(),
     store.resources(),
+    store.scenarioCount(),
   ]);
   const evaluation = readEvaluation();
 
@@ -47,9 +48,10 @@ export async function getSiteStats(): Promise<SiteStats> {
     corpus: {
       skills: graph.all().length,
       resources: resources.length,
-      // The harness only scores scenarios it could resolve, so its own count is
-      // the honest one to show beside the results it produced.
-      scenarios: evaluation?.scenarios ?? 0,
+      // How many the corpus holds. The harness may score fewer — a deliberately
+      // vague goal is answered with a question rather than a guess — so the two
+      // counts are reported separately rather than conflated.
+      scenarios,
       source: store.kind,
     },
     evaluation,

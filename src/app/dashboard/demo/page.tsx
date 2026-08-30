@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { applyFeedback, generatePath } from "@/lib/service";
 import { getStore } from "@/lib/store";
+import type { SkillRef } from "@/lib/types";
 
 /**
  * A dashboard anyone can reach without first having a learner.
@@ -18,7 +19,42 @@ export const dynamic = "force-dynamic";
 /** Reused across requests on a warm instance so repeat visits are cheap. */
 let demoLearnerId: string | null = null;
 
-async function seedDemoLearner(): Promise<string> {
+/**
+ * Pick a destination from whatever corpus is loaded.
+ *
+ * Naming a slug here would tie the demo to one particular sheet — and did:
+ * the seed corpus calls it `dashboarding`, the curated one calls it
+ * `bi-dashboards`, so a hardcoded goal rendered an empty dashboard the moment
+ * the real corpus arrived. The deepest teachable skill is chosen instead,
+ * because a long prerequisite chain is what actually shows the planner working.
+ */
+async function pickDemoGoal(): Promise<{ goal: SkillRef; known: SkillRef[] } | null> {
+  const store = getStore();
+  const [graph, resources] = await Promise.all([store.graph(), store.resources()]);
+
+  const teachable = new Set(resources.flatMap((r) => r.teaches.map((t) => t.skillId)));
+  const candidates = graph
+    .all()
+    .filter((skill) => teachable.has(skill.id))
+    .map((skill) => ({ skill, depth: graph.ancestors(skill.id).size }))
+    .sort((a, b) => b.depth - a.depth);
+
+  const best = candidates[0];
+  if (!best || best.depth === 0) return null;
+
+  // Give the learner one entry-level skill so the dashboard shows a mix of
+  // "already had" and "picked up along the way" rather than a blank slate.
+  const foundation = [...graph.ancestors(best.skill.id)]
+    .filter((id) => graph.directPrereqs(id).length === 0 && teachable.has(id))
+    .sort()[0];
+
+  return {
+    goal: { skillId: best.skill.id, level: 4 },
+    known: foundation ? [{ skillId: foundation, level: 3 }] : [],
+  };
+}
+
+async function seedDemoLearner(): Promise<string | null> {
   const store = getStore();
 
   if (demoLearnerId) {
@@ -27,15 +63,19 @@ async function seedDemoLearner(): Promise<string> {
     demoLearnerId = null; // the store was reset under us
   }
 
+  const target = await pickDemoGoal();
+  if (!target) return null;
+
+  const graph = await store.graph();
+  const goalName = graph.name(target.goal.skillId);
+
   const learner = await store.createLearner({
     name: "Riya",
-    goalText:
-      "I want to become a data analyst and be employable in about six months.",
-    goalSummary:
-      "You want to move from Excel into a data analyst role within about six months, studying around ten hours a week.",
-    goalSkills: [{ skillId: "dashboarding", level: 4 }],
-    statedSkills: [{ skillId: "sql-basics", level: 3 }],
-    mastery: { "sql-basics": 0.6 },
+    goalText: `I want to be able to do ${goalName.toLowerCase()} well enough to be employable.`,
+    goalSummary: `You want to reach ${goalName} at a working professional level, starting from what you already know.`,
+    goalSkills: [target.goal],
+    statedSkills: target.known,
+    mastery: Object.fromEntries(target.known.map((k) => [k.skillId, k.level / 5])),
     constraints: { hoursPerWeek: 10, deadlineWeeks: 26 },
   });
 
@@ -57,5 +97,7 @@ async function seedDemoLearner(): Promise<string> {
 
 export default async function DemoDashboard() {
   const id = await seedDemoLearner();
-  redirect(`/dashboard/${id}`);
+  // No corpus, no demo — send them somewhere that explains itself rather than
+  // to a dashboard with nothing in it.
+  redirect(id ? `/dashboard/${id}` : "/plan");
 }
