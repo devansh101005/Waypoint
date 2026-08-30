@@ -93,13 +93,7 @@ function readTestCount(): number | null {
   }
 }
 
-// ---------- formatting, shared by every surface that shows these ----------
-
-export function asPercent(value: number, digits = 1): string {
-  return `${(value * 100).toFixed(digits)}%`;
-}
-
-export function asScore(value: number): string {
-  // Minus sign rather than a hyphen: these sit in tabular figures.
-  return value.toFixed(3).replace(/^-/, "−");
-}
+// Formatting lives in lib/format so client components can use it without
+// dragging the store into the browser bundle. Re-exported here because every
+// surface that reads these stats also renders them.
+export { asPercent, asScore } from "./format";
