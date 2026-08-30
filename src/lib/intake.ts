@@ -76,11 +76,26 @@ Return JSON with this shape:
 }
 
 Rules:
-- goalSkills are the destination: the handful of skills that, once held, mean the learner has
-  arrived. Do not list prerequisites — those are derived from the skill graph automatically.
-- Prefer 1-3 goalSkills. A vague goal like "work with AI" should still resolve to concrete slugs.
+- goalSkills are the destination: the skills that, once held at the stated level, mean the
+  learner has actually arrived at what they asked for. Do not list prerequisites — those are
+  derived from the skill graph automatically.
+
+- Match the BREADTH of the goal to the breadth of the ambition:
+    one concrete task ("build a dashboard for my team")        -> 1-2 skills
+    a subject area ("learn machine learning properly")          -> 3-4 skills
+    a role or career ("become a data analyst", "be employable") -> 4-6 skills
+  A career is not one skill. Someone who wants to be hired as a front-end developer needs the
+  whole working set, not just the language.
+
+- Match the LEVEL to what they need to DO with it, not to a default:
+    2 = follow a tutorial, dabble, satisfy curiosity
+    3 = use it independently on their own work
+    4 = employable, works professionally, knows the pitfalls   <- the right level for any goal
+        phrased as getting a job, being hired, becoming a <role>, or being "employable"
+    5 = could teach it or lead others
+  Do not put everything at 3. Read what they actually said they want to be able to do.
+
 - statedSkills are only what the learner claims. Never infer from their goal.
-- level: 1 = heard of it, 3 = can use it independently, 5 = could teach it.
 - If the learner has not said what they want clearly enough to pick any goal skill, return an
   empty goalSkills array and ask one specific followUpQuestion.
 - Never invent a slug. If nothing fits, leave the array empty.`;
