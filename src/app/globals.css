@@ -296,8 +296,15 @@ h3,
     transform: none;
   }
 }
+/*
+  `backwards`, not `both`: the delay still holds the stop hidden before it draws
+  in, but once it has arrived the element falls back to its own styles. With
+  `both` the final keyframe keeps `transform: none` latched in the animation
+  origin, which outranks inline styles and would silently cancel the survivor
+  slide on a re-plot.
+*/
 .wp-stop {
-  animation: wp-stop-in 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: wp-stop-in 0.45s cubic-bezier(0.4, 0, 0.2, 1) backwards;
 }
 
 @keyframes wp-scroll {
@@ -356,5 +363,120 @@ h3,
   .wp-press:hover {
     transform: none;
     box-shadow: none;
+  }
+}
+
+/* Station markers pop in as the line reaches them; segments grow downward. */
+@keyframes wp-marker-in {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.wp-marker {
+  animation: wp-marker-in 0.34s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes wp-segment-in {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+.wp-segment {
+  animation: wp-segment-in 0.26s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/*
+  Keyboard focus, in the system's own vocabulary: a hard square mark, no radius
+  and no glow. It has to survive two grounds — cream paper and the dark ink
+  panel — and no single colour does: amber only reaches about 1.9:1 on cream,
+  under the 3:1 an indicator needs. So it is drawn twice, ink ringed by paper.
+  On paper the ink outline carries it; on the ink panel the paper halo does.
+*/
+/*
+  !important because both Tailwind's base ring and per-component utilities set
+  outline on the same elements, and which one wins was varying by screen. A
+  focus indicator that is present on some controls and not others is worse than
+  either choice made consistently.
+*/
+:focus-visible {
+  outline: 3px solid #16161a !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 8px #f4f3ef !important;
+}
+
+/*
+  Re-plotting a route. A dropped stop leaves first, then the stops that survived
+  slide up to close the gap, then the new ones draw in — three beats rather than
+  one swap, so the learner can see which stops were kept.
+
+  The slide is driven from JS (measure, invert, release) because the distance is
+  only knowable after the list reflows; this is the transition it plays.
+*/
+@keyframes wp-stop-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+}
+.wp-leaving {
+  animation: wp-stop-out 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
+  pointer-events: none;
+}
+.wp-sliding {
+  transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* A route being computed, in the language of the diagram rather than a spinner. */
+@keyframes wp-ellipsis-cycle {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75% {
+    content: "...";
+  }
+}
+.wp-ellipsis::after {
+  content: "...";
+  animation: wp-ellipsis-cycle 1.2s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wp-marker,
+  .wp-segment {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .wp-leaving {
+    animation: none !important;
+    display: none;
+  }
+  .wp-sliding {
+    transition: none !important;
+  }
+  .wp-marker {
+    transform: none;
+  }
+  .wp-ellipsis::after {
+    animation: none;
+    content: "...";
   }
 }

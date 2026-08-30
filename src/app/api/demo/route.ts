@@ -86,9 +86,18 @@ export async function GET() {
   const graph = await store.graph();
   const resources = await store.resources();
 
-  const taught = new Set(
-    resources.flatMap((r) => r.teaches.map((t) => t.skillId)),
-  );
+  /**
+   * The highest level anything teaches each skill. A destination whose ceiling
+   * sits below the level being asked for can never be completed, so the client
+   * needs this to avoid offering a goal the planner will have to refuse.
+   */
+  const ceiling = new Map<string, number>();
+  for (const r of resources) {
+    for (const t of r.teaches) {
+      ceiling.set(t.skillId, Math.max(ceiling.get(t.skillId) ?? 0, t.level));
+    }
+  }
+  const taught = new Set(ceiling.keys());
 
   return NextResponse.json({
     storeKind: store.kind,
@@ -101,6 +110,8 @@ export async function GET() {
         domain: s.domain,
         prereqCount: graph.directPrereqs(s.id).length,
         teachable: taught.has(s.id),
+        maxLevel: ceiling.get(s.id) ?? 0,
+        depth: graph.ancestors(s.id).size,
       }))
       .sort(
         (a, b) =>
