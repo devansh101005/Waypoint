@@ -1,0 +1,66 @@
+slug,name,domain,prereq_slugs,description
+command-line-basics,Command Line Basics,web-dev,,"Navigating folders, running programs and managing files from a terminal."
+git-version-control,Git & Version Control,web-dev,command-line-basics,"Tracking changes, branching, merging and collaborating on code with Git and GitHub."
+python-basics,Python Basics,data-science,,"Variables, types, conditionals and loops in Python."
+python-data-structures,Python Data Structures,data-science,python-basics,"Lists, dictionaries, sets and tuples, and choosing between them."
+python-functions,Python Functions & Modules,data-science,python-basics,"Writing reusable functions, handling arguments and organising code into modules."
+python-file-io,Python File Handling,data-science,python-functions,"Reading and writing CSV, JSON and text files from Python."
+jupyter-notebooks,Jupyter Notebooks,data-science,python-basics,Running and organising analysis in notebook environments such as Jupyter and Colab.
+numpy-arrays,NumPy Arrays,data-science,python-data-structures,Vectorised numerical computation with n-dimensional arrays.
+pandas-dataframes,Pandas DataFrames,data-science,numpy-arrays,"Loading, indexing, filtering and reshaping tabular data with pandas."
+pandas-cleaning,Data Cleaning with Pandas,data-science,pandas-dataframes,"Handling missing values, duplicates, type errors and inconsistent categories."
+pandas-groupby,Aggregation & Grouping in Pandas,data-science,pandas-dataframes,"Split-apply-combine operations, pivot tables and multi-level aggregation."
+sql-basics,SQL Basics,data-science,,"Querying a single table with SELECT, WHERE, ORDER BY and LIMIT."
+sql-aggregation,SQL Aggregation,data-science,sql-basics,"Summarising data with GROUP BY, HAVING and aggregate functions."
+sql-joins,SQL Joins,data-science,sql-basics,"Combining tables with inner, outer, left and right joins."
+sql-subqueries,SQL Subqueries & CTEs,data-science,"sql-joins, sql-aggregation",Structuring complex queries with nested selects and common table expressions.
+sql-window-functions,SQL Window Functions,data-science,sql-subqueries,"Running totals, rankings and period-over-period comparisons without collapsing rows."
+database-design,Relational Database Design,data-science,sql-joins,"Normalisation, keys, relationships and schema design for analytical workloads."
+descriptive-statistics,Descriptive Statistics,data-science,,"Summarising data with means, medians, spread and distribution shape."
+probability-basics,Probability Basics,data-science,descriptive-statistics,"Random variables, common distributions and conditional probability."
+inferential-statistics,Inferential Statistics,data-science,probability-basics,"Sampling, confidence intervals and reasoning from a sample to a population."
+hypothesis-testing,Hypothesis Testing,data-science,inferential-statistics,"Formulating hypotheses, running significance tests and interpreting p-values."
+ab-testing,A/B Testing & Experiment Design,data-science,hypothesis-testing,"Designing controlled experiments, sizing samples and reading the results honestly."
+linear-algebra-basics,Linear Algebra Basics,data-science,,"Vectors, matrices and the operations underpinning machine learning."
+data-visualization-principles,Data Visualisation Principles,data-science,descriptive-statistics,"Choosing the right chart, encoding data honestly and avoiding misleading graphics."
+matplotlib,Matplotlib,data-science,"python-data-structures, data-visualization-principles",Building and customising static plots in Python.
+seaborn,Seaborn,data-science,"matplotlib, pandas-dataframes","Statistical plotting with concise, high-level Python syntax."
+excel-analysis,Excel for Analysis,data-science,,"Formulas, lookups and pivot tables for analysing data in spreadsheets."
+bi-dashboards,BI Dashboards,data-science,"data-visualization-principles, sql-basics",Building interactive dashboards in tools such as Power BI or Tableau.
+data-storytelling,Data Storytelling,data-science,data-visualization-principles,Turning analysis into a clear narrative that drives a decision.
+exploratory-data-analysis,Exploratory Data Analysis,data-science,"pandas-groupby, pandas-cleaning, seaborn, descriptive-statistics","Systematically interrogating a new dataset to find structure, errors and hypotheses."
+feature-engineering,Feature Engineering,data-science,exploratory-data-analysis,"Constructing, encoding and selecting input variables that improve model performance."
+scikit-learn-basics,Scikit-learn Basics,data-science,"pandas-dataframes, python-functions","The estimator API, fitting models and building preprocessing pipelines."
+supervised-learning,Supervised Learning,data-science,"scikit-learn-basics, inferential-statistics","Regression and classification models, and how they learn from labelled data."
+model-evaluation,Model Evaluation,data-science,supervised-learning,"Cross-validation, appropriate metrics, overfitting and honest performance reporting."
+unsupervised-learning,Unsupervised Learning,data-science,scikit-learn-basics,Clustering and dimensionality reduction on unlabelled data.
+time-series-analysis,Time Series Analysis,data-science,"inferential-statistics, pandas-dataframes","Trend, seasonality and forecasting on time-indexed data."
+deep-learning-basics,Deep Learning Basics,data-science,"model-evaluation, linear-algebra-basics","Neural networks, backpropagation and training loops."
+nlp-basics,NLP Basics,data-science,supervised-learning,"Representing and classifying text, from bag-of-words to embeddings."
+ml-deployment,ML Model Deployment,data-science,"model-evaluation, git-version-control",Serving a trained model behind an API and monitoring it in production.
+html-fundamentals,HTML Fundamentals,web-dev,,"Document structure, semantic elements, forms and links."
+css-fundamentals,CSS Fundamentals,web-dev,html-fundamentals,"Selectors, the box model, typography and specificity."
+css-layout-flexbox,CSS Flexbox,web-dev,css-fundamentals,"One-dimensional layout, alignment and distribution of space."
+css-grid,CSS Grid,web-dev,css-layout-flexbox,"Two-dimensional page layout with rows, columns and areas."
+responsive-design,Responsive Design,web-dev,css-layout-flexbox,"Media queries, fluid units and layouts that work across screen sizes."
+css-frameworks-tailwind,Tailwind CSS,web-dev,"css-fundamentals, responsive-design",Building interfaces with utility-first CSS.
+ui-design-basics,UI Design Basics,web-dev,,"Type scale, spacing, colour and visual hierarchy for interfaces."
+web-accessibility,Web Accessibility,web-dev,html-fundamentals,"Semantic markup, ARIA, keyboard navigation and WCAG conformance."
+javascript-basics,JavaScript Basics,web-dev,,"Syntax, types, control flow and functions in JavaScript."
+javascript-dom,DOM Manipulation,web-dev,"javascript-basics, html-fundamentals","Selecting elements, handling events and updating the page from JavaScript."
+es6-features,Modern JavaScript (ES6+),web-dev,javascript-basics,"Destructuring, modules, arrow functions, spread and template literals."
+javascript-async,Asynchronous JavaScript,web-dev,es6-features,"Callbacks, promises, async/await and the event loop."
+rest-api-consumption,Consuming REST APIs,web-dev,javascript-async,"Fetching, parsing and error-handling data from HTTP APIs in the browser."
+typescript-basics,TypeScript Basics,web-dev,es6-features,"Static types, interfaces and generics layered onto JavaScript."
+react-fundamentals,React Fundamentals,web-dev,"javascript-dom, es6-features","Components, JSX, props and rendering."
+react-hooks,React Hooks,web-dev,react-fundamentals,"State, effects and the rules of hooks."
+react-state-management,React State Management,web-dev,react-hooks,Sharing state across components with context and external stores.
+react-routing,React Routing,web-dev,react-hooks,"Client-side navigation, route parameters and nested layouts."
+nextjs-basics,Next.js Basics,web-dev,react-hooks,"File-based routing, server rendering and data fetching in Next.js."
+frontend-testing,Frontend Testing,web-dev,react-hooks,Unit and integration testing of components from the user's perspective.
+web-performance,Web Performance,web-dev,"javascript-basics, css-fundamentals","Measuring and improving load time, rendering and Core Web Vitals."
+nodejs-basics,Node.js Basics,web-dev,"javascript-async, command-line-basics","Running JavaScript outside the browser, modules and the npm ecosystem."
+express-apis,Building APIs with Express,web-dev,"nodejs-basics, rest-api-consumption","Routing, middleware and designing REST endpoints on the server."
+database-integration,Database Integration,web-dev,"express-apis, sql-basics",Connecting a web application to a relational database and querying it safely.
+authentication-basics,Authentication & Authorisation,web-dev,express-apis,"Sessions, tokens, password handling and protecting routes."
+deployment-basics,Deployment & Hosting,web-dev,git-version-control,Shipping an application to a hosting platform with environment configuration.
