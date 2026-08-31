@@ -187,8 +187,12 @@ export default function StartPage() {
     }
   }
 
+  /** Synchronous, unlike the `planning` state the button is disabled from. */
+  const inFlight = useRef(false);
+
   async function plotRoute() {
-    if (!learnerId) return;
+    if (!learnerId || inFlight.current) return;
+    inFlight.current = true;
     setPlanning(true);
     setError("");
     try {
@@ -207,6 +211,7 @@ export default function StartPage() {
     } catch {
       setError("Could not reach the planner.");
     } finally {
+      inFlight.current = false;
       setPlanning(false);
     }
   }

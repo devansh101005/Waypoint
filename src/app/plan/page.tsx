@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AskPanel } from "@/components/ask-panel";
 import { ReadingStrip, TransitBar } from "@/components/transit/chrome";
 import { TransitRoute, type RouteStop } from "@/components/transit/route";
@@ -81,7 +81,16 @@ export default function PlanPage() {
       .catch(() => setMessage("Could not load the skill catalogue."));
   }, []);
 
+  /**
+   * `planning` disables the button, but the state update is asynchronous — two
+   * fast clicks both get through the guard and plan twice, minting a second
+   * learner nobody asked for. A ref flips synchronously.
+   */
+  const inFlight = useRef(false);
+
   async function plot() {
+    if (inFlight.current) return;
+    inFlight.current = true;
     if (!goal) return;
     setPlanning(true);
     setMessage("");
@@ -109,6 +118,7 @@ export default function PlanPage() {
     } catch {
       setMessage("Could not reach the planner.");
     } finally {
+      inFlight.current = false;
       setPlanning(false);
     }
   }
