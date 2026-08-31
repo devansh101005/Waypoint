@@ -171,3 +171,30 @@ export interface EvalMetrics {
   kendallTau: number;
   totalHours: number;
 }
+
+/**
+ * One step of a route, prepared for the side-by-side comparison on /eval.
+ *
+ * `missingPrereqs` is the whole point: the aggregate metrics say the similarity
+ * baseline puts the learner in front of material they are not ready for about
+ * half the time, and this is where that stops being a percentage and becomes a
+ * named skill the learner does not yet have.
+ */
+export interface RouteStep {
+  position: number;
+  id: string;
+  title: string;
+  provider: string;
+  estHours: number;
+  teaches: string[];
+  missingPrereqs: string[];
+}
+
+/** The same learner, planned two ways. */
+export interface SideBySide {
+  goal: string;
+  background: string;
+  knownSkills: Array<{ name: string; level: number }>;
+  ours: RouteStep[];
+  baseline: RouteStep[];
+}

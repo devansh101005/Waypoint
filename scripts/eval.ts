@@ -35,13 +35,17 @@ import { computeGap } from "../src/lib/gap";
 import { extractIntake } from "../src/lib/intake";
 import { buildGraph } from "../src/lib/graph";
 import { buildMastery } from "../src/lib/mastery";
-import { planPath } from "../src/lib/planner";
+import { findPrereqViolations, planPath } from "../src/lib/planner";
 import { scoreResource } from "../src/lib/scoring";
+import type { SkillGraph } from "../src/lib/graph";
 import type {
   EvalMetrics,
   EvalScenario,
+  MasteryVector,
   Resource,
+  RouteStep,
   ScoreBreakdown,
+  SideBySide,
   SkillRef,
 } from "../src/lib/types";
 
@@ -134,7 +138,10 @@ async function main() {
   const cachePath = path.join(outDir, "resolved-goals.json");
   let cache: Record<string, SkillRef[]> = {};
   try {
-    cache = JSON.parse(readFileSync(cachePath, "utf8")) as Record<string, SkillRef[]>;
+    cache = JSON.parse(readFileSync(cachePath, "utf8")) as Record<
+      string,
+      SkillRef[]
+    >;
   } catch {
     /* first run */
   }
@@ -148,14 +155,20 @@ async function main() {
    */
   const clarified: Record<string, string> = {};
 
-  async function goalSkillsFor(scenario: EvalScenario): Promise<SkillRef[] | null> {
-    const fromSheet = (scenario.goalSkills ?? []).filter((g) => graph.has(g.skillId));
+  async function goalSkillsFor(
+    scenario: EvalScenario,
+  ): Promise<SkillRef[] | null> {
+    const fromSheet = (scenario.goalSkills ?? []).filter((g) =>
+      graph.has(g.skillId),
+    );
     if (fromSheet.length > 0) {
       resolvedBy[scenario.id] = "sheet";
       return fromSheet;
     }
 
-    const cached = (cache[scenario.id] ?? []).filter((g) => graph.has(g.skillId));
+    const cached = (cache[scenario.id] ?? []).filter((g) =>
+      graph.has(g.skillId),
+    );
     if (cached.length > 0) {
       resolvedBy[scenario.id] = "cache";
       return cached;
@@ -179,18 +192,24 @@ What I want: ${scenario.goal}`,
         // published numbers, which is the last place to be vague.
         const reasons: string[] = [];
         if (intake.droppedSkills.length > 0) {
-          reasons.push(`invented slugs dropped: ${intake.droppedSkills.join(", ")}`);
+          reasons.push(
+            `invented slugs dropped: ${intake.droppedSkills.join(", ")}`,
+          );
         }
         if (intake.followUpQuestion) {
           clarified[scenario.id] = intake.followUpQuestion;
           reasons.push(`asked instead: "${intake.followUpQuestion}"`);
         }
-        console.log(`no goal skills resolved${reasons.length ? ` — ${reasons.join("; ")}` : ""}`);
+        console.log(
+          `no goal skills resolved${reasons.length ? ` — ${reasons.join("; ")}` : ""}`,
+        );
         return null;
       }
       cache[scenario.id] = intake.goalSkills;
       resolvedBy[scenario.id] = "model";
-      console.log(intake.goalSkills.map((g) => `${g.skillId}:${g.level}`).join(", "));
+      console.log(
+        intake.goalSkills.map((g) => `${g.skillId}:${g.level}`).join(", "),
+      );
       return intake.goalSkills;
     } catch (error) {
       console.log(`failed — ${error instanceof Error ? error.message : error}`);
@@ -198,10 +217,53 @@ What I want: ${scenario.goal}`,
     }
   }
 
+  /**
+   * One route, flattened for display, with each step marked as ready or not
+   * ready against the state the learner was in when they reached it. The
+   * missing prerequisites are named, because "step 3 is a violation" is an
+   * assertion and "step 3 needs Python Basics level 3, which they do not have"
+   * is evidence.
+   */
+  function describeRoute(
+    items: Array<{ resource: Resource }>,
+    startMastery: MasteryVector,
+    g: SkillGraph,
+  ): RouteStep[] {
+    const violations = new Map(
+      findPrereqViolations(items, startMastery).map((v) => [
+        v.position,
+        v.missing,
+      ]),
+    );
+    return items.map((item, i) => {
+      const missing = violations.get(i + 1) ?? [];
+      return {
+        position: i + 1,
+        id: item.resource.id,
+        title: item.resource.title,
+        provider: item.resource.provider,
+        estHours: item.resource.estHours,
+        teaches: item.resource.teaches.map(
+          (t) => g.get(t.skillId)?.name ?? t.skillId,
+        ),
+        missingPrereqs: missing.map(
+          (m) => `${g.get(m.skillId)?.name ?? m.skillId} level ${m.level}`,
+        ),
+      };
+    });
+  }
+
   const perScenario: Array<{
     scenario: EvalScenario;
     ours: EvalMetrics;
     baseline: EvalMetrics;
+    /**
+     * The two orderings themselves. The metrics say the baseline puts a learner
+     * in front of material they are not ready for about half the time; these
+     * let a reader watch that happen to a named person instead of taking a
+     * percentage on trust.
+     */
+    comparison: SideBySide;
   }> = [];
   const skipped: string[] = [];
 
@@ -254,6 +316,16 @@ What I want: ${scenario.goal}`,
       scenario,
       ours: evaluatePath("Waypoint", ours, input),
       baseline: evaluatePath("Similarity baseline", baseline, input),
+      comparison: {
+        goal: scenario.goal,
+        background: scenario.persona.background,
+        knownSkills: (scenario.persona.statedSkills ?? []).map((s) => ({
+          name: graph.get(s.skillId)?.name ?? s.skillId,
+          level: s.level,
+        })),
+        ours: describeRoute(ours.items, startMastery, graph),
+        baseline: describeRoute(baseline.items, startMastery, graph),
+      },
     });
   }
 
@@ -265,8 +337,12 @@ What I want: ${scenario.goal}`,
   }
 
   mkdirSync(outDir, { recursive: true });
-  writeFileSync(cachePath, `${JSON.stringify(cache, null, 2)}
-`, "utf8");
+  writeFileSync(
+    cachePath,
+    `${JSON.stringify(cache, null, 2)}
+`,
+    "utf8",
+  );
 
   const oursAvg = macroAverage(perScenario.map((r) => r.ours));
   const baseAvg = macroAverage(perScenario.map((r) => r.baseline));
@@ -420,6 +496,7 @@ _Skipped ${unexplained.length} scenario(s) with unresolved goal skills: ${unexpl
             persona: r.scenario.persona.personaName,
             ours: r.ours,
             baseline: r.baseline,
+            comparison: r.comparison,
           })),
           skipped,
         },
