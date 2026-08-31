@@ -101,6 +101,20 @@ Include a short "Known limitations" section. Take it from `docs/PROGRESS.md`:
 That second one is a strength, not an apology. Frame it as: _a system that guessed would score on
 this case and be wrong in a way nobody could check._
 
+## One design decision worth stating explicitly
+
+Judges reward a team that knows its own boundaries. Include a short paragraph:
+
+> **Identity and authentication.** Waypoint has no sign-up. Completing an intake
+> mints an unguessable learner id and the dashboard URL carrying it is the route
+> back — the same model as a shared document link. This was chosen so the
+> prototype can be evaluated without putting a signup between a reviewer and a
+> working product, and because the data held is a first name and a set of
+> learning goals. Authentication would be added through Supabase Auth against
+> the same UUID-keyed `learners` table.
+
+Say it as a decision with a reason, not as a missing feature.
+
 ## Format
 
 - 10–16 slides, or 6–10 pages if you write it as a document. Either is fine; PDF is what's submitted.

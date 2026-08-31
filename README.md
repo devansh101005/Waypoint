@@ -102,8 +102,8 @@ and reports each problem with the spreadsheet row number. A failed import writes
 | `npm run db:migrate`            | Apply schema top-ups to an existing database (idempotent)                   |
 | `npm run db:studio`             | Browse the database                                                         |
 | `npm run import`                | Import a corpus (see above)                                                 |
-| `npm run eval`                  | Score the planner against hand-labelled scenarios vs. a similarity baseline |
-| `npm run eval -- --json`        | The same, also writing `eval-results/eval.json` for the `/eval` page        |
+| `npm run eval -- --corpus data/live` | Score the planner against hand-labelled scenarios vs. a similarity baseline |
+| `npm run audit`                 | Corpus health: teachability, reachable prerequisites, level ceilings, shape |
 | `npm run plan -- "skill:level"` | Generate a path from the CLI against the bootstrap corpus (no database)     |
 | `npm run package`               | Build the submission ZIP from tracked files only                            |
 
@@ -125,6 +125,22 @@ redundancy, nDCG and Kendall tau against the expert ordering. Results render at 
 
 Set `COHERE_API_KEY` before quoting the numbers: without it the baseline falls back to word-overlap
 similarity, which understates it, and the generated report says so.
+
+## Learner identity
+
+There is no sign-up. Completing an intake mints an unguessable learner id (a v4
+UUID, 122 bits of entropy) and the dashboard URL that contains it is the way
+back to that route — the same "anyone with the link" model a shared document
+uses. The browser keeps a local list of the routes it has plotted so they stay
+reachable after a tab closes; that list is a convenience pointer only, and
+clearing it deletes nothing — every route, its history and its events remain in
+the database and remain reachable by URL.
+
+This is a deliberate trade for a prototype that has to be evaluated by someone
+who has never seen it before: a login wall would put a signup between a reviewer
+and a working product, and the data held is a first name and a set of learning
+goals. Real authentication would slot in through Supabase Auth against the same
+`learners` table, which is already keyed by UUID rather than by session.
 
 ## Architecture
 
