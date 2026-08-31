@@ -18,6 +18,14 @@
 const KEY = "waypoint.routes.v1";
 
 /**
+ * Fired when a route is recorded. The `storage` event only reaches *other*
+ * tabs, so anything in this one that shows a remembered route — the DASHBOARD
+ * link especially — has no way to know a route was just plotted, and would go
+ * on offering the worked example until the next full page load.
+ */
+export const ROUTES_CHANGED = "waypoint:routes-changed";
+
+/**
  * Generous on purpose. The cap exists so one browser cannot grow an unbounded
  * list, not to tidy anything away — losing a pointer is the only harm it can
  * do, and at this size a normal user will never reach it.
@@ -67,6 +75,7 @@ export function rememberRoute(id: string, label: string): void {
       ...existing.filter((r) => r.id !== id),
     ].slice(0, LIMIT);
     window.localStorage.setItem(KEY, JSON.stringify(next));
+    window.dispatchEvent(new Event(ROUTES_CHANGED));
   } catch {
     /* A browser that refuses storage still gets a working route this session. */
   }
