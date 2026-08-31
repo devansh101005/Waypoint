@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { TransitBar } from "@/components/transit/chrome";
+import { RouteComparison } from "@/components/transit/comparison";
 import { INK, LINE, LINE_INK, PAPER } from "@/components/transit/theme";
 import { asPercent, asScore, getSiteStats } from "@/lib/site-stats";
 import type { EvalMetrics } from "@/lib/types";
@@ -191,6 +192,24 @@ export default async function EvalPage() {
                 </div>
               </div>
             </section>
+
+            {evaluation.comparisons.length > 0 && (
+              <section aria-labelledby="side-by-side">
+                <h2
+                  id="side-by-side"
+                  className="wp-display mb-3 text-[clamp(1.3rem,3vw,1.9rem)] font-extrabold tracking-[-0.01em]"
+                >
+                  THE SAME LEARNER, ROUTED TWO WAYS
+                </h2>
+                <p className="mb-7 max-w-3xl leading-relaxed">
+                  A violation rate is a number you have to trust. This is the
+                  same figure with the routes attached: pick a learner and see
+                  which steps each approach puts in front of them before they
+                  are ready, and exactly which skill they are missing.
+                </p>
+                <RouteComparison comparisons={evaluation.comparisons} />
+              </section>
+            )}
 
             <section aria-labelledby="reading">
               <h2

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { getStore } from "./store";
-import type { EvalMetrics } from "./types";
+import type { EvalMetrics, SideBySide } from "./types";
 
 /**
  * Every figure the interface displays, resolved from a real artifact.
@@ -22,6 +22,12 @@ export interface EvalSnapshot {
   scenarios: number;
   ours: EvalMetrics;
   baseline: EvalMetrics;
+  /**
+   * The routes behind the averages, so the comparison can be shown rather than
+   * only totalled. Ordered worst-baseline-first: the scenario where similarity
+   * search fails hardest is the one that explains what the metric means.
+   */
+  comparisons: Array<{ id: string; persona: string } & SideBySide>;
 }
 
 export interface SiteStats {
@@ -65,15 +71,29 @@ function readEvaluation(): EvalSnapshot | null {
     const parsed = JSON.parse(readFileSync(file, "utf8")) as {
       mode: "embeddings" | "lexical";
       generatedAt: string;
-      scenarios: unknown[];
+      scenarios: Array<{
+        id: string;
+        persona: string;
+        comparison?: SideBySide;
+      }>;
       summary: { ours: EvalMetrics; baseline: EvalMetrics };
     };
+
+    const notReady = (r: SideBySide["baseline"]) =>
+      r.filter((s) => s.missingPrereqs.length > 0).length;
+
     return {
       mode: parsed.mode,
       generatedAt: parsed.generatedAt,
       scenarios: parsed.scenarios.length,
       ours: parsed.summary.ours,
       baseline: parsed.summary.baseline,
+      // Worst baseline first — the clearest illustration leads. `comparison` is
+      // optional so a report written by an older harness still renders.
+      comparisons: parsed.scenarios
+        .filter((s) => s.comparison)
+        .map((s) => ({ id: s.id, persona: s.persona, ...s.comparison! }))
+        .sort((a, b) => notReady(b.baseline) - notReady(a.baseline)),
     };
   } catch {
     return null;
