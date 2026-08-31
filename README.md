@@ -7,6 +7,15 @@ Every step is explained from the plan that produced it, so recommendations canno
 
 ## Try it
 
+**Live: https://waypoint-six-teal.vercel.app** — fully configured, nothing to install.
+That is the fastest way to see all six features, including conversational intake.
+
+Running from this ZIP instead? `npm install && npm run dev`, then open `/plan`. Five of
+the six features work with **no database, no API keys and no configuration at all** —
+routes plan, every step explains itself, and `/eval` shows the evaluation. Only `/start`
+needs a language-model key, and it will tell you so and point you to `/plan`.
+
+
 | Page                     | What it is                                                                                |
 | ------------------------ | ----------------------------------------------------------------------------------------- |
 | `/start`                 | Describe your goal in your own words; the profile fills in as you talk, then plot a route |
