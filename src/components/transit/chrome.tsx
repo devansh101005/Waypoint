@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DashboardLink } from "./dashboard-link";
 import { INK, LINE_INK, PAPER } from "./theme";
 
 /**
@@ -32,9 +33,7 @@ export function TransitBar({ line = "LINE 01 · DATA" }: { line?: string }) {
           <Link href="/plan" className="hover:opacity-70">
             PICK A DESTINATION
           </Link>
-          <Link href="/dashboard/demo" className="hover:opacity-70">
-            DASHBOARD
-          </Link>
+          <DashboardLink className="hover:opacity-70" />
           <Link href="/eval" className="hover:opacity-70">
             EVIDENCE
           </Link>

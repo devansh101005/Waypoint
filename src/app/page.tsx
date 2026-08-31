@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CountUp } from "@/components/transit/count-up";
+import { DashboardLink } from "@/components/transit/dashboard-link";
 import { DemoRoute } from "@/components/transit/demo-route";
 import { NetworkMap } from "@/components/transit/network-map";
 import { buildDemoRoute } from "@/lib/demo-route";
@@ -103,9 +104,7 @@ export default async function Home() {
             <Link href="/eval" className="hover:opacity-70">
               EVIDENCE
             </Link>
-            <Link href="/dashboard/demo" className="hover:opacity-70">
-              DASHBOARD
-            </Link>
+            <DashboardLink className="hover:opacity-70" />
             <Link href="/start">DESCRIBE YOUR GOAL →</Link>
           </nav>
         </div>

@@ -3,6 +3,7 @@
 import { use, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { ReadingStrip, TransitBar } from "@/components/transit/chrome";
+import { OtherRoutes } from "@/components/transit/other-routes";
 import { SkillLine } from "@/components/transit/skill-line";
 import { INK, LINE, LINE_INK, PAPER } from "@/components/transit/theme";
 import type { Reasons } from "@/lib/types";
@@ -283,6 +284,8 @@ export default function DashboardPage({
                 </ol>
               </section>
             )}
+
+            <OtherRoutes currentId={id} />
 
             {data.activity.length > 0 && (
               <section aria-labelledby="activity">

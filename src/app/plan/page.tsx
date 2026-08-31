@@ -5,6 +5,7 @@ import { AskPanel } from "@/components/ask-panel";
 import { ReadingStrip, TransitBar } from "@/components/transit/chrome";
 import { TransitRoute, type RouteStop } from "@/components/transit/route";
 import { INK, LINE, LINE_INK, PAPER } from "@/components/transit/theme";
+import { rememberRoute } from "@/lib/learner-memory";
 import type { PathDiff } from "@/lib/types";
 
 /**
@@ -100,6 +101,11 @@ export default function PlanPage() {
         return;
       }
       setResult(data);
+      // Hold on to the id so this route can be found again after the tab closes.
+      rememberRoute(
+        data.learnerId,
+        catalogue.find((s) => s.id === goal)?.name ?? "Your route",
+      );
     } catch {
       setMessage("Could not reach the planner.");
     } finally {

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AskPanel } from "@/components/ask-panel";
 import { ReadingStrip, TransitBar } from "@/components/transit/chrome";
+import { rememberRoute } from "@/lib/learner-memory";
 import { TransitRoute, type RouteStop } from "@/components/transit/route";
 import { INK, LINE, LINE_INK, PAPER } from "@/components/transit/theme";
 import { quickMatch, type MatchableSkill } from "@/lib/quickmatch";
@@ -202,6 +203,7 @@ export default function StartPage() {
         return;
       }
       setPath(data);
+      rememberRoute(data.learnerId, profile?.goalSummary || "Your route");
     } catch {
       setError("Could not reach the planner.");
     } finally {
