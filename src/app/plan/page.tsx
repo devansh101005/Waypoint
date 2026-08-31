@@ -188,37 +188,63 @@ export default function PlanPage() {
               </select>
             </div>
 
-            <div>
-              <label
-                htmlFor="known"
-                className="mb-2 block font-mono text-[0.68rem] font-bold tracking-[0.18em]"
-              >
+            <fieldset className="min-w-0">
+              <legend className="mb-2 font-mono text-[0.68rem] font-bold tracking-[0.18em]">
                 STATIONS ALREADY PASSED
-              </label>
-              <select
-                id="known"
-                multiple
-                value={known}
-                onChange={(e) =>
-                  setKnown([...e.target.selectedOptions].map((o) => o.value))
-                }
-                className="h-28 w-full border-2 px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2"
-                style={{
-                  borderColor: INK,
-                  background: PAPER,
-                  outlineColor: LINE.data,
-                }}
+              </legend>
+              {/*
+                Checkboxes rather than a multi-select. In a native
+                <select multiple> a plain click on an already-chosen row clears
+                every other choice instead of unticking that one, and getting a
+                second item requires knowing to hold ctrl. Both behaviours were
+                reported as bugs, which is the correct reaction to them.
+              */}
+              <div
+                className="h-40 overflow-y-auto border-2 px-3 py-2"
+                style={{ borderColor: INK, background: PAPER }}
               >
-                {catalogue.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
-                  </option>
-                ))}
-              </select>
-              <p className="mt-1.5 font-mono text-[0.68rem] opacity-70">
-                CTRL OR CMD TO SELECT SEVERAL · LEAVE EMPTY IF STARTING FRESH
+                {catalogue.map((s) => {
+                  const on = known.includes(s.id);
+                  return (
+                    <label
+                      key={s.id}
+                      className="flex cursor-pointer items-center gap-2.5 py-1 text-sm"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={on}
+                        onChange={() =>
+                          setKnown((current) =>
+                            on
+                              ? current.filter((id) => id !== s.id)
+                              : [...current, s.id],
+                          )
+                        }
+                        className="size-4 shrink-0 accent-current"
+                        style={{ accentColor: LINE_INK.data }}
+                      />
+                      <span className="min-w-0">{s.name}</span>
+                    </label>
+                  );
+                })}
+              </div>
+              <p className="mt-1.5 flex flex-wrap items-center gap-x-3 font-mono text-[0.68rem]">
+                <span className="opacity-70">
+                  {known.length === 0
+                    ? "LEAVE EMPTY IF STARTING FRESH"
+                    : `${known.length} SELECTED`}
+                </span>
+                {known.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setKnown([])}
+                    className="underline underline-offset-4 hover:opacity-70"
+                  >
+                    CLEAR ALL
+                  </button>
+                )}
               </p>
-            </div>
+            </fieldset>
           </div>
 
           <button
