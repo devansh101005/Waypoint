@@ -13,7 +13,19 @@ export async function GET(
   const { id } = await context.params;
 
   const store = getStore();
-  const learner = await store.getLearner(id);
+
+  /**
+   * An id that is not a UUID cannot name a learner, and handing it to Postgres
+   * raises a cast error rather than returning nothing — so a mistyped URL came
+   * back as a 500. Both "malformed" and "no such learner" are the same thing to
+   * whoever is reading: this route does not exist.
+   */
+  let learner = null;
+  try {
+    learner = await store.getLearner(id);
+  } catch {
+    learner = null;
+  }
   if (!learner) {
     return NextResponse.json({ error: "unknown_learner" }, { status: 404 });
   }
