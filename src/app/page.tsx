@@ -97,13 +97,16 @@ export default async function Home() {
             LINE 01 · DATA
           </span>
           <nav className="ml-auto flex flex-wrap gap-x-5 gap-y-1 text-[0.7rem] font-semibold tracking-[0.18em]">
+            <Link href="/plan" className="hover:opacity-70">
+              PICK A DESTINATION
+            </Link>
             <Link href="/eval" className="hover:opacity-70">
               EVIDENCE
             </Link>
             <Link href="/dashboard/demo" className="hover:opacity-70">
               DASHBOARD
             </Link>
-            <Link href="/start">PLAN A ROUTE →</Link>
+            <Link href="/start">DESCRIBE YOUR GOAL →</Link>
           </nav>
         </div>
       </header>
@@ -116,7 +119,7 @@ export default async function Home() {
                 className="mb-6 font-mono text-[0.7rem] font-bold tracking-[0.28em]"
                 style={{ color: RED_INK }}
               >
-                LEARNING PATH PLANNER · PROTOTYPE ROUND
+                LEARNING PATH PLANNER
               </p>
               <h1
                 className="wp-display text-[clamp(2.5rem,6.2vw,4.6rem)] leading-[0.93] font-extrabold"
@@ -153,6 +156,21 @@ export default async function Home() {
                   SEE THE EVIDENCE
                 </Link>
               </div>
+
+              {/* The direct route. It needs no sign-up and no language model,
+                  so it is the fastest way for a sceptical visitor to get a real
+                  plan on screen — worth saying rather than hiding in the nav. */}
+              <p className="mt-4 text-sm">
+                <Link
+                  href="/plan"
+                  className="underline underline-offset-4 hover:opacity-70"
+                >
+                  Or pick a destination yourself →
+                </Link>
+                <span className="ml-2 opacity-65">
+                  No sign-up, plots in a second.
+                </span>
+              </p>
             </div>
 
             <div className="wp-rise" style={{ animationDelay: "0.15s" }}>
@@ -203,8 +221,8 @@ export default async function Home() {
           </div>
         </div>
         <p className="sr-only">
-          {ticker.join(". ")}. Every figure is read from the live corpus and the
-          evaluation harness output.
+          {ticker.join(". ")}. Every figure is measured, not
+          claimed.
         </p>
 
         <section
@@ -217,7 +235,7 @@ export default async function Home() {
               <DemoRoute {...demo} />
             ) : (
               <p className="font-mono text-sm" style={{ color: PAPER }}>
-                No corpus loaded, so there is no example route to show.
+                No catalogue loaded, so there is no example route to show.
               </p>
             )}
           </div>
@@ -298,7 +316,7 @@ export default async function Home() {
                   Scored against {evaluation.scenarios} of {corpus.scenarios}{" "}
                   learning paths a human expert wrote by hand, alongside the
                   semantic search this is meant to beat. Both saw the same
-                  corpus of {corpus.resources} resources and the same
+                  catalogue of {corpus.resources} resources and the same
                   embeddings.
                 </p>
               </div>
@@ -341,10 +359,14 @@ export default async function Home() {
                 className="mt-3 font-mono text-[0.72rem]"
                 style={{ opacity: 0.72 }}
               >
-                Generated{" "}
-                {new Date(evaluation.generatedAt).toISOString().slice(0, 10)} by{" "}
-                <code>npm run eval</code> · {evaluation.mode} baseline · corpus
-                read from {corpus.source}
+                Measured{" "}
+                {new Date(evaluation.generatedAt).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+                {evaluation.mode === "embeddings" &&
+                  " · the baseline searches with the same embeddings we do"}
               </p>
             </div>
           </section>
@@ -367,7 +389,7 @@ export default async function Home() {
               {corpus.skills} skills · {corpus.resources} resources
               {corpus.scenarios > 0 &&
                 ` · ${corpus.scenarios} expert-labelled routes`}{" "}
-              · built for the HCL prototype round
+              · every figure measured, none claimed
             </p>
           </div>
           <Link

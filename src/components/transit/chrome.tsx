@@ -27,7 +27,10 @@ export function TransitBar({ line = "LINE 01 · DATA" }: { line?: string }) {
         </span>
         <nav className="ml-auto flex flex-wrap gap-x-5 gap-y-1 text-[0.7rem] font-semibold tracking-[0.18em]">
           <Link href="/start" className="hover:opacity-70">
-            PLAN
+            DESCRIBE A GOAL
+          </Link>
+          <Link href="/plan" className="hover:opacity-70">
+            PICK A DESTINATION
           </Link>
           <Link href="/dashboard/demo" className="hover:opacity-70">
             DASHBOARD
