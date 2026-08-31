@@ -53,7 +53,7 @@ export function RouteComparison({ comparisons }: ComparisonProps) {
           >
             {comparisons.map((c, i) => (
               <option key={c.id} value={i}>
-                {c.id} — {c.persona}
+                {c.persona}
               </option>
             ))}
           </select>
@@ -90,7 +90,7 @@ export function RouteComparison({ comparisons }: ComparisonProps) {
       </div>
 
       <p className="mt-4 text-sm leading-relaxed">
-        Both columns are real output over the same corpus and the same
+        Both columns are real output over the same catalogue and the same
         embeddings. The difference is not the search — it is that one of them
         knows what has to come first.
       </p>

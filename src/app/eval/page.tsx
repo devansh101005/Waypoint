@@ -81,7 +81,7 @@ export default async function EvalPage() {
         </h1>
         <p className="mt-5 max-w-2xl leading-relaxed">
           Every recommender claims good results. This page is the receipt: our
-          planner and a semantic search baseline, run over the same corpus,
+          planner and a semantic search baseline, run over the same catalogue,
           scored against learning paths a human expert wrote by hand.
         </p>
 
@@ -90,8 +90,8 @@ export default async function EvalPage() {
             className="mt-10 border-2 border-dashed p-6 font-mono text-sm"
             style={{ borderColor: INK }}
           >
-            NO RESULTS RECORDED. RUN <code>npm run eval -- --json</code> TO
-            GENERATE THEM.
+            NO EVALUATION HAS BEEN RECORDED YET, SO THERE IS NOTHING TO SHOW.
+            THIS PAGE NEVER DISPLAYS A FIGURE IT CANNOT SOURCE.
           </p>
         ) : (
           <div className="mt-10 space-y-12">
@@ -233,10 +233,16 @@ export default async function EvalPage() {
                 considered in the first place.
               </p>
               <p className="mt-5 font-mono text-[0.72rem] opacity-70">
-                GENERATED{" "}
-                {new Date(evaluation.generatedAt).toISOString().slice(0, 10)} BY{" "}
-                <code>npm run eval</code> · CORPUS READ FROM{" "}
-                {corpus.source.toUpperCase()}
+                MEASURED{" "}
+                {new Date(evaluation.generatedAt)
+                  .toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })
+                  .toUpperCase()}
+                {evaluation.mode === "embeddings" &&
+                  " · BOTH SYSTEMS SEARCHED THE SAME CATALOGUE WITH THE SAME EMBEDDINGS"}
               </p>
             </section>
 
