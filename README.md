@@ -29,15 +29,18 @@ Every step is explained from the plan that produced it, so recommendations canno
 
 ## Requirements
 
-- Node.js 20+ (developed on 24) and npm — this alone is enough to run the planner
-- Optional: an API key for an OpenAI-compatible LLM gateway (conversational intake, explanation phrasing)
-- Optional: a Cohere key (embeddings and reranking)
+- Node.js 20+ (developed on 24) and npm — this alone runs the planner, the
+  explanations and the evaluation page
+- An OpenAI-compatible LLM gateway key — **required for conversational intake
+  at `/start`**; every other screen works without it
+- Optional: a Cohere key (dense embeddings and reranking)
 - Optional: Postgres with `pgvector` (persistence; Supabase works out of the box)
 
 ## Setup
 
-**No database or API key is required to see it work.** With nothing configured, Waypoint loads its
-corpus from the CSVs in `data/` and keeps learner state in memory:
+**No database or API key is required to see the planner work.** With nothing configured, Waypoint
+loads its corpus from the CSVs in `data/` and keeps learner state in memory. `/start` is the one
+screen that needs a language-model key — it will tell you so and point you at `/plan`:
 
 ```bash
 npm install
@@ -63,19 +66,27 @@ already exists, because `drizzle-kit push` needs a terminal to confirm and does 
 
 ### Environment variables
 
-| Variable             | Required | Purpose                                                                   |
-| -------------------- | -------- | ------------------------------------------------------------------------- |
-| `DATABASE_URL`       | no       | Postgres connection string (Supabase: use the **transaction pooler** URL) |
-| `RIKKO_API_KEY`      | no       | API key for the OpenAI-compatible LLM gateway                             |
-| `LLM_BASE_URL`       | no       | Gateway base URL (default `https://myrikko.ai/v1`)                        |
-| `LLM_MODEL_PRIMARY`  | no       | Chat, extraction and explanations (default `deepseek-v4-pro-0813`)        |
-| `LLM_MODEL_FAST`     | no       | Cheap bulk calls (default `glm-5.3-flash`)                                |
-| `LLM_MODEL_SHOWCASE` | no       | Optional higher-tier model (default `claude-opus-5`)                      |
-| `COHERE_API_KEY`     | no       | Embeddings (`embed-v4.0`) and rerank (`rerank-v3.5`)                      |
-| `RERANK`             | no       | `on` (default) or `off` to disable the rerank stage                       |
+Nothing here is needed to **start** the app: with an empty environment it reads
+the corpus from CSV, keeps state in memory, and `/plan` will plan real routes.
+What each variable buys is a feature, so the table says what you lose without
+it rather than a bare yes/no.
 
-Without `COHERE_API_KEY` the app still runs: retrieval falls back to skill-tag and lexical signals
-and the rerank stage is skipped.
+| Variable             | Without it                                                                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `RIKKO_API_KEY`      | **`/start` cannot read a goal.** Conversational intake needs a language model; the page says so and sends you to `/plan`, which needs no key. |
+| `LLM_BASE_URL`       | Defaults to `https://myrikko.ai/v1`. Only set it for a different OpenAI-compatible gateway.                                                 |
+| `DATABASE_URL`       | Learner state lives in memory and is lost when the process stops. Planning, explanations and `/eval` are unaffected.                        |
+| `COHERE_API_KEY`     | Retrieval loses its dense signal and renormalises onto skill tags and lexical overlap; the rerank stage is skipped. Routes still plan.      |
+| `LLM_MODEL_PRIMARY`  | Defaults to `deepseek-v4-pro-0813` (chat, extraction, explanations).                                                                        |
+| `LLM_MODEL_FAST`     | Defaults to `glm-5.3-flash` (cheap bulk calls).                                                                                            |
+| `LLM_MODEL_SHOWCASE` | Defaults to `claude-opus-5`. Optional higher-tier model.                                                                                    |
+| `RERANK`             | Defaults to `on`. Set `off` to skip the cross-encoder rerank.                                                                               |
+
+For Supabase, `DATABASE_URL` must be the **transaction pooler** connection string.
+
+**The shortest path to seeing it work is `/plan` with no configuration at all.**
+To exercise all six features — conversational intake included — set
+`RIKKO_API_KEY`, and add `COHERE_API_KEY` before quoting any evaluation numbers.
 
 ## Importing a corpus
 
