@@ -22,6 +22,11 @@ export async function GET(
   const path = await store.activePath(id);
   const events = await store.events(id);
 
+  // The activity feed is for the learner, so it has to name the thing they
+  // actually did. An internal id tells them nothing.
+  const resources = await store.resources();
+  const titleOf = new Map(resources.map((r) => [r.id, r.title]));
+
   return NextResponse.json({
     ...serialiseProgress(learner, path, graph),
     pathId: path?.id ?? null,
@@ -29,11 +34,15 @@ export async function GET(
     activity: events
       .slice(-10)
       .reverse()
-      .map((event) => ({
-        type: event.type,
-        resourceId:
-          (event.payload as { resourceId?: string }).resourceId ?? null,
-        at: event.ts,
-      })),
+      .map((event) => {
+        const resourceId =
+          (event.payload as { resourceId?: string }).resourceId ?? null;
+        return {
+          type: event.type,
+          resourceId,
+          resourceTitle: resourceId ? (titleOf.get(resourceId) ?? null) : null,
+          at: event.ts,
+        };
+      }),
   });
 }

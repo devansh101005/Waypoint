@@ -41,7 +41,12 @@ interface Progress {
     };
     reasons: Reasons;
   } | null;
-  activity: Array<{ type: string; resourceId: string | null; at: string }>;
+  activity: Array<{
+    type: string;
+    resourceId: string | null;
+    resourceTitle: string | null;
+    at: string;
+  }>;
 }
 
 export default function DashboardPage({
@@ -299,7 +304,12 @@ export default function DashboardPage({
                       >
                         {verb(event.type)}
                       </span>
-                      <span className="opacity-70">{event.resourceId}</span>
+                      <span
+                        className="min-w-0 truncate opacity-70"
+                        title={event.resourceId ?? undefined}
+                      >
+                        {event.resourceTitle ?? event.resourceId}
+                      </span>
                       <span className="ml-auto tabular-nums opacity-70">
                         {new Date(event.at).toLocaleTimeString("en-IN", {
                           hour: "2-digit",
