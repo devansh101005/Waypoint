@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-30T19:27:57.805Z",
+  "generatedAt": "2026-08-30T19:50:00.851Z",
   "mode": "embeddings",
   "corpus": {
     "skills": 65,
@@ -17,10 +17,10 @@
     },
     "baseline": {
       "system": "Similarity baseline",
-      "prereqViolationRate": 0.502,
+      "prereqViolationRate": 0.49,
       "gapCoverage": 0.647,
       "redundancy": 0.363,
-      "ndcg": 0.17,
+      "ndcg": 0.168,
       "kendallTau": 0.111,
       "totalHours": 231.556
     }
@@ -46,6 +46,238 @@
         "ndcg": 0.188,
         "kendallTau": -0.333,
         "totalHours": 286
+      },
+      "comparison": {
+        "goal": "I want to learn data analysis from zero and I don't know where to start.",
+        "background": "Meera is eighteen and in the first year of a BA in economics. She has used a computer for coursework and social media but has never written a line of code or opened a database. She heard that data analysis pays well and has three free evenings a week. She is easily discouraged when something does not run, and has already abandoned one YouTube series after a Python installation failed.",
+        "knownSkills": [],
+        "ours": [
+          {
+            "position": 1,
+            "id": "RES-007",
+            "title": "Kaggle Learn: Intro to SQL",
+            "provider": "Kaggle",
+            "estHours": 3,
+            "teaches": [
+              "SQL Basics",
+              "SQL Aggregation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-003",
+            "title": "Kaggle Learn: Python",
+            "provider": "Kaggle",
+            "estHours": 5,
+            "teaches": [
+              "Python Basics",
+              "Python Data Structures",
+              "Python Functions & Modules"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-004",
+            "title": "Kaggle Learn: Pandas",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Pandas DataFrames",
+              "Aggregation & Grouping in Pandas"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-006",
+            "title": "Kaggle Learn: Data Visualization",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Seaborn",
+              "Data Visualisation Principles"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-014",
+            "title": "NumPy: The Absolute Basics for Beginners",
+            "provider": "NumPy",
+            "estHours": 4,
+            "teaches": [
+              "NumPy Arrays"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 6,
+            "id": "RES-022",
+            "title": "StatQuest with Josh Starmer",
+            "provider": "StatQuest",
+            "estHours": 15,
+            "teaches": [
+              "Descriptive Statistics",
+              "Inferential Statistics",
+              "Supervised Learning",
+              "Model Evaluation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 7,
+            "id": "RES-017",
+            "title": "freeCodeCamp: Scientific Computing with Python",
+            "provider": "freeCodeCamp",
+            "estHours": 25,
+            "teaches": [
+              "Python Basics",
+              "Python Functions & Modules",
+              "Python File Handling",
+              "Python Data Structures"
+            ],
+            "missingPrereqs": []
+          }
+        ],
+        "baseline": [
+          {
+            "position": 1,
+            "id": "RES-016",
+            "title": "freeCodeCamp: Data Analysis with Python",
+            "provider": "freeCodeCamp",
+            "estHours": 30,
+            "teaches": [
+              "Pandas DataFrames",
+              "Data Cleaning with Pandas",
+              "NumPy Arrays",
+              "Aggregation & Grouping in Pandas"
+            ],
+            "missingPrereqs": [
+              "Python Basics level 3"
+            ]
+          },
+          {
+            "position": 2,
+            "id": "RES-102",
+            "title": "Python Data Science Handbook",
+            "provider": "Jake VanderPlas",
+            "estHours": 45,
+            "teaches": [
+              "Exploratory Data Analysis",
+              "NumPy Arrays",
+              "Pandas DataFrames",
+              "Matplotlib"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-043",
+            "title": "Google Data Analytics Professional Certificate",
+            "provider": "Google / Coursera",
+            "estHours": 180,
+            "teaches": [
+              "Excel for Analysis",
+              "SQL Basics",
+              "Data Storytelling",
+              "BI Dashboards"
+            ],
+            "missingPrereqs": [
+              "Python Data Structures level 2"
+            ]
+          },
+          {
+            "position": 4,
+            "id": "RES-015",
+            "title": "Pandas Getting Started Tutorials",
+            "provider": "pandas",
+            "estHours": 6,
+            "teaches": [
+              "Pandas DataFrames",
+              "Aggregation & Grouping in Pandas"
+            ],
+            "missingPrereqs": [
+              "Python Basics level 2"
+            ]
+          },
+          {
+            "position": 5,
+            "id": "RES-004",
+            "title": "Kaggle Learn: Pandas",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Pandas DataFrames",
+              "Aggregation & Grouping in Pandas"
+            ],
+            "missingPrereqs": [
+              "Inferential Statistics level 2"
+            ]
+          },
+          {
+            "position": 6,
+            "id": "RES-028",
+            "title": "Kaggle Learn: Time Series",
+            "provider": "Kaggle",
+            "estHours": 5,
+            "teaches": [
+              "Time Series Analysis"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 7,
+            "id": "RES-006",
+            "title": "Kaggle Learn: Data Visualization",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Seaborn",
+              "Data Visualisation Principles"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 8,
+            "id": "RES-007",
+            "title": "Kaggle Learn: Intro to SQL",
+            "provider": "Kaggle",
+            "estHours": 3,
+            "teaches": [
+              "SQL Basics",
+              "SQL Aggregation"
+            ],
+            "missingPrereqs": [
+              "Python Data Structures level 2"
+            ]
+          },
+          {
+            "position": 9,
+            "id": "RES-014",
+            "title": "NumPy: The Absolute Basics for Beginners",
+            "provider": "NumPy",
+            "estHours": 4,
+            "teaches": [
+              "NumPy Arrays"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 10,
+            "id": "RES-003",
+            "title": "Kaggle Learn: Python",
+            "provider": "Kaggle",
+            "estHours": 5,
+            "teaches": [
+              "Python Basics",
+              "Python Data Structures",
+              "Python Functions & Modules"
+            ],
+            "missingPrereqs": []
+          }
+        ]
       }
     },
     {
@@ -62,12 +294,260 @@
       },
       "baseline": {
         "system": "Similarity baseline",
-        "prereqViolationRate": 0.556,
+        "prereqViolationRate": 0.444,
         "gapCoverage": 0.832,
         "redundancy": 0.342,
         "ndcg": 0.125,
         "kendallTau": -1,
         "totalHours": 329
+      },
+      "comparison": {
+        "goal": "I want to move from an accounts role into a data analyst job within a year.",
+        "background": "Riya has worked for two years in accounts payable at a mid-size firm. She is genuinely strong in Excel, builds pivot tables daily, and understands averages, variance and reconciliation from her job. She has never coded. She wants to move into a data analyst role, ideally internally, and can study around nine hours a week.",
+        "knownSkills": [
+          {
+            "name": "Excel for Analysis",
+            "level": 3
+          },
+          {
+            "name": "Descriptive Statistics",
+            "level": 2
+          }
+        ],
+        "ours": [
+          {
+            "position": 1,
+            "id": "RES-007",
+            "title": "Kaggle Learn: Intro to SQL",
+            "provider": "Kaggle",
+            "estHours": 3,
+            "teaches": [
+              "SQL Basics",
+              "SQL Aggregation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-010",
+            "title": "Kaggle Learn: Advanced SQL",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "SQL Joins",
+              "SQL Window Functions",
+              "SQL Subqueries & CTEs"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-039",
+            "title": "Storytelling with Data — Blog",
+            "provider": "Cole Nussbaumer Knaflic",
+            "estHours": 6,
+            "teaches": [
+              "Data Storytelling",
+              "Data Visualisation Principles"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-003",
+            "title": "Kaggle Learn: Python",
+            "provider": "Kaggle",
+            "estHours": 5,
+            "teaches": [
+              "Python Basics",
+              "Python Data Structures",
+              "Python Functions & Modules"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-004",
+            "title": "Kaggle Learn: Pandas",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Pandas DataFrames",
+              "Aggregation & Grouping in Pandas"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 6,
+            "id": "RES-005",
+            "title": "Kaggle Learn: Data Cleaning",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Data Cleaning with Pandas"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 7,
+            "id": "RES-006",
+            "title": "Kaggle Learn: Data Visualization",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Seaborn",
+              "Data Visualisation Principles"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 8,
+            "id": "RES-037",
+            "title": "Microsoft Learn: Power BI Training",
+            "provider": "Microsoft",
+            "estHours": 20,
+            "teaches": [
+              "BI Dashboards"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 9,
+            "id": "RES-014",
+            "title": "NumPy: The Absolute Basics for Beginners",
+            "provider": "NumPy",
+            "estHours": 4,
+            "teaches": [
+              "NumPy Arrays"
+            ],
+            "missingPrereqs": []
+          }
+        ],
+        "baseline": [
+          {
+            "position": 1,
+            "id": "RES-043",
+            "title": "Google Data Analytics Professional Certificate",
+            "provider": "Google / Coursera",
+            "estHours": 180,
+            "teaches": [
+              "Excel for Analysis",
+              "SQL Basics",
+              "Data Storytelling",
+              "BI Dashboards"
+            ],
+            "missingPrereqs": [
+              "Python Basics level 2"
+            ]
+          },
+          {
+            "position": 2,
+            "id": "RES-016",
+            "title": "freeCodeCamp: Data Analysis with Python",
+            "provider": "freeCodeCamp",
+            "estHours": 30,
+            "teaches": [
+              "Pandas DataFrames",
+              "Data Cleaning with Pandas",
+              "NumPy Arrays",
+              "Aggregation & Grouping in Pandas"
+            ],
+            "missingPrereqs": [
+              "SQL Joins level 3",
+              "SQL Aggregation level 3"
+            ]
+          },
+          {
+            "position": 3,
+            "id": "RES-012",
+            "title": "DataLemur SQL Interview Questions",
+            "provider": "DataLemur",
+            "estHours": 12,
+            "teaches": [
+              "SQL Window Functions",
+              "SQL Subqueries & CTEs"
+            ],
+            "missingPrereqs": [
+              "Python Basics level 3"
+            ]
+          },
+          {
+            "position": 4,
+            "id": "RES-102",
+            "title": "Python Data Science Handbook",
+            "provider": "Jake VanderPlas",
+            "estHours": 45,
+            "teaches": [
+              "Exploratory Data Analysis",
+              "NumPy Arrays",
+              "Pandas DataFrames",
+              "Matplotlib"
+            ],
+            "missingPrereqs": [
+              "Python Data Structures level 2"
+            ]
+          },
+          {
+            "position": 5,
+            "id": "RES-015",
+            "title": "Pandas Getting Started Tutorials",
+            "provider": "pandas",
+            "estHours": 6,
+            "teaches": [
+              "Pandas DataFrames",
+              "Aggregation & Grouping in Pandas"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 6,
+            "id": "RES-111",
+            "title": "Excel Skills for Business: Advanced",
+            "provider": "Macquarie University",
+            "estHours": 25,
+            "teaches": [
+              "Excel for Analysis"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 7,
+            "id": "RES-009",
+            "title": "Mode SQL Tutorial",
+            "provider": "Mode Analytics",
+            "estHours": 12,
+            "teaches": [
+              "SQL Basics",
+              "SQL Joins",
+              "SQL Aggregation",
+              "SQL Subqueries & CTEs"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 8,
+            "id": "RES-006",
+            "title": "Kaggle Learn: Data Visualization",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Seaborn",
+              "Data Visualisation Principles"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 9,
+            "id": "RES-038",
+            "title": "Tableau Free Training Videos",
+            "provider": "Tableau",
+            "estHours": 15,
+            "teaches": [
+              "BI Dashboards"
+            ],
+            "missingPrereqs": []
+          }
+        ]
       }
     },
     {
@@ -90,6 +570,265 @@
         "ndcg": 0.164,
         "kendallTau": 1,
         "totalHours": 216
+      },
+      "comparison": {
+        "goal": "I can already write Python. I want to actually understand and ship machine learning models.",
+        "background": "Arjun has three years of experience writing Python services. He is comfortable with functions, modules and testing, and uses pandas occasionally for one-off scripts. He has never trained a model, and his statistics knowledge stopped at a first-year engineering course he barely remembers. He wants to move to an ML team internally within six months and can commit twelve hours a week.",
+        "knownSkills": [
+          {
+            "name": "Python Basics",
+            "level": 4
+          },
+          {
+            "name": "Python Data Structures",
+            "level": 3
+          },
+          {
+            "name": "Python Functions & Modules",
+            "level": 3
+          },
+          {
+            "name": "Pandas DataFrames",
+            "level": 3
+          },
+          {
+            "name": "NumPy Arrays",
+            "level": 3
+          }
+        ],
+        "ours": [
+          {
+            "position": 1,
+            "id": "RES-030",
+            "title": "scikit-learn: Getting Started",
+            "provider": "scikit-learn",
+            "estHours": 2,
+            "teaches": [
+              "Scikit-learn Basics"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-025",
+            "title": "Kaggle Learn: Intro to Machine Learning",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Scikit-learn Basics",
+              "Supervised Learning",
+              "Model Evaluation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-084",
+            "title": "MDN: Command Line Crash Course",
+            "provider": "Mozilla",
+            "estHours": 3,
+            "teaches": [
+              "Command Line Basics"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-081",
+            "title": "Learn Git Branching",
+            "provider": "Peter Cottle",
+            "estHours": 4,
+            "teaches": [
+              "Git & Version Control"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-026",
+            "title": "Kaggle Learn: Intermediate Machine Learning",
+            "provider": "Kaggle",
+            "estHours": 5,
+            "teaches": [
+              "Scikit-learn Basics",
+              "Model Evaluation",
+              "Supervised Learning"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 6,
+            "id": "RES-033",
+            "title": "Kaggle: Titanic — Machine Learning from Disaster",
+            "provider": "Kaggle",
+            "estHours": 8,
+            "teaches": [
+              "Exploratory Data Analysis",
+              "Feature Engineering",
+              "Supervised Learning"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 7,
+            "id": "RES-006",
+            "title": "Kaggle Learn: Data Visualization",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Seaborn",
+              "Data Visualisation Principles"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 8,
+            "id": "RES-005",
+            "title": "Kaggle Learn: Data Cleaning",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Data Cleaning with Pandas"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 9,
+            "id": "RES-022",
+            "title": "StatQuest with Josh Starmer",
+            "provider": "StatQuest",
+            "estHours": 15,
+            "teaches": [
+              "Descriptive Statistics",
+              "Inferential Statistics",
+              "Supervised Learning",
+              "Model Evaluation"
+            ],
+            "missingPrereqs": []
+          }
+        ],
+        "baseline": [
+          {
+            "position": 1,
+            "id": "RES-032",
+            "title": "freeCodeCamp: Machine Learning with Python",
+            "provider": "freeCodeCamp",
+            "estHours": 30,
+            "teaches": [
+              "Supervised Learning",
+              "Deep Learning Basics",
+              "NLP Basics"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-030",
+            "title": "scikit-learn: Getting Started",
+            "provider": "scikit-learn",
+            "estHours": 2,
+            "teaches": [
+              "Scikit-learn Basics"
+            ],
+            "missingPrereqs": [
+              "ML Model Deployment level 3"
+            ]
+          },
+          {
+            "position": 3,
+            "id": "RES-108",
+            "title": "Made With ML: MLOps Course",
+            "provider": "Goku Mohandas",
+            "estHours": 40,
+            "teaches": [
+              "ML Model Deployment"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-025",
+            "title": "Kaggle Learn: Intro to Machine Learning",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "Scikit-learn Basics",
+              "Supervised Learning",
+              "Model Evaluation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-017",
+            "title": "freeCodeCamp: Scientific Computing with Python",
+            "provider": "freeCodeCamp",
+            "estHours": 25,
+            "teaches": [
+              "Python Basics",
+              "Python Functions & Modules",
+              "Python File Handling",
+              "Python Data Structures"
+            ],
+            "missingPrereqs": [
+              "Git & Version Control level 2"
+            ]
+          },
+          {
+            "position": 6,
+            "id": "RES-045",
+            "title": "Full Stack Deep Learning — Course Materials",
+            "provider": "Full Stack Deep Learning",
+            "estHours": 25,
+            "teaches": [
+              "ML Model Deployment",
+              "Model Evaluation"
+            ],
+            "missingPrereqs": [
+              "Descriptive Statistics level 2"
+            ]
+          },
+          {
+            "position": 7,
+            "id": "RES-044",
+            "title": "MIT OpenCourseWare: Introduction to Computational Thinking and Data Science",
+            "provider": "MIT OpenCourseWare",
+            "estHours": 40,
+            "teaches": [
+              "Probability Basics",
+              "Inferential Statistics",
+              "Python Functions & Modules"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 8,
+            "id": "RES-026",
+            "title": "Kaggle Learn: Intermediate Machine Learning",
+            "provider": "Kaggle",
+            "estHours": 5,
+            "teaches": [
+              "Scikit-learn Basics",
+              "Model Evaluation",
+              "Supervised Learning"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 9,
+            "id": "RES-102",
+            "title": "Python Data Science Handbook",
+            "provider": "Jake VanderPlas",
+            "estHours": 45,
+            "teaches": [
+              "Exploratory Data Analysis",
+              "NumPy Arrays",
+              "Pandas DataFrames",
+              "Matplotlib"
+            ],
+            "missingPrereqs": []
+          }
+        ]
       }
     },
     {
@@ -112,6 +851,190 @@
         "ndcg": 0.147,
         "kendallTau": 0,
         "totalHours": 112
+      },
+      "comparison": {
+        "goal": "I have four months and about four hours a week. What is the minimum I need to qualify for a reporting role?",
+        "background": "Sana manages a retail floor team and has been told her role is being restructured within four months. She wants to qualify for an internal reporting position that requires SQL and a BI tool. She has used spreadsheets for rosters and stock but nothing analytical. She can realistically study four hours a week, no more, and needs the shortest credible route rather than the best one.",
+        "knownSkills": [
+          {
+            "name": "Excel for Analysis",
+            "level": 2
+          }
+        ],
+        "ours": [
+          {
+            "position": 1,
+            "id": "RES-007",
+            "title": "Kaggle Learn: Intro to SQL",
+            "provider": "Kaggle",
+            "estHours": 3,
+            "teaches": [
+              "SQL Basics",
+              "SQL Aggregation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-010",
+            "title": "Kaggle Learn: Advanced SQL",
+            "provider": "Kaggle",
+            "estHours": 4,
+            "teaches": [
+              "SQL Joins",
+              "SQL Window Functions",
+              "SQL Subqueries & CTEs"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-039",
+            "title": "Storytelling with Data — Blog",
+            "provider": "Cole Nussbaumer Knaflic",
+            "estHours": 6,
+            "teaches": [
+              "Data Storytelling",
+              "Data Visualisation Principles"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-037",
+            "title": "Microsoft Learn: Power BI Training",
+            "provider": "Microsoft",
+            "estHours": 20,
+            "teaches": [
+              "BI Dashboards"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-011",
+            "title": "HackerRank SQL Practice",
+            "provider": "HackerRank",
+            "estHours": 10,
+            "teaches": [
+              "SQL Joins",
+              "SQL Aggregation",
+              "SQL Subqueries & CTEs"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 6,
+            "id": "RES-022",
+            "title": "StatQuest with Josh Starmer",
+            "provider": "StatQuest",
+            "estHours": 15,
+            "teaches": [
+              "Descriptive Statistics",
+              "Inferential Statistics",
+              "Supervised Learning",
+              "Model Evaluation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 7,
+            "id": "RES-013",
+            "title": "PostgreSQL Tutorial",
+            "provider": "PostgreSQLTutorial.com",
+            "estHours": 15,
+            "teaches": [
+              "SQL Basics",
+              "Relational Database Design",
+              "SQL Joins"
+            ],
+            "missingPrereqs": []
+          }
+        ],
+        "baseline": [
+          {
+            "position": 1,
+            "id": "RES-037",
+            "title": "Microsoft Learn: Power BI Training",
+            "provider": "Microsoft",
+            "estHours": 20,
+            "teaches": [
+              "BI Dashboards"
+            ],
+            "missingPrereqs": [
+              "SQL Joins level 3",
+              "SQL Aggregation level 3"
+            ]
+          },
+          {
+            "position": 2,
+            "id": "RES-012",
+            "title": "DataLemur SQL Interview Questions",
+            "provider": "DataLemur",
+            "estHours": 12,
+            "teaches": [
+              "SQL Window Functions",
+              "SQL Subqueries & CTEs"
+            ],
+            "missingPrereqs": [
+              "Excel for Analysis level 3"
+            ]
+          },
+          {
+            "position": 3,
+            "id": "RES-111",
+            "title": "Excel Skills for Business: Advanced",
+            "provider": "Macquarie University",
+            "estHours": 25,
+            "teaches": [
+              "Excel for Analysis"
+            ],
+            "missingPrereqs": [
+              "React Fundamentals level 3"
+            ]
+          },
+          {
+            "position": 4,
+            "id": "RES-068",
+            "title": "Next.js Learn",
+            "provider": "Vercel",
+            "estHours": 15,
+            "teaches": [
+              "Next.js Basics",
+              "React Hooks"
+            ],
+            "missingPrereqs": [
+              "Data Visualisation Principles level 2"
+            ]
+          },
+          {
+            "position": 5,
+            "id": "RES-038",
+            "title": "Tableau Free Training Videos",
+            "provider": "Tableau",
+            "estHours": 15,
+            "teaches": [
+              "BI Dashboards"
+            ],
+            "missingPrereqs": [
+              "CSS Fundamentals level 3"
+            ]
+          },
+          {
+            "position": 6,
+            "id": "RES-085",
+            "title": "Frontend Mentor Challenges",
+            "provider": "Frontend Mentor",
+            "estHours": 25,
+            "teaches": [
+              "CSS Flexbox",
+              "Responsive Design",
+              "CSS Grid",
+              "HTML Fundamentals"
+            ],
+            "missingPrereqs": []
+          }
+        ]
       }
     },
     {
@@ -131,9 +1054,152 @@
         "prereqViolationRate": 0.667,
         "gapCoverage": 0.625,
         "redundancy": 0.268,
-        "ndcg": 0.235,
+        "ndcg": 0.224,
         "kendallTau": -1,
         "totalHours": 248
+      },
+      "comparison": {
+        "goal": "I need to build one live dashboard from our company database. That's all.",
+        "background": "Farid runs logistics for a distribution company and is expert in Excel, including nested lookups and pivot models. His director has asked him to replace a weekly manual report with a live dashboard pulling from the company database. He does not want to become an analyst and has no interest in Python. He has eight hours a week until the dashboard is delivered.",
+        "knownSkills": [
+          {
+            "name": "Excel for Analysis",
+            "level": 4
+          }
+        ],
+        "ours": [
+          {
+            "position": 1,
+            "id": "RES-007",
+            "title": "Kaggle Learn: Intro to SQL",
+            "provider": "Kaggle",
+            "estHours": 3,
+            "teaches": [
+              "SQL Basics",
+              "SQL Aggregation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-039",
+            "title": "Storytelling with Data — Blog",
+            "provider": "Cole Nussbaumer Knaflic",
+            "estHours": 6,
+            "teaches": [
+              "Data Storytelling",
+              "Data Visualisation Principles"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-038",
+            "title": "Tableau Free Training Videos",
+            "provider": "Tableau",
+            "estHours": 15,
+            "teaches": [
+              "BI Dashboards"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-022",
+            "title": "StatQuest with Josh Starmer",
+            "provider": "StatQuest",
+            "estHours": 15,
+            "teaches": [
+              "Descriptive Statistics",
+              "Inferential Statistics",
+              "Supervised Learning",
+              "Model Evaluation"
+            ],
+            "missingPrereqs": []
+          }
+        ],
+        "baseline": [
+          {
+            "position": 1,
+            "id": "RES-038",
+            "title": "Tableau Free Training Videos",
+            "provider": "Tableau",
+            "estHours": 15,
+            "teaches": [
+              "BI Dashboards"
+            ],
+            "missingPrereqs": [
+              "Data Visualisation Principles level 2"
+            ]
+          },
+          {
+            "position": 2,
+            "id": "RES-037",
+            "title": "Microsoft Learn: Power BI Training",
+            "provider": "Microsoft",
+            "estHours": 20,
+            "teaches": [
+              "BI Dashboards"
+            ],
+            "missingPrereqs": [
+              "Building APIs with Express level 2",
+              "SQL Basics level 2"
+            ]
+          },
+          {
+            "position": 3,
+            "id": "RES-074",
+            "title": "Prisma: Getting Started",
+            "provider": "Prisma",
+            "estHours": 6,
+            "teaches": [
+              "Database Integration"
+            ],
+            "missingPrereqs": [
+              "React Fundamentals level 3"
+            ]
+          },
+          {
+            "position": 4,
+            "id": "RES-068",
+            "title": "Next.js Learn",
+            "provider": "Vercel",
+            "estHours": 15,
+            "teaches": [
+              "Next.js Basics",
+              "React Hooks"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-043",
+            "title": "Google Data Analytics Professional Certificate",
+            "provider": "Google / Coursera",
+            "estHours": 180,
+            "teaches": [
+              "Excel for Analysis",
+              "SQL Basics",
+              "Data Storytelling",
+              "BI Dashboards"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 6,
+            "id": "RES-009",
+            "title": "Mode SQL Tutorial",
+            "provider": "Mode Analytics",
+            "estHours": 12,
+            "teaches": [
+              "SQL Basics",
+              "SQL Joins",
+              "SQL Aggregation",
+              "SQL Subqueries & CTEs"
+            ],
+            "missingPrereqs": []
+          }
+        ]
       }
     },
     {
@@ -156,6 +1222,246 @@
         "ndcg": 0.153,
         "kendallTau": 0.333,
         "totalHours": 249
+      },
+      "comparison": {
+        "goal": "I want to become a front-end developer and build things I can actually show people.",
+        "background": "Nikhil graduated in mechanical engineering last year and has not found work in his field. He has used a computer only as an end user and has never opened a terminal. He wants to become a front-end developer and is prepared to study close to full time for six months. He learns best when he can see a visual result quickly.",
+        "knownSkills": [],
+        "ours": [
+          {
+            "position": 1,
+            "id": "RES-084",
+            "title": "MDN: Command Line Crash Course",
+            "provider": "Mozilla",
+            "estHours": 3,
+            "teaches": [
+              "Command Line Basics"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-081",
+            "title": "Learn Git Branching",
+            "provider": "Peter Cottle",
+            "estHours": 4,
+            "teaches": [
+              "Git & Version Control"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-051",
+            "title": "MDN: Learn Web Development",
+            "provider": "Mozilla",
+            "estHours": 60,
+            "teaches": [
+              "HTML Fundamentals",
+              "CSS Fundamentals",
+              "JavaScript Basics"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-055",
+            "title": "Flexbox Froggy",
+            "provider": "Codepip",
+            "estHours": 1,
+            "teaches": [
+              "CSS Flexbox"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-095",
+            "title": "Chrome DevTools Documentation",
+            "provider": "Google",
+            "estHours": 5,
+            "teaches": [
+              "Web Performance",
+              "DOM Manipulation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 6,
+            "id": "RES-085",
+            "title": "Frontend Mentor Challenges",
+            "provider": "Frontend Mentor",
+            "estHours": 25,
+            "teaches": [
+              "CSS Flexbox",
+              "Responsive Design",
+              "CSS Grid",
+              "HTML Fundamentals"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 7,
+            "id": "RES-059",
+            "title": "javascript.info — The Modern JavaScript Tutorial",
+            "provider": "Ilya Kantor",
+            "estHours": 50,
+            "teaches": [
+              "JavaScript Basics",
+              "Modern JavaScript (ES6+)",
+              "Asynchronous JavaScript",
+              "DOM Manipulation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 8,
+            "id": "RES-065",
+            "title": "React: Learn React (Official Docs)",
+            "provider": "Meta",
+            "estHours": 20,
+            "teaches": [
+              "React Fundamentals",
+              "React Hooks"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 9,
+            "id": "RES-053",
+            "title": "MDN: CSS Styling Basics",
+            "provider": "Mozilla",
+            "estHours": 20,
+            "teaches": [
+              "CSS Fundamentals",
+              "CSS Flexbox"
+            ],
+            "missingPrereqs": []
+          }
+        ],
+        "baseline": [
+          {
+            "position": 1,
+            "id": "RES-085",
+            "title": "Frontend Mentor Challenges",
+            "provider": "Frontend Mentor",
+            "estHours": 25,
+            "teaches": [
+              "CSS Flexbox",
+              "Responsive Design",
+              "CSS Grid",
+              "HTML Fundamentals"
+            ],
+            "missingPrereqs": [
+              "JavaScript Basics level 3",
+              "CSS Fundamentals level 2"
+            ]
+          },
+          {
+            "position": 2,
+            "id": "RES-067",
+            "title": "freeCodeCamp: Front End Development Libraries",
+            "provider": "freeCodeCamp",
+            "estHours": 35,
+            "teaches": [
+              "React Fundamentals",
+              "React State Management"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-087",
+            "title": "Figma: Get Started Guide",
+            "provider": "Figma",
+            "estHours": 6,
+            "teaches": [
+              "UI Design Basics"
+            ],
+            "missingPrereqs": [
+              "Asynchronous JavaScript level 2"
+            ]
+          },
+          {
+            "position": 4,
+            "id": "RES-073",
+            "title": "freeCodeCamp: Back End Development and APIs",
+            "provider": "freeCodeCamp",
+            "estHours": 30,
+            "teaches": [
+              "Node.js Basics",
+              "Building APIs with Express",
+              "Consuming REST APIs"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-054",
+            "title": "freeCodeCamp: Responsive Web Design Certification",
+            "provider": "freeCodeCamp",
+            "estHours": 35,
+            "teaches": [
+              "HTML Fundamentals",
+              "CSS Fundamentals",
+              "Responsive Design",
+              "CSS Flexbox"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 6,
+            "id": "RES-094",
+            "title": "Build a Full-Stack App: Portfolio Project",
+            "provider": "roadmap.sh",
+            "estHours": 40,
+            "teaches": [
+              "Building APIs with Express",
+              "React Hooks",
+              "Deployment & Hosting",
+              "Database Integration"
+            ],
+            "missingPrereqs": [
+              "Git & Version Control level 2"
+            ]
+          },
+          {
+            "position": 7,
+            "id": "RES-089",
+            "title": "Vercel Documentation: Deployments",
+            "provider": "Vercel",
+            "estHours": 3,
+            "teaches": [
+              "Deployment & Hosting"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 8,
+            "id": "RES-051",
+            "title": "MDN: Learn Web Development",
+            "provider": "Mozilla",
+            "estHours": 60,
+            "teaches": [
+              "HTML Fundamentals",
+              "CSS Fundamentals",
+              "JavaScript Basics"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 9,
+            "id": "RES-068",
+            "title": "Next.js Learn",
+            "provider": "Vercel",
+            "estHours": 15,
+            "teaches": [
+              "Next.js Basics",
+              "React Hooks"
+            ],
+            "missingPrereqs": []
+          }
+        ]
       }
     },
     {
@@ -178,6 +1484,199 @@
         "ndcg": 0.079,
         "kendallTau": 0,
         "totalHours": 254
+      },
+      "comparison": {
+        "goal": "I can build websites but I keep getting rejected for front-end jobs. What am I missing?",
+        "background": "Tanvi has been building static sites for a year using HTML, CSS and vanilla JavaScript, and has a small freelance client. She can manipulate the DOM but has never used a framework, does not write tests, and describes her JavaScript as 'copied from Stack Overflow until it works'. She wants a salaried front-end job and can study ten hours a week.",
+        "knownSkills": [
+          {
+            "name": "HTML Fundamentals",
+            "level": 4
+          },
+          {
+            "name": "CSS Fundamentals",
+            "level": 4
+          },
+          {
+            "name": "JavaScript Basics",
+            "level": 3
+          },
+          {
+            "name": "Git & Version Control",
+            "level": 2
+          }
+        ],
+        "ours": [
+          {
+            "position": 1,
+            "id": "RES-059",
+            "title": "javascript.info — The Modern JavaScript Tutorial",
+            "provider": "Ilya Kantor",
+            "estHours": 50,
+            "teaches": [
+              "JavaScript Basics",
+              "Modern JavaScript (ES6+)",
+              "Asynchronous JavaScript",
+              "DOM Manipulation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-065",
+            "title": "React: Learn React (Official Docs)",
+            "provider": "Meta",
+            "estHours": 20,
+            "teaches": [
+              "React Fundamentals",
+              "React Hooks"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-079",
+            "title": "React Testing Library: Introduction",
+            "provider": "Testing Library",
+            "estHours": 4,
+            "teaches": [
+              "Frontend Testing"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-069",
+            "title": "TypeScript Handbook",
+            "provider": "Microsoft",
+            "estHours": 12,
+            "teaches": [
+              "TypeScript Basics"
+            ],
+            "missingPrereqs": []
+          }
+        ],
+        "baseline": [
+          {
+            "position": 1,
+            "id": "RES-085",
+            "title": "Frontend Mentor Challenges",
+            "provider": "Frontend Mentor",
+            "estHours": 25,
+            "teaches": [
+              "CSS Flexbox",
+              "Responsive Design",
+              "CSS Grid",
+              "HTML Fundamentals"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-067",
+            "title": "freeCodeCamp: Front End Development Libraries",
+            "provider": "freeCodeCamp",
+            "estHours": 35,
+            "teaches": [
+              "React Fundamentals",
+              "React State Management"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-054",
+            "title": "freeCodeCamp: Responsive Web Design Certification",
+            "provider": "freeCodeCamp",
+            "estHours": 35,
+            "teaches": [
+              "HTML Fundamentals",
+              "CSS Fundamentals",
+              "Responsive Design",
+              "CSS Flexbox"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-087",
+            "title": "Figma: Get Started Guide",
+            "provider": "Figma",
+            "estHours": 6,
+            "teaches": [
+              "UI Design Basics"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-060",
+            "title": "freeCodeCamp: JavaScript Algorithms and Data Structures",
+            "provider": "freeCodeCamp",
+            "estHours": 40,
+            "teaches": [
+              "JavaScript Basics",
+              "Modern JavaScript (ES6+)"
+            ],
+            "missingPrereqs": [
+              "Frontend Testing level 3",
+              "Asynchronous JavaScript level 3"
+            ]
+          },
+          {
+            "position": 6,
+            "id": "RES-121",
+            "title": "Playwright Documentation",
+            "provider": "Microsoft",
+            "estHours": 12,
+            "teaches": [
+              "Frontend Testing"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 7,
+            "id": "RES-063",
+            "title": "The Odin Project: Foundations",
+            "provider": "The Odin Project",
+            "estHours": 60,
+            "teaches": [
+              "HTML Fundamentals",
+              "CSS Fundamentals",
+              "JavaScript Basics",
+              "Git & Version Control",
+              "Command Line Basics"
+            ],
+            "missingPrereqs": [
+              "Node.js Basics level 2"
+            ]
+          },
+          {
+            "position": 8,
+            "id": "RES-094",
+            "title": "Build a Full-Stack App: Portfolio Project",
+            "provider": "roadmap.sh",
+            "estHours": 40,
+            "teaches": [
+              "Building APIs with Express",
+              "React Hooks",
+              "Deployment & Hosting",
+              "Database Integration"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 9,
+            "id": "RES-055",
+            "title": "Flexbox Froggy",
+            "provider": "Codepip",
+            "estHours": 1,
+            "teaches": [
+              "CSS Flexbox"
+            ],
+            "missingPrereqs": []
+          }
+        ]
       }
     },
     {
@@ -200,6 +1699,282 @@
         "ndcg": 0.182,
         "kendallTau": 1,
         "totalHours": 325
+      },
+      "comparison": {
+        "goal": "I write React all day. I need to be able to build the backend too.",
+        "background": "Rohan has eighteen months in a front-end role writing React with hooks. He consumes APIs daily but has never built one, has never designed a schema, and is unclear on how authentication actually works beyond calling a login endpoint. His team is small and he has been asked to take on backend work. He has ten hours a week.",
+        "knownSkills": [
+          {
+            "name": "JavaScript Basics",
+            "level": 4
+          },
+          {
+            "name": "Modern JavaScript (ES6+)",
+            "level": 3
+          },
+          {
+            "name": "React Fundamentals",
+            "level": 3
+          },
+          {
+            "name": "React Hooks",
+            "level": 3
+          },
+          {
+            "name": "HTML Fundamentals",
+            "level": 3
+          },
+          {
+            "name": "CSS Fundamentals",
+            "level": 3
+          }
+        ],
+        "ours": [
+          {
+            "position": 1,
+            "id": "RES-084",
+            "title": "MDN: Command Line Crash Course",
+            "provider": "Mozilla",
+            "estHours": 3,
+            "teaches": [
+              "Command Line Basics"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-007",
+            "title": "Kaggle Learn: Intro to SQL",
+            "provider": "Kaggle",
+            "estHours": 3,
+            "teaches": [
+              "SQL Basics",
+              "SQL Aggregation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-061",
+            "title": "MDN: Asynchronous JavaScript",
+            "provider": "Mozilla",
+            "estHours": 8,
+            "teaches": [
+              "Asynchronous JavaScript"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-062",
+            "title": "MDN: Fetch API",
+            "provider": "Mozilla",
+            "estHours": 3,
+            "teaches": [
+              "Consuming REST APIs"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-073",
+            "title": "freeCodeCamp: Back End Development and APIs",
+            "provider": "freeCodeCamp",
+            "estHours": 30,
+            "teaches": [
+              "Node.js Basics",
+              "Building APIs with Express",
+              "Consuming REST APIs"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 6,
+            "id": "RES-075",
+            "title": "JWT: Introduction to JSON Web Tokens",
+            "provider": "Auth0",
+            "estHours": 2,
+            "teaches": [
+              "Authentication & Authorisation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 7,
+            "id": "RES-114",
+            "title": "OWASP Authentication Cheat Sheet",
+            "provider": "OWASP",
+            "estHours": 4,
+            "teaches": [
+              "Authentication & Authorisation"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 8,
+            "id": "RES-074",
+            "title": "Prisma: Getting Started",
+            "provider": "Prisma",
+            "estHours": 6,
+            "teaches": [
+              "Database Integration"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 9,
+            "id": "RES-123",
+            "title": "node-postgres Documentation",
+            "provider": "Brian Carlson",
+            "estHours": 8,
+            "teaches": [
+              "Database Integration"
+            ],
+            "missingPrereqs": []
+          }
+        ],
+        "baseline": [
+          {
+            "position": 1,
+            "id": "RES-073",
+            "title": "freeCodeCamp: Back End Development and APIs",
+            "provider": "freeCodeCamp",
+            "estHours": 30,
+            "teaches": [
+              "Node.js Basics",
+              "Building APIs with Express",
+              "Consuming REST APIs"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-094",
+            "title": "Build a Full-Stack App: Portfolio Project",
+            "provider": "roadmap.sh",
+            "estHours": 40,
+            "teaches": [
+              "Building APIs with Express",
+              "React Hooks",
+              "Deployment & Hosting",
+              "Database Integration"
+            ],
+            "missingPrereqs": [
+              "Git & Version Control level 2"
+            ]
+          },
+          {
+            "position": 3,
+            "id": "RES-090",
+            "title": "Netlify Documentation: Get Started",
+            "provider": "Netlify",
+            "estHours": 3,
+            "teaches": [
+              "Deployment & Hosting"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-068",
+            "title": "Next.js Learn",
+            "provider": "Vercel",
+            "estHours": 15,
+            "teaches": [
+              "Next.js Basics",
+              "React Hooks"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-067",
+            "title": "freeCodeCamp: Front End Development Libraries",
+            "provider": "freeCodeCamp",
+            "estHours": 35,
+            "teaches": [
+              "React Fundamentals",
+              "React State Management"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 6,
+            "id": "RES-064",
+            "title": "The Odin Project: Full Stack JavaScript",
+            "provider": "The Odin Project",
+            "estHours": 150,
+            "teaches": [
+              "React Fundamentals",
+              "React Hooks",
+              "Node.js Basics",
+              "Building APIs with Express",
+              "Database Integration"
+            ],
+            "missingPrereqs": [
+              "Git & Version Control level 2"
+            ]
+          },
+          {
+            "position": 7,
+            "id": "RES-089",
+            "title": "Vercel Documentation: Deployments",
+            "provider": "Vercel",
+            "estHours": 3,
+            "teaches": [
+              "Deployment & Hosting"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 8,
+            "id": "RES-118",
+            "title": "TanStack Query Documentation",
+            "provider": "TanStack",
+            "estHours": 10,
+            "teaches": [
+              "Consuming REST APIs",
+              "React State Management"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 9,
+            "id": "RES-091",
+            "title": "React Router: Tutorial",
+            "provider": "Remix / Shopify",
+            "estHours": 5,
+            "teaches": [
+              "React Routing"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 10,
+            "id": "RES-126",
+            "title": "Next.js App Router Documentation",
+            "provider": "Vercel",
+            "estHours": 14,
+            "teaches": [
+              "Next.js Basics"
+            ],
+            "missingPrereqs": [
+              "DOM Manipulation level 2"
+            ]
+          },
+          {
+            "position": 11,
+            "id": "RES-065",
+            "title": "React: Learn React (Official Docs)",
+            "provider": "Meta",
+            "estHours": 20,
+            "teaches": [
+              "React Fundamentals",
+              "React Hooks"
+            ],
+            "missingPrereqs": []
+          }
+        ]
       }
     },
     {
@@ -222,6 +1997,128 @@
         "ndcg": 0.253,
         "kendallTau": 1,
         "totalHours": 65
+      },
+      "comparison": {
+        "goal": "I need to make our site accessible and stop it looking amateur. I'm not trying to become a developer.",
+        "background": "Priya writes copy and updates the company's marketing site through a CMS. She can edit existing HTML blocks and change colours in CSS by trial and error. After an accessibility complaint from a customer, she has been made responsible for fixing the site and improving how it looks. She has no ambition to become a developer and can spend six hours a week.",
+        "knownSkills": [
+          {
+            "name": "HTML Fundamentals",
+            "level": 2
+          },
+          {
+            "name": "CSS Fundamentals",
+            "level": 2
+          }
+        ],
+        "ours": [
+          {
+            "position": 1,
+            "id": "RES-088",
+            "title": "Refactoring UI — Free Design Tips",
+            "provider": "Adam Wathan & Steve Schoger",
+            "estHours": 3,
+            "teaches": [
+              "UI Design Basics"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-078",
+            "title": "MDN: Accessibility Learning Module",
+            "provider": "Mozilla",
+            "estHours": 8,
+            "teaches": [
+              "Web Accessibility"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-052",
+            "title": "MDN: Structuring Content with HTML",
+            "provider": "Mozilla",
+            "estHours": 15,
+            "teaches": [
+              "HTML Fundamentals"
+            ],
+            "missingPrereqs": []
+          }
+        ],
+        "baseline": [
+          {
+            "position": 1,
+            "id": "RES-076",
+            "title": "web.dev: Learn Accessibility",
+            "provider": "Google",
+            "estHours": 10,
+            "teaches": [
+              "Web Accessibility"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 2,
+            "id": "RES-078",
+            "title": "MDN: Accessibility Learning Module",
+            "provider": "Mozilla",
+            "estHours": 8,
+            "teaches": [
+              "Web Accessibility"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 3,
+            "id": "RES-054",
+            "title": "freeCodeCamp: Responsive Web Design Certification",
+            "provider": "freeCodeCamp",
+            "estHours": 35,
+            "teaches": [
+              "HTML Fundamentals",
+              "CSS Fundamentals",
+              "Responsive Design",
+              "CSS Flexbox"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 4,
+            "id": "RES-088",
+            "title": "Refactoring UI — Free Design Tips",
+            "provider": "Adam Wathan & Steve Schoger",
+            "estHours": 3,
+            "teaches": [
+              "UI Design Basics"
+            ],
+            "missingPrereqs": []
+          },
+          {
+            "position": 5,
+            "id": "RES-087",
+            "title": "Figma: Get Started Guide",
+            "provider": "Figma",
+            "estHours": 6,
+            "teaches": [
+              "UI Design Basics"
+            ],
+            "missingPrereqs": [
+              "Git & Version Control level 2"
+            ]
+          },
+          {
+            "position": 6,
+            "id": "RES-090",
+            "title": "Netlify Documentation: Get Started",
+            "provider": "Netlify",
+            "estHours": 3,
+            "teaches": [
+              "Deployment & Hosting"
+            ],
+            "missingPrereqs": []
+          }
+        ]
       }
     }
   ],
