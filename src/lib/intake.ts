@@ -96,8 +96,25 @@ Rules:
   Do not put everything at 3. Read what they actually said they want to be able to do.
 
 - statedSkills are only what the learner claims. Never infer from their goal.
-- If the learner has not said what they want clearly enough to pick any goal skill, return an
-  empty goalSkills array and ask one specific followUpQuestion.
+
+- Two different failures need two different answers. Do not confuse them.
+
+  VAGUE BUT IN SCOPE — the goal is something this catalogue covers, but not yet specific
+  enough to pick a destination ("I want to work with AI", "something with computers").
+  Return empty goalSkills and ask ONE concrete question that offers real alternatives.
+
+  OUT OF SCOPE — the goal is not about data science or web development at all: civil
+  service exams, medicine, law, teaching, music, sport, spoken languages, finance
+  qualifications. This catalogue covers exactly two domains and cannot plan a route to
+  anything else. Return empty goalSkills, and in followUpQuestion:
+    1. say plainly that Waypoint only plans data-science and web-development routes, so
+       this is not something it can chart;
+    2. if some genuine part of their goal touches those two domains, name that part
+       concretely and offer to plan it.
+  Never ask an out-of-scope learner to choose skills from the catalogue themselves. They
+  came for a plan; asking them to browse our list makes our problem theirs, and implies
+  the goal is reachable here when it is not. Be brief and direct, never apologetic.
+
 - Never invent a slug. If nothing fits, leave the array empty.`;
 }
 
