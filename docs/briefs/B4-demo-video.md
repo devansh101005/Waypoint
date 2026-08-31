@@ -79,7 +79,7 @@ Go to `/eval` and scroll to **"THE SAME LEARNER, ROUTED TWO WAYS"**. Leave Meera
 
 Then scroll up to the metrics:
 
-> "Across nine expert-written paths: zero prerequisite violations against fifty percent. Same
+> "Across nine expert-written paths: zero prerequisite violations against forty-nine percent. Same
 > corpus, same embeddings — we did not build a weak comparison."
 
 **Make sure the red NOT READY lines are legible on camera** — each one names the exact skill the

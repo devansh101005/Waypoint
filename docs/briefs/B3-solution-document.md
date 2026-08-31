@@ -65,10 +65,10 @@ Put this table in, prominently. Source: `eval-results/eval.md`.
 
 | Metric                      | Waypoint  | Similarity baseline |
 | --------------------------- | --------- | ------------------- |
-| Prerequisite violation rate | **0.0%**  | 50.2%               |
+| Prerequisite violation rate | **0.0%**  | 49.0%               |
 | Gap coverage                | **93.0%** | 64.7%               |
 | Redundancy                  | **16.8%** | 36.3%               |
-| nDCG vs. expert path        | **0.392** | 0.170               |
+| nDCG vs. expert path        | **0.392** | 0.168               |
 | Ordering correlation        | **0.459** | 0.111               |
 | Hours prescribed            | 71.3h     | 231.6h              |
 
