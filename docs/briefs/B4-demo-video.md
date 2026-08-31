@@ -68,14 +68,23 @@ Click **"I STRUGGLED HERE"** (or use the re-plot toggle on the landing page).
 
 Let the animation play. Don't talk over it.
 
-**3:15–3:45 — Proof. (Our strongest 30 seconds.)**
-Go to `/eval`.
+**3:15–3:45 — Proof. (Our strongest 30 seconds. Do not cut this one.)**
+Go to `/eval` and scroll to **"THE SAME LEARNER, ROUTED TWO WAYS"**. Leave Meera selected.
 
-> "We tested this against the standard approach — rank courses by similarity to the goal — on
-> expert-written learning paths. Same corpus, same embeddings. Zero prerequisite violations against
-> fifty percent. Ninety-three percent of the skill gap closed against sixty-five."
+> "Meera is starting from zero. On the left is our route — seven steps, every one of them something
+> she is ready for. On the right is what similarity search gives her. It opens with a thirty-hour
+> intermediate Python course she cannot start, and step three is a hundred-and-eighty-hour
+> certificate. Five of its ten steps put her in front of material she is not ready for — and it
+> buries Intro to SQL, the thing she should do first, down at step eight."
 
-Let the numbers sit on screen for a beat.
+Then scroll up to the metrics:
+
+> "Across nine expert-written paths: zero prerequisite violations against fifty percent. Same
+> corpus, same embeddings — we did not build a weak comparison."
+
+**Make sure the red NOT READY lines are legible on camera** — each one names the exact skill the
+learner is missing. This is the section that separates us from every other submission. If you are
+running long, cut something else.
 
 **3:45–4:00 — Close.**
 Show the dashboard.

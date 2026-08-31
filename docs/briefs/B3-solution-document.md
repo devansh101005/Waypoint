@@ -78,6 +78,16 @@ Explain what the comparison is, because the fairness is the point: the baseline 
 approach (rank resources by similarity to the goal, present in similarity order). It sees **the same
 corpus and the same embeddings** we do. We did not build a weak strawman.
 
+**Then show the screenshot that makes it concrete.** On `/eval`, the section
+**"THE SAME LEARNER, ROUTED TWO WAYS"** puts both routes side by side for one learner, with every
+unmet prerequisite named on the step that needs it. Use Meera (SCN-01, the default):
+
+> Similarity search opens Meera — a complete beginner — with a 30-hour intermediate Python course
+> she cannot start, follows it with a 180-hour certificate, and buries "Intro to SQL" at step eight.
+> Five of its ten steps land on her before she is ready. Our route: seven steps, zero.
+
+That single screenshot argues the whole case better than the table does. Put it on its own slide.
+
 ## Be honest about limits — judges reward this
 
 Include a short "Known limitations" section. Take it from `docs/PROGRESS.md`:
