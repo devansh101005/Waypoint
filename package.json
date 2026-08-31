@@ -13,7 +13,7 @@
     "db:studio": "drizzle-kit studio",
     "import": "tsx scripts/import.ts",
     "eval": "tsx scripts/eval.ts",
-    "package": "git archive --format=zip -o waypoint-submission.zip HEAD",
+    "package": "git archive --format=zip -o submission/waypoint-submission.zip HEAD",
     "plan": "tsx scripts/plan-demo.ts",
     "bench:intake": "tsx scripts/bench-intake.ts",
     "db:migrate": "tsx scripts/migrate.ts",
