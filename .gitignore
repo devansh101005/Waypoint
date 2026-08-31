@@ -59,3 +59,6 @@ docs/01-DIFFERENTIATION.md
 
 # hook diagnostics (local troubleshooting only)
 .claude/hook-diagnostics.json
+
+# built deliverables, not source
+/submission/
