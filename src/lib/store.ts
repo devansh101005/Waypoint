@@ -277,11 +277,99 @@ declare global {
   var __waypointStore: Store | undefined;
 }
 
+/**
+ * Does this look like the database being unreachable, rather than our query
+ * being wrong?
+ *
+ * Only connection-class failures may trigger the fallback. A genuine bug — a
+ * bad query, a constraint violation — must still surface loudly, because
+ * silently answering it from a different store would hide the defect and
+ * return data that disagrees with what was written.
+ */
+function isUnreachable(error: unknown): boolean {
+  // Drizzle wraps the driver error, so the connection failure is usually the
+  // `cause` of a generic "Failed query" — checking only the top-level message
+  // misses every real outage. Walk the chain.
+  const seen = new Set<unknown>();
+  let current: unknown = error;
+
+  while (current && !seen.has(current)) {
+    seen.add(current);
+    const { message, code } = current as { message?: string; code?: string };
+    const text = `${message ?? ""} ${code ?? ""}`;
+    if (
+      /ENOTFOUND|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN|ECONNRESET|EPIPE|getaddrinfo|tenant\/user .* not found|terminated unexpectedly|Connection terminated|CONNECTION_|XX000/i.test(
+        text,
+      )
+    ) {
+      return true;
+    }
+    current = (current as { cause?: unknown }).cause;
+  }
+  return false;
+}
+
+/**
+ * Postgres, with the CSV corpus as a safety net.
+ *
+ * The store used to be chosen from whether DATABASE_URL was *set*, never from
+ * whether the database *answered* — so when the hosted database went away the
+ * whole site returned 500s, even though everything except cross-restart
+ * persistence can be served from the CSVs that ship with the build.
+ *
+ * The first connection-class failure switches this instance over for good and
+ * retries the call against memory. Learner state written before the switch is
+ * gone, which is the honest outcome: the database holding it is unreachable.
+ */
+function createResilientStore(): Store {
+  const primary = createPostgresStore();
+  let fallback: Store | null = null;
+  let degraded = false;
+
+  const degrade = (error: unknown): Store => {
+    if (!degraded) {
+      degraded = true;
+      console.warn(
+        "[store] Postgres is unreachable — serving from the CSV corpus in memory. " +
+          "Learner progress will not survive a restart until the database returns. " +
+          `Cause: ${String((error as { message?: string })?.message ?? error)}`,
+      );
+    }
+    fallback ??= createMemoryStore();
+    return fallback;
+  };
+
+  return new Proxy(primary, {
+    get(target, prop, receiver) {
+      if (prop === "kind") {
+        return degraded ? "memory" : Reflect.get(target, prop, receiver);
+      }
+
+      const original = Reflect.get(target, prop, receiver);
+      if (typeof original !== "function") return original;
+
+      return async (...args: unknown[]) => {
+        if (degraded) {
+          const store = fallback as unknown as Record<string, Function>;
+          return store[prop as string](...args);
+        }
+        try {
+          return await (original as Function).apply(target, args);
+        } catch (error) {
+          if (!isUnreachable(error)) throw error;
+          const store = degrade(error) as unknown as Record<string, Function>;
+          return store[prop as string](...args);
+        }
+      };
+    },
+  }) as Store;
+}
+
 export function getStore(): Store {
   if (!globalThis.__waypointStore) {
     if (process.env.DATABASE_URL) {
-      globalThis.__waypointStore = createPostgresStore();
-      console.info("[store] Using Postgres.");
+      globalThis.__waypointStore = createResilientStore();
+      console.info("[store] Using Postgres, with the CSV corpus as a fallback.");
     } else {
       globalThis.__waypointStore = createMemoryStore();
       console.info("[store] No DATABASE_URL set — running in memory from the CSV corpus.");

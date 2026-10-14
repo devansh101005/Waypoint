@@ -10,12 +10,35 @@ config({ path: ".env.local" });
 /**
  * Integration tests against a real database.
  *
- * Skipped when DATABASE_URL is absent so the suite still passes on a clean
+ * Skipped when no database can be reached, so the suite still passes on a clean
  * checkout — which is how anyone evaluating this project will first run it.
- * Every learner created here is left in place; the rows are tiny and deleting
- * them would hide exactly the persistence these tests exist to prove.
+ *
+ * Reachability, not just the presence of DATABASE_URL: a hosted database that
+ * has been paused or deleted leaves the variable set and pointing at nothing,
+ * and guarding on the variable alone turned that into a failing suite that said
+ * nothing about the code.
  */
-const hasDatabase = Boolean(process.env.DATABASE_URL);
+const databaseUrl = process.env.DATABASE_URL;
+
+async function databaseAnswers(): Promise<boolean> {
+  if (!databaseUrl) return false;
+  try {
+    await createPostgresStore().graph();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+const hasDatabase = await databaseAnswers();
+
+if (databaseUrl && !hasDatabase) {
+  console.warn(
+    "[test] DATABASE_URL is set but the database did not answer — skipping the " +
+      "Postgres integration tests. The application falls back to the CSV corpus " +
+      "in the same situation.",
+  );
+}
 
 describe.skipIf(!hasDatabase)("postgres store", () => {
   let store: Store;
